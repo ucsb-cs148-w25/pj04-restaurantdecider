@@ -1,0 +1,1 @@
+My name is Danny You and I'm a 4th year Computer Science Major. My current hobbies include reading and playing video games. Some ideas I have for this project include making a leaderboard in the APP so that the APP can recommand the top-liked restaurants to new users.

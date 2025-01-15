@@ -1,8 +1,8 @@
 # lec02 sprint meeting
 
 ## Attendance
-- [x] Karthik Bhattaram
 - [x] Tanay Biradar
+- [x] Karthik Bhattaram
 - [x] Irene Li
 - [x] Winston Wang
 - [x] Chloe Weng

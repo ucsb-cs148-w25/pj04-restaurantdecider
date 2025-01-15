@@ -1,0 +1,1 @@
+My name is Winston Wang and I'm a 4th year Computer Science Major. My current hobbies include reading and playing badminton. Some ideas I have for this project include making a user based rating system as well as using machine learning to adapt to user habits.                                  

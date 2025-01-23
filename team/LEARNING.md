@@ -20,10 +20,10 @@ Given these strengths, we plan on pairing members who have experience in differe
 
 Our most significant gap comes in the frontend.
 
-Chloe: Will watch video tutorials on Svelte to close our gap in that area.
-Danny:
-Edison: Will read documentation on Express.
-Irene: Will watch tutorials on Svelte and leverage the knowledge for her GH issue.
-Karthik: Plans to read articles for Svelte and Node, will also try more SQL.
-Tanay: Will read DuckDB documentation and will ask Claude / Edison for help on SQL.
-Winston: Will read documentation and watch videos on Svelte
+Chloe: Will watch video tutorials on Svelte to close our gap in that area.\
+Danny:\
+Edison: Will read documentation on Express.\
+Irene: Will watch tutorials on Svelte and leverage the knowledge for her GH issue.\
+Karthik: Plans to read articles for Svelte and Node, will also try more SQL.\
+Tanay: Will read DuckDB documentation and will ask Claude / Edison for help on SQL.\
+Winston: Will read documentation and watch videos on Svelte\

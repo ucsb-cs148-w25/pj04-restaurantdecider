@@ -1,11 +1,45 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+import express from 'express'
+import path from 'path'
+import cookieParser from 'cookie-parser'
+import logger from 'morgan'
+import createError from 'http-errors'
+import { fileURLToPath } from 'url'
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// custom modules
+import { DuckDBInstance } from '@duckdb/node-api'
+
+// include routers
+import indexRouter from './routes/index.js'
+import usersRouter from './routes/users.js'
+
+// allows us to use ES module syntax
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// set up database
+const dbInstance = await DuckDBInstance.create('./data/db.duckdb')
+export const db = await dbInstance.connect()
+
+await db.run(`
+  CREATE TABLE IF NOT EXISTS USERS (
+    username VARCHAR,
+    hashedPassword VARCHAR
+  )
+`);
+
+// // DEBUG: Function to get all table names
+// export async function getAllTableNames() {
+//   const result = await db.run(`
+//     SELECT table_name 
+//     FROM information_schema.tables 
+//     WHERE table_schema = 'main'
+//   `);
+//   const chunks = await result.fetchAllChunks();
+//   const tableNames = chunks.flatMap(chunk => chunk.getRows().map(row => row[0]));
+//   console.log('Tables in database:', tableNames);
+//   return tableNames;
+// }
+// const tableNames = await getAllTableNames();
 
 var app = express();
 
@@ -38,4 +72,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;

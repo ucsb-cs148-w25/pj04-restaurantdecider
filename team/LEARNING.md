@@ -1,4 +1,4 @@
-Lead by Edison
+**Led by Edison**
 
 ## Strengths of Each Member
 
@@ -18,7 +18,7 @@ On a scale 1-3, where 1 is beginner, 2 is intermediate, and 3 is advanced.
 
 Given these strengths, we plan on pairing members who have experience in different areas on tasks with members who have less experience.
 
-Our most significant gap comes in the frontend.
+Our most significant gap in experience comes in the frontend.
 
 Chloe: Will watch video tutorials on Svelte to close our gap in that area.\
 Danny:\

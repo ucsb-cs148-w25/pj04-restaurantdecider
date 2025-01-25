@@ -27,3 +27,9 @@ Irene: Will watch tutorials on Svelte and leverage the knowledge for her GH issu
 Karthik: Plans to read articles for Svelte and Node, will also try more SQL.\
 Tanay: Will read DuckDB documentation and will ask Claude / Edison for help on SQL.\
 Winston: Will read documentation and watch videos on Svelte\
+
+## Help Channel Posting
+- Tanay posted in JS Help
+- Irene posted in JS Help
+- Winston posted in JS Help
+- Edison posted in JS Help

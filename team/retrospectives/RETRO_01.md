@@ -1,8 +1,8 @@
 # Date of Retrospective: 01/24/25
 
 * Led by: Winston Wang
-* Present: Karthik Bhattaram, Tanay Biradar, Irene Li, Winston Wang, Chloe Weng, Edison Zhang
-* Absent: Danny You
+* Present: Karthik Bhattaram, Tanay Biradar, Irene Li, Winston Wang, Chloe Weng, Edison Zhang, Danny You
+* Absent: None
 
 ## Action item
 

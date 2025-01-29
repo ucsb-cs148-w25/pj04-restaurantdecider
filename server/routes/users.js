@@ -1,39 +1,49 @@
-import express from 'express';
-import bcrypt from 'bcryptjs';
+import express from "express";
+import bcrypt from "bcryptjs";
 // import jwt from 'jsonwebtoken';
-import { getDbConnection } from '../app.js'; 
+import { getDbConnection } from "../app.js";
 
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
+router.post("/register", async (req, res) => {
   const { username, password } = req.body;
 
+  let db;
   try {
-    const db = getDbConnection();
+    db = getDbConnection();
 
     // Check if the username already exists
-    // const existingUser = await db.prepare('SELECT * FROM USERS WHERE username = ?', [username]);
+    const existingUser = await db.run(
+      "SELECT * FROM USERS WHERE username = ?",
+      [username]
+    );
 
-    // if (existingUser) {
-    //   console.log(`Username ${username} already taken`);  
-    //   return res.status(400).json({ error: 'Username already taken' });
-    // }
+    if (existingUser) {
+      console.log(`Username ${username} already taken`);
+      return res.status(400).json({ error: "Username already taken" });
+    }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert new user into the USERS table
-    console.log('Inserting user into the database:', { username, hashedPassword }); 
+    console.log("Inserting user into the database:", { username });
 
-    await db.run('INSERT INTO USERS (username, hashedPassword) VALUES (?, ?)', [username, hashedPassword]);
+    await db.run("INSERT INTO USERS (username, hashedPassword) VALUES (?, ?)", [
+      username,
+      hashedPassword,
+    ]);
 
-    res.status(201).json({ message: 'User registered successfully' });
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error('Error during registration:', error);  
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error during registration:", error);
+    res.status(500).json({ error: "Internal server error" });
+  } finally {
+    if (db) {
+      db.close();
+    }
   }
 });
-
 
 // User Login (POST /login)
 // router.post('/login', async (req, res) => {
@@ -69,8 +79,8 @@ router.post('/register', async (req, res) => {
 // router.get('/users', async (req, res) => {
 //   try {
 //     const db = getDbConnection();
-//     const users = await db.all('SELECT * FROM USERS'); 
-//     res.status(200).json(users);  
+//     const users = await db.all('SELECT * FROM USERS');
+//     res.status(200).json(users);
 //   } catch (error) {
 //     console.error('Error retrieving users:', error);
 //     res.status(500).json({ error: 'Internal server error' });

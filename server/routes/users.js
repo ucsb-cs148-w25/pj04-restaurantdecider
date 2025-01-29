@@ -7,27 +7,20 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   const { username, password } = req.body;
+  let db = getDbConnection();
 
-  let db;
   try {
-    db = getDbConnection();
-
-    // Check if the username already exists
-    const existingUser = await db.run(
-      "SELECT * FROM USERS WHERE username = ?",
-      [username]
-    );
+    const result = await db.run("SELECT * FROM USERS WHERE username = ?", [
+      username,
+    ]);
+    const rows = await result.fetchAllChunks();
+    const existingUser = rows.length > 0 && rows[0].rowCount > 0;
 
     if (existingUser) {
-      console.log(`Username ${username} already taken`);
       return res.status(400).json({ error: "Username already taken" });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Insert new user into the USERS table
-    console.log("Inserting user into the database:", { username });
 
     await db.run("INSERT INTO USERS (username, hashedPassword) VALUES (?, ?)", [
       username,
@@ -36,12 +29,7 @@ router.post("/register", async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error("Error during registration:", error);
     res.status(500).json({ error: "Internal server error" });
-  } finally {
-    if (db) {
-      db.close();
-    }
   }
 });
 

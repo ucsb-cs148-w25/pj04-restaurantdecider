@@ -15,6 +15,10 @@ router.post("/register", async (req, res) => {
     ]);
     const rows = await result.fetchAllChunks();
     const existingUser = rows.length > 0 && rows[0].rowCount > 0;
+    console.log(rows);
+    rows.forEach(row => {
+      console.log(row.username, row.hashedPassword); // Replace with actual column names
+    });
 
     if (existingUser) {
       return res.status(400).json({ error: "Username already taken" });
@@ -34,35 +38,46 @@ router.post("/register", async (req, res) => {
 });
 
 // User Login (POST /login)
-// router.post('/login', async (req, res) => {
-//   const { username, password } = req.body;
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  let db = getDbConnection();
 
-//   try {
-//     const db = getDbConnection();
+  try {
+    // Get the user by username
+    const user = await db.run("SELECT * FROM USERS WHERE username = ?", [
+      username,
+    ]);
+    const rows = await user.fetchAllChunks();
+    console.log(rows)
+    const res = rows.flatMap(chunk => chunk.getRows())
+    console.log('User found:', res);
+    res.forEach(row => {
+      console.log(row[0], row[1]); // Replace with actual column names
+    });
 
-//     // Get the user by username
-//     const user = await db.get('SELECT * FROM USERS WHERE username = ?', [username]);
-//     console.log('User found:', user);
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    // console.log('password:', password);
+    // console.log('username:', res.username);
+    console.log('user password:', res[1]);
+    // Compare the provided password with the stored hashed password
+    const isMatch = await bcrypt.compare(password, res.hashedPassword);
+    console.log('jhkjkh');
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    console.log('here');
 
-//     if (!user) {
-//       return res.status(401).json({ error: 'Invalid credentials' });
-//     }
+    // Generate JWT token
+    const token = jwt.sign({ username: user.username }, 'your_jwt_secret_key', { expiresIn: '1h' });
 
-//     // Compare the provided password with the stored hashed password
-//     const isMatch = await bcrypt.compare(password, user.hashedPassword);
-//     if (!isMatch) {
-//       return res.status(401).json({ error: 'Invalid credentials' });
-//     }
-
-//     // Generate JWT token
-//     const token = jwt.sign({ username: user.username }, 'your_jwt_secret_key', { expiresIn: '1h' });
-
-//     res.status(200).json({ token });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-// });
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // router.get('/users', async (req, res) => {
 //   try {

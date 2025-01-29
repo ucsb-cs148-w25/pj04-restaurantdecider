@@ -2,8 +2,7 @@
     import UserProfile from './user_profile.svelte';
 
     const user = {
-        email: 'user@example.com',
-        dietaryRestrictions: []
+        username: 'user123',
     };
 </script>
 

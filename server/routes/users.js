@@ -1,6 +1,5 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-// import jwt from 'jsonwebtoken';
 import { db, User } from "../utils/db.js";
 
 const router = express.Router();
@@ -35,54 +34,30 @@ router.post("/register", async (req, res) => {
 // User Login (POST /login)
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  let db = getDbConnection();
 
   try {
     // Get the user by username
-    const user = await db.run("SELECT * FROM USERS WHERE username = ?", [
-      username,
-    ]);
-    const rows = await user.fetchAllChunks();
-    console.log(rows)
-    const res = rows.flatMap(chunk => chunk.getRows())
-    console.log('User found:', res);
-    res.forEach(row => {
-      console.log(row[0], row[1]); // Replace with actual column names
+    const user = await User.findOne({
+      where: {
+        username: username
+      }
     });
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    // console.log('password:', password);
-    // console.log('username:', res.username);
-    console.log('user password:', res[1]);
+
     // Compare the provided password with the stored hashed password
-    const isMatch = await bcrypt.compare(password, res.hashedPassword);
-    console.log('jhkjkh');
+    const isMatch = await bcrypt.compare(password, user.hashedPassword);
+
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    console.log('here');
 
-    // Generate JWT token
-    const token = jwt.sign({ username: user.username }, 'your_jwt_secret_key', { expiresIn: '1h' });
-
-    res.status(200).json({ token });
+    res.status(200).json({ message: "User logged in successfully" });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-// router.get('/users', async (req, res) => {
-//   try {
-//     const db = getDbConnection();
-//     const users = await db.all('SELECT * FROM USERS');
-//     res.status(200).json(users);
-//   } catch (error) {
-//     console.error('Error retrieving users:', error);
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-// });
 
 export default router;

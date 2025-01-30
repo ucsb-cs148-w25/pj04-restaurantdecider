@@ -4,8 +4,7 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import createError from "http-errors";
 import { fileURLToPath } from "url";
-import { DuckDBInstance } from "@duckdb/node-api";
-import fs from "fs";
+import { initializeDB } from "./utils/db.js";
 
 // custom modules
 import indexRouter from "./routes/index.js";
@@ -16,42 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // initialize db
-let db; // db will be a reference to the connection object
-
-async function connectDB() {
-  try {
-    // Create data directory if it doesn't exist
-    const dataDir = path.join(__dirname, "data");
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
-    }
-
-    const dbInstance = await DuckDBInstance.create("./data/db.duckdb");
-    db = await dbInstance.connect();
-
-    await db.run(`
-      CREATE TABLE IF NOT EXISTS USERS (
-        username VARCHAR,
-        hashedPassword VARCHAR
-      )
-    `);
-
-    console.log("Connected to DuckDB successfully");
-  } catch (err) {
-    console.error("Error connecting to DuckDB", err);
-  }
-}
-
-// call connectDB to establish the connection on app startup
-connectDB();
-
-// Function to get db connection
-export function getDbConnection() {
-  if (!db) {
-    throw new Error("Database not connected yet");
-  }
-  return db;
-}
+initializeDB();
 
 // Set up the Express app
 const app = express();

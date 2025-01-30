@@ -1,35 +1,30 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 // import jwt from 'jsonwebtoken';
-import { getDbConnection } from "../app.js";
+import { db, User } from "../utils/db.js";
 
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
   const { username, password } = req.body;
-  let db = getDbConnection();
 
   try {
-    const result = await db.run("SELECT * FROM USERS WHERE username = ?", [
-      username,
-    ]);
-    const rows = await result.fetchAllChunks();
-    const existingUser = rows.length > 0 && rows[0].rowCount > 0;
-    console.log(rows);
-    rows.forEach(row => {
-      console.log(row.username, row.hashedPassword); // Replace with actual column names
+    const existingUsers = await User.findAll({
+      where: {
+        username: username
+      }
     });
 
-    if (existingUser) {
+    if (existingUsers.length > 0) {
       return res.status(400).json({ error: "Username already taken" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await db.run("INSERT INTO USERS (username, hashedPassword) VALUES (?, ?)", [
-      username,
-      hashedPassword,
-    ]);
+    await User.create({
+      username: username,
+      hashedPassword: hashedPassword
+    });
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {

@@ -30,6 +30,6 @@ Winston: Will read documentation and watch videos on Svelte\
 
 ## Help Channel Posting
 - Tanay posted in JS Help
-- Irene posted in JS Help
+- Irene posted in Git Help
 - Winston posted in JS Help
 - Edison posted in JS Help

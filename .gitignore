@@ -1,6 +1,7 @@
 # DB
 *.duckdb
 *.duckdb.wal
+*.sqlite3
 
 # General
 .DS_Store

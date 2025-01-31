@@ -7,6 +7,6 @@
 | Fri 01/17 | Chloe Weng        | Led lab 2 meeting                                      | 
 | Fri 01/17 | Tanay Biradar     | Led team discussion of Sprint01                        | 
 | Fri 01/24 | Winston Wang      | Will lead first Retro                                  | 
-| Mon 01/27 | Irene Li          | Will lead standup meeting                              | 
+| Mon 01/27 | Irene Li          | Led lecture 5 standup meeting                          | 
 | Wed 01/29 | Karthik Bhattaram | Will lead standup meeting                              | 
 | Fri 01/31 | Danny You         | Will lead lab 3 meeting                                | 

@@ -5,6 +5,7 @@ import logger from "morgan";
 import createError from "http-errors";
 import { fileURLToPath } from "url";
 import { initializeDB } from "./utils/db.js";
+import cors from "cors";
 
 // custom modules
 import indexRouter from "./routes/index.js";
@@ -22,6 +23,9 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
+app.use(cors({
+  origin: "*",
+}))
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -1,22 +1,20 @@
 <h1>Search for Restaurants</h1>
 
 <p>Radius (miles)</p>
-<Input placeholder="Radius" class="max-w-xs" type="number"></Input>
-
+<Input placeholder="Radius" class="max-w-xs" type="number" bind:value={radius}></Input>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger class={buttonVariants({ variant: "outline" })}>Number of Restaurants to Display</DropdownMenu.Trigger>
+	<DropdownMenu.Trigger class={buttonVariants({ variant: "outline" })}>Show {numToShow} restaurants</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-56">
 		<DropdownMenu.Group>
-			<DropdownMenu.RadioGroup bind:value={position}>
-				<DropdownMenu.RadioItem value="short">8</DropdownMenu.RadioItem>
-				<DropdownMenu.RadioItem value="medium">16</DropdownMenu.RadioItem>
-				<DropdownMenu.RadioItem value="long">32</DropdownMenu.RadioItem>
+			<DropdownMenu.RadioGroup bind:value={numToShow}>
+				<DropdownMenu.RadioItem value={8}>8</DropdownMenu.RadioItem>
+				<DropdownMenu.RadioItem value={16}>16</DropdownMenu.RadioItem>
+				<DropdownMenu.RadioItem value={32}>32</DropdownMenu.RadioItem>
 			</DropdownMenu.RadioGroup>
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
-
 
 <div class="location-picker">
 	<div class="search-container">
@@ -45,13 +43,13 @@
 		<Button type="submit">Search</Button>
 </form>
 
-<script lang="ts">
+<script lang="js">
 		import { onMount } from 'svelte';
 		import { Button } from '$lib/components/ui/button';
 		import { buttonVariants } from '$lib/components/ui/button';
 		import { Input } from '$lib/components/ui/input';
 		import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-		import type { PageData } from './$types';
+		import { apiBaseUrl } from '$lib/index';
 
 		// Load Google Maps script dynamically
 		onMount(async () => {
@@ -68,13 +66,32 @@
 	
 		let handleSubmit = (e) => {
 				e.preventDefault();
-				console.log('submit'); // TODO
+				let dataToSend = {
+					"latitude": latitude,
+					"longitude": longitude,
+					"radius": radius,
+					"listSize": numToShow
+				}
+				console.log(dataToSend);
+
+				fetch(`${apiBaseUrl}/maps/restaurants`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(dataToSend)
+				})
+				.then(response => response.json())
+				.then(data => {
+					console.log(data);
+				})
 		}
 		
-		let { data } = $props<{ data: PageData }>();
-		let position = $state("bottom");
+		let { data } = $props();
+		let numToShow = $state(8);
 		let latitude = $state(0);
 		let longitude = $state(0);
+		let radius = $state(0);
 		let mapContainer;
 		let map;
 		let marker;

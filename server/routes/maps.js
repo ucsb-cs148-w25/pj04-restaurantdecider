@@ -2,7 +2,6 @@ import express from "express";
 import fetch from "node-fetch";
 
 const router = express.Router();
-console.log('Loading Maps API Key in maps.js:', process.env.MAPS_API_KEY);
 
 router.post("/restaurants", async (req, res) => {
   const { latitude, longitude, radius, listSize } = req.body;
@@ -37,16 +36,16 @@ router.post("/restaurants", async (req, res) => {
       body: JSON.stringify(requestBody)
     });
 
-    console.log('API Request URL:', url);
-    console.log('API KEY: ', process.env.MAPS_API_KEY)
-    console.log('Request Headers:', {
-      'Content-Type': 'application/json',
-      'X-Goog-Api-Key': process.env.MAPS_API_KEY, 
-      'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.photos,places.rating,places.userRatingCount'
-    });
+    // console.log('API Request URL:', url);
+    // console.log('API KEY: ', process.env.MAPS_API_KEY)
+    // console.log('Request Headers:', {
+    //   'Content-Type': 'application/json',
+    //   'X-Goog-Api-Key': process.env.MAPS_API_KEY, 
+    //   'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.photos,places.rating,places.userRatingCount'
+    // });
     
     const data = await response.json();
-    console.log('API Response:', data);
+    // console.log('API Response:', data);
 
     if (!data.places) {
       return res.status(400).json({ error: "REQUEST_DENIED", message: data.error?.message || "Failed to fetch restaurants" });

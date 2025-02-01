@@ -78,5 +78,3 @@
 </form>
 
 <p><a href="/..">Return Home</a></p>
-
-<p>{getUsername()}</p>

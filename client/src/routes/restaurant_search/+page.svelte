@@ -45,48 +45,14 @@
 
 <script lang="js">
 		import { onMount } from 'svelte';
+		import { goto } from '$app/navigation';
 		import { Button } from '$lib/components/ui/button';
 		import { buttonVariants } from '$lib/components/ui/button';
 		import { Input } from '$lib/components/ui/input';
 		import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-		import { apiBaseUrl } from '$lib/index';
+		import { apiBaseUrl } from '$lib/index.js';
+		import { getRestaurantsList, setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 
-		// Load Google Maps script dynamically
-		onMount(async () => {
-				const script = document.createElement('script');
-				script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places`;
-				script.async = true;
-				script.defer = true;
-				script.onload = () => {
-						scriptLoaded = true;
-						initializeMap();
-				};
-				document.head.appendChild(script);
-		});
-	
-		let handleSubmit = (e) => {
-				e.preventDefault();
-				let dataToSend = {
-					"latitude": latitude,
-					"longitude": longitude,
-					"radius": radius,
-					"listSize": numToShow
-				}
-				console.log(dataToSend);
-
-				fetch(`${apiBaseUrl}/maps/restaurants`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify(dataToSend)
-				})
-				.then(response => response.json())
-				.then(data => {
-					console.log(data);
-				})
-		}
-		
 		let { data } = $props();
 		let numToShow = $state(8);
 		let latitude = $state(0);
@@ -99,66 +65,105 @@
 		let isLoading = true;
 		let scriptLoaded = false;
 
+		// Load Google Maps script dynamically
+		onMount(async () => {
+			const script = document.createElement('script');
+			script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places`;
+			script.async = true;
+			script.defer = true;
+			script.onload = () => {
+					scriptLoaded = true;
+					initializeMap();
+			};
+			document.head.appendChild(script);
+		});
+	
+		let handleSubmit = (e) => {
+			e.preventDefault();
+			let dataToSend = {
+				"latitude": latitude,
+				"longitude": longitude,
+				"radius": radius,
+				"listSize": numToShow
+			}
+
+			fetch(`${apiBaseUrl}/maps/restaurants`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(dataToSend)
+			})
+			.then(response => response.json())
+			.then(data => {
+				setRestaurantsList(data);
+				goto('/bracket');
+			})
+			.catch(error => {
+				console.error('Error fetching restaurants:', error);
+			})
+		}
+
 		function updateCoordinates(lat, lng) {
-				latitude = lat;
-				longitude = lng;
+			latitude = lat;
+			longitude = lng;
 		}
 
 		async function initializeMap() {
-				try {
-						const { Map } = await google.maps.importLibrary("maps");
-						const places = await google.maps.importLibrary("places");
-						const { Marker } = await google.maps.importLibrary("marker");
-					
-						// initialize map and pin
-						map = new Map(mapContainer, {
-								zoom: data.mapConfig.defaultZoom,
-								center: data.mapConfig.defaultCenter,
-								mapTypeId: 'roadmap'
-						});
-						marker = new Marker({ map, draggable: true });
-					
-						// initialize the search box
-						const input = document.getElementById('search-box');
-						searchBox = new places.SearchBox(input);  // Use places directly here
-
-						// set up event listeners
-						map.addListener('bounds_changed', () => {
-								searchBox.setBounds(map.getBounds());
-						});
+			try {
+				const { Map } = await google.maps.importLibrary("maps");
+				const places = await google.maps.importLibrary("places");
+				const { Marker } = await google.maps.importLibrary("marker");
 			
-						searchBox.addListener('places_changed', () => {
-								// where are we?
-								const places = searchBox.getPlaces();
-								if (places.length === 0) return;
-								const place = places[0];
-				
-								if (place.geometry.viewport) {
-										map.fitBounds(place.geometry.viewport);
-								} else {
-										map.setCenter(place.geometry.location);
-										map.setZoom(17);
-								}
-				
-								marker.setPosition(place.geometry.location);
-								updateCoordinates(place.geometry.location.lat(), place.geometry.location.lng());
-						});
-
-						map.addListener('dragend', (e) => {
-								marker.setPosition(e.latLng);
-								updateCoordinates(e.latLng.lat(), e.latLng.lng());
-						});
-
-						map.addListener('click', (e) => {
-								marker.setPosition(e.latLng);
-								updateCoordinates(e.latLng.lat(), e.latLng.lng());
-						});
+				// initialize map and pin
+				map = new Map(mapContainer, {
+					zoom: data.mapConfig.defaultZoom,
+					center: data.mapConfig.defaultCenter,
+					mapTypeId: 'roadmap'
+				});
+				marker = new Marker({ map, draggable: true });
 			
-						isLoading = false;
-				} catch (error) {
-						console.error('Error initializing map:', error);
-						isLoading = false;
-				}
+				// initialize the search box
+				const input = document.getElementById('search-box');
+				searchBox = new places.SearchBox(input);  // Use places directly here
+
+				// set up event listeners
+				map.addListener('bounds_changed', () => {
+					searchBox.setBounds(map.getBounds());
+				});
+	
+				searchBox.addListener('places_changed', () => {
+					// where are we?
+					const places = searchBox.getPlaces();
+					if (places.length === 0) return;
+					const place = places[0];
+	
+					if (place.geometry.viewport) {
+							map.fitBounds(place.geometry.viewport);
+					} else {
+							map.setCenter(place.geometry.location);
+							map.setZoom(17);
+					}
+	
+					marker.setPosition(place.geometry.location);
+					updateCoordinates(place.geometry.location.lat(), place.geometry.location.lng());
+				});
+
+				map.addListener('dragend', (e) => {
+					marker.setPosition(e.latLng);
+					updateCoordinates(e.latLng.lat(), e.latLng.lng());
+				});
+
+				map.addListener('click', (e) => {
+					marker.setPosition(e.latLng);
+					updateCoordinates(e.latLng.lat(), e.latLng.lng());
+				});
+	
+				isLoading = false;
+			} catch (error) {
+				console.error('Error initializing map:', error);
+				isLoading = false;
+			}
 		}
 </script>
 

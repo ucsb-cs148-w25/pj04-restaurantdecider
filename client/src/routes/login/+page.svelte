@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { apiBaseUrl } from '$lib/index';
+	import { apiBaseUrl } from '$lib/index.js';
 	import { setUsername } from '$lib/stores/userStore.svelte.js';
 	import { getUsername } from '$lib/stores/userStore.svelte.js';
 

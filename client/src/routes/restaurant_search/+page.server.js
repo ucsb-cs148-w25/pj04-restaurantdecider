@@ -1,5 +1,6 @@
 import { MAPS_API_KEY } from '$env/static/private';
 
+// allows us to access the MAPS_API_KEY from the environment
 export const load = async () => {
     return {
         mapConfig: {

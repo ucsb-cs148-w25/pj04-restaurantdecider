@@ -36,16 +36,7 @@ router.post("/restaurants", async (req, res) => {
       body: JSON.stringify(requestBody)
     });
 
-    // console.log('API Request URL:', url);
-    // console.log('API KEY: ', process.env.MAPS_API_KEY)
-    // console.log('Request Headers:', {
-    //   'Content-Type': 'application/json',
-    //   'X-Goog-Api-Key': process.env.MAPS_API_KEY, 
-    //   'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.photos,places.rating,places.userRatingCount'
-    // });
-    
     const data = await response.json();
-    // console.log('API Response:', data);
 
     if (!data.places) {
       return res.status(400).json({ error: "REQUEST_DENIED", message: data.error?.message || "Failed to fetch restaurants" });
@@ -64,5 +55,29 @@ router.post("/restaurants", async (req, res) => {
     res.status(500).json({ error: "Internal server error", message: error.message });
   }
 });
+
+
+router.post('/restaurantphoto', async (req, res) => {
+  const { resource_id, max_width_px } = req.body;
+  try {
+    const response = await fetch(`https://places.googleapis.com/v1/${resource_id}/media?key=${process.env.MAPS_API_KEY}&max_width_px=${max_width_px}`, {
+      method: 'GET',
+      headers: {
+        'X-Goog-Api-Key': process.env.MAPS_API_KEY
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch image');
+    }
+
+    const imageBuffer = await response.buffer();
+    res.set('Content-Type', 'image/jpeg');
+    res.send(imageBuffer);
+  } catch (error) {
+    console.error('Error fetching image:', error);
+    res.status(500).json({ error: "Internal server error", message: error.message });
+  }
+})
 
 export default router;

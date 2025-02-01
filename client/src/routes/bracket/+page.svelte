@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import { Card } from '$lib/components/ui/card';
 	import { onMount } from 'svelte';
 	import Checkmark from '$lib/svg/checkmark.svelte';
+	import { getRestaurantsList, setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
+	import { apiBaseUrl } from '$lib/index.js';
 
 	interface Restaurant {
 		id: number;
@@ -11,18 +12,57 @@
 		description: string;
 	}
 
-	let n = 8;
-	// Sample restaurant data
-	const allRestaurants: Restaurant[] = Array(n)
-		.fill(null)
-		.map((_, i) => ({
-			id: i + 1,
-			name: `Restaurant ${i + 1}`,
-			image: `/placeholder.svg?height=400&width=300`,
-			description: `Description for Restaurant ${i + 1}`
-		}));
+	let allRestaurants: Restaurant[] = [];
+	let restaurants: Restaurant[] = [];
 
-	let restaurants = [...allRestaurants]; // Create a copy for the tournament
+	onMount(() => {
+		const restaurantsData = getRestaurantsList();
+
+		allRestaurants = restaurantsData.restaurants.map((restaurant, index) => ({
+			id: index + 1,
+			name: restaurant.name,
+			image: restaurant.menuImages[0] || '/placeholder.svg?height=400&width=300',
+			description: `Rating: ${restaurant.rating}, Reviews: ${restaurant.reviews}`
+		}));
+		console.log('RESTAURANTS: ', allRestaurants);
+
+		// Initialize scoreboard with 0 points for each restaurant
+		allRestaurants.forEach(restaurant => {
+			scoreboard[restaurant.id] = 0;
+		});
+
+		// Update restaurants array with the new data
+		restaurants = [...allRestaurants];
+
+		// Get the first pair to start the bracket
+		getNextPair();
+
+		// Load images after initial mount
+		restaurantsData.restaurants.forEach(async (restaurant, index) => {
+			if (restaurant.menuImages && restaurant.menuImages[0]) {
+				try {
+					const response = await fetch(`${apiBaseUrl}/maps/restaurantphoto`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							resource_id: restaurant.menuImages[0],
+							max_width_px: 400
+						}),
+					});
+					if (response.ok) {
+						const imageUrl = URL.createObjectURL(await response.blob());
+						allRestaurants[index].image = imageUrl;
+						restaurants = [...allRestaurants]; // Trigger reactivity
+					}
+				} catch (error) {
+					console.error('Error fetching restaurant photo:', error);
+				}
+			}
+		});
+	});
+	
 	let currentPair: Restaurant[] = [];
 	let winners: Restaurant[] = [];
 	let currentRound = 1;
@@ -30,11 +70,6 @@
 	let flippedCards: { [key: number]: boolean } = {};
 	let scoreboard: { [key: number]: number } = {};
 	let showScoreboard = false;
-
-	// Initialize scoreboard with 0 points for each restaurant
-	allRestaurants.forEach(restaurant => {
-		scoreboard[restaurant.id] = 0;
-	});
 
 	function getNextPair() {
 		if (restaurants.length >= 2) {
@@ -147,6 +182,8 @@
 				{#each currentPair as restaurant, i}
 					<div class="flex flex-col">
 						<div class="flip-card-container relative h-[300px] overflow-visible md:h-[500px]">
+							<!-- svelte-ignore a11y_click_events_have_key_events -->
+							<!-- svelte-ignore a11y_no_static_element_interactions -->
 							<div
 								class="flip-card {flippedCards[restaurant.id] ? 'flipped' : ''} overflow-visible"
 								on:click={(e) => toggleCard(restaurant, e)}

@@ -2,7 +2,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Card } from '$lib/components/ui/card';
 	import { onMount } from 'svelte';
-	import Checkmark from '$lib/icons/checkmark.svelte';
+	import Checkmark from '$lib/svg/checkmark.svelte';
 
 	interface Restaurant {
 		id: number;

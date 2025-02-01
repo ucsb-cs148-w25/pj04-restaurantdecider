@@ -1,11 +1,8 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
 	import { Button } from '$lib/components/ui/button';
 	import { Card } from '$lib/components/ui/card';
 	import { onMount } from 'svelte';
-	import ArrowRight from '$lib/icons/arrow_right.svelte';
-	import ChevronLeft from '$lib/icons/chevron_left.svelte';
-	import ArrowLeft from '$lib/icons/arrow_left.svelte';
+	import Checkmark from '$lib/icons/checkmark.svelte';
 
 	interface Restaurant {
 		id: number;
@@ -86,12 +83,12 @@
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-2">
 			{#each currentPair as restaurant, i}
 				<div class="flex flex-col">
-					<div class="flip-card-container relative h-[300px] md:h-[500px]">
+					<div class="flip-card-container relative h-[300px] overflow-visible md:h-[500px]">
 						<div
-							class="flip-card {flippedCards[restaurant.id] ? 'flipped' : ''}"
+							class="flip-card {flippedCards[restaurant.id] ? 'flipped' : ''} overflow-visible"
 							on:click={(e) => toggleCard(restaurant, e)}
 						>
-							<div class="flip-card-front">
+							<div class="flip-card-front shadow-md">
 								<div
 									class="absolute inset-0 bg-cover bg-center transition-transform duration-300"
 									style="background-image: url({restaurant.image})"
@@ -105,24 +102,25 @@
 								</div>
 							</div>
 							<div class="flip-card-back">
-								<div class="flex h-full flex-col bg-white p-6">
-									<h2 class="mb-4 text-2xl font-bold text-primary">{restaurant.name}</h2>
-									<p class="text-gray-700">{restaurant.description}</p>
+								<div class="h-full bg-white p-6">
+									<div class="flex h-full flex-col justify-between">
+										<div>
+											<h2 class="mb-4 text-2xl font-bold text-primary">{restaurant.name}</h2>
+											<p class="text-gray-700">{restaurant.description}</p>
+										</div>
+										<div class="flex justify-center">
+											<Button
+												class="h-12 w-12 rounded-full bg-green-500"
+												on:click={() => selectWinner(restaurant)}
+											>
+												<Checkmark />
+											</Button>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<Button
-						variant="ghost"
-						class="mt-4 flex-1 justify-center bg-primary/80 py-6 text-white hover:bg-primary/90"
-						on:click={() => selectWinner(restaurant)}
-					>
-						{#if i === 0}
-							<ArrowLeft class="w-18 h-6" />
-						{:else}
-							<ArrowRight class="w-18 h-6" />
-						{/if}
-					</Button>
 				</div>
 			{/each}
 		</div>
@@ -164,8 +162,5 @@
 	.flip-card-back {
 		transform: rotateY(180deg);
 		background-color: white;
-		box-shadow:
-			0 4px 6px -1px rgb(0 0 0 / 0.1),
-			0 2px 4px -2px rgb(0 0 0 / 0.1);
 	}
 </style>

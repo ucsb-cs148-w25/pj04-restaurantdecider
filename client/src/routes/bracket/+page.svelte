@@ -200,7 +200,6 @@
 							</span>
 							<div>
 								<h2 class="text-xl font-semibold">{restaurant.name}</h2>
-								<p class="text-gray-600">Score: {scoreboard[restaurant.id]}</p>
 							</div>
 						</div>
 						<div 

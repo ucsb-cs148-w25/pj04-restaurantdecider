@@ -15,10 +15,6 @@
 	async function handleSubmitLogin(event: Event) {
 		event.preventDefault();
 		try {
-			console.log('Login successful');
-			setUsername(loginUsername);
-			console.log(loginUsername);
-
 			const response = await fetch(`${apiBaseUrl}/users/login`, {
 				method: 'POST',
 				headers: {

@@ -1,12 +1,5 @@
 <script>
-    import UserProfile from './user_profile.svelte';
-
-    const user = {
-        email: 'user@example.com',
-        dietaryRestrictions: []
-    };
+	import { getUsername } from '$lib/stores/userStore.svelte.js';
 </script>
 
-<div>
-    <UserProfile {user} />
-</div>
+<div>{getUsername()}</div>

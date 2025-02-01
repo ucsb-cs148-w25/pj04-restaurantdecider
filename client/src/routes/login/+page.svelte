@@ -2,14 +2,15 @@
 	import { apiBaseUrl } from '$lib/index';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
+	import {writable} from 'svelte/store';
 
-	let loginUsername = '';
+	let loginUsername = $state(writable(''));
 	let loginPassword = '';
 
 	let signupUsername = '';
 	let signupPassword = '';
 
-	async function handleSubmitLogin(event: Event) {
+		async function handleSubmitLogin(event: Event) {
 		event.preventDefault();
 		try {
 			const response = await fetch(`${apiBaseUrl}/users/login`, {
@@ -18,7 +19,7 @@
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
-					username: loginUsername,
+					username: $loginUsername,
 					password: loginPassword
 				}),
 			});
@@ -54,6 +55,10 @@
 			console.error('Signup error:', error);
 		}
 	}
+
+	export const userState = $state({
+	   username: $loginUsername
+	});
 </script>
 
 <h1 class="text-3xl font-bold underline">Login</h1>

@@ -1,8 +1,9 @@
 <script>
     import UserProfile from './user_profile.svelte';
+    import userState from '../login/+page.svelte';
 
     const user = {
-        username: 'user123',
+        username: userState.username
     };
 </script>
 

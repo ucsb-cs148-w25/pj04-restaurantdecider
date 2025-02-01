@@ -1,12 +1,6 @@
 <script>
-    import UserProfile from './user_profile.svelte';
-    import userState from '../login/+page.svelte';
-
-    const user = {
-        username: userState.username
-    };
+	import { getUsername } from '$lib/stores/userStore.svelte.js';
+	console.log('after:', getUsername());
 </script>
 
-<div>
-    <UserProfile {user} />
-</div>
+<div>{getUsername()}</div>

@@ -11,7 +11,7 @@
 		description: string;
 	}
 
-	let n = 4;
+	let n = 8;
 	// Sample restaurant data
 	const allRestaurants: Restaurant[] = Array(n)
 		.fill(null)
@@ -64,6 +64,52 @@
 		currentPair = [...currentPair];
 	}
 
+	function tieBreaker() {
+		// Group restaurants by their scores
+		const scoreGroups: { [score: number]: Restaurant[] } = {};
+		
+		allRestaurants.forEach(restaurant => {
+			const score = scoreboard[restaurant.id] || 0;
+			if (!scoreGroups[score]) {
+				scoreGroups[score] = [];
+			}
+			scoreGroups[score].push(restaurant);
+		});
+
+		// Find the highest score that has ties
+		let highestScoreWithTies = -1;
+		Object.entries(scoreGroups).forEach(([score, restaurants]) => {
+			if (restaurants.length > 1 && Number(score) > highestScoreWithTies) {
+				highestScoreWithTies = Number(score);
+			}
+		});
+
+		// If no ties found, show scoreboard
+		if (highestScoreWithTies === -1) {
+			showScoreboard = true;
+			return;
+		}
+
+		// Get the tied restaurants for the highest score
+		const tiedRestaurants = scoreGroups[highestScoreWithTies];
+
+		// Increment scores for all restaurants with higher scores
+		allRestaurants.forEach(restaurant => {
+			const score = scoreboard[restaurant.id] || 0;
+			if (score > highestScoreWithTies) {
+				scoreboard[restaurant.id] = score + 1;
+			}
+		});
+
+		// Set up the next pair from tied restaurants
+		if (tiedRestaurants.length >= 2) {
+			currentPair = tiedRestaurants.slice(0, 2);
+			winners = tiedRestaurants.slice(2);
+		} else {
+			showScoreboard = true;
+		}
+	}
+
 	function selectWinner(winner: Restaurant) {
 		console.log('Select Winner Inside Current Round:', currentRound);
 
@@ -82,7 +128,8 @@
 			
 			if (restaurants.length == 0) {
 				if (winners.length == 1) {
-					showScoreboard = true;
+					tieBreaker();
+					//showScoreboard = true;
 				} else{
 					getNextPair();
 				}

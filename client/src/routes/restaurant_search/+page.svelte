@@ -1,22 +1,22 @@
 <h1>Search for Restaurants</h1>
 
-<p>Radius</p>
+<p>Radius (miles)</p>
+<Input placeholder="Radius" class="max-w-xs" type="number"></Input>
+
+
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger class={buttonVariants({ variant: "outline" })}
-		>Open</DropdownMenu.Trigger
-	>
+	<DropdownMenu.Trigger class={buttonVariants({ variant: "outline" })}>Number of Restaurants to Display</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-56">
 		<DropdownMenu.Group>
-			<DropdownMenu.GroupHeading>Panel Position</DropdownMenu.GroupHeading>
-			<DropdownMenu.Separator />
 			<DropdownMenu.RadioGroup bind:value={position}>
-				<DropdownMenu.RadioItem value="short">Top</DropdownMenu.RadioItem>
-				<DropdownMenu.RadioItem value="medium">Bottom</DropdownMenu.RadioItem>
-				<DropdownMenu.RadioItem value="long">Right</DropdownMenu.RadioItem>
+				<DropdownMenu.RadioItem value="short">8</DropdownMenu.RadioItem>
+				<DropdownMenu.RadioItem value="medium">16</DropdownMenu.RadioItem>
+				<DropdownMenu.RadioItem value="long">32</DropdownMenu.RadioItem>
 			</DropdownMenu.RadioGroup>
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
+
 
 <div class="location-picker">
 	<div class="search-container">

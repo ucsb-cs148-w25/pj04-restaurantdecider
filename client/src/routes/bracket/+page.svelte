@@ -11,8 +11,9 @@
 		description: string;
 	}
 
+	let n = 4;
 	// Sample restaurant data
-	const restaurants: Restaurant[] = Array(16)
+	const allRestaurants: Restaurant[] = Array(n)
 		.fill(null)
 		.map((_, i) => ({
 			id: i + 1,
@@ -21,50 +22,98 @@
 			description: `Description for Restaurant ${i + 1}`
 		}));
 
+	let restaurants = [...allRestaurants]; // Create a copy for the tournament
 	let currentPair: Restaurant[] = [];
 	let winners: Restaurant[] = [];
 	let currentRound = 1;
+	let tierRound = 1;
 	let selectedRestaurant: Restaurant | null = null;
 	let isTransitioning = false;
 	let flippedCards: { [key: number]: boolean } = {};
+	let scoreboard: { [key: number]: number } = {};
+	let showScoreboard = false;
+
+	// Initialize scoreboard with 0 points for each restaurant
+	allRestaurants.forEach(restaurant => {
+		scoreboard[restaurant.id] = 0;
+	});
+
+	$: console.log('Current Round:', currentRound);
 
 	function getNextPair() {
-		if (currentRound === 1) {
-			if (restaurants.length >= 2) {
-				currentPair = restaurants.splice(0, 2);
-			} else if (winners.length >= 2) {
-				currentRound++;
-				currentPair = winners.splice(0, 2);
-			}
-		} else {
-			if (winners.length >= 2) {
-				currentPair = winners.splice(0, 2);
-			}
+		console.log('Get next Pair Inside Current Round:', currentRound);
+		if (restaurants.length >= 2) {
+			currentPair = restaurants.splice(0, 2);
+		} else if (winners.length >= 2) {
+			currentPair = winners.splice(0, 2);
+		} else{
+			showScoreboard = true;
 		}
+		//if (tierRound === 1) {
+		//	if (restaurants.length >= 2) {
+		//		currentPair = restaurants.splice(0, 2);
+		//	} else if (winners.length >= 2) {
+		//		tierRound++;
+		//		currentPair = winners.splice(0, 2);
+		//	}
+		//} else {
+		//	if (winners.length >= 2) {
+		//		currentPair = winners.splice(0, 2);
+		//	}
+		//}
+		currentPair = [...currentPair];
 	}
 
 	function selectWinner(winner: Restaurant) {
+		console.log('Select Winner Inside Current Round:', currentRound);
+
 		if (isTransitioning) return;
 		isTransitioning = true;
 
-		setTimeout(() => {
-			winners.push(winner);
-			if (winners.length === 8 && currentRound === 1) {
-				currentRound = 2;
-			} else if (winners.length === 4 && currentRound === 2) {
-				currentRound = 3;
-			} else if (winners.length === 2 && currentRound === 3) {
-				currentRound = 4;
-			}
+		// Increment winner's score
+		
+		scoreboard[winner.id] = (scoreboard[winner.id] || 0) + 1;
+		console.log("Scoreboard:", scoreboard[winner.id]);
 
-			if (currentRound === 4) {
-				currentPair = winners;
+		setTimeout(()=> {
+			winners = [...winners, winner];
+			currentRound = currentRound + 1;  
+			currentPair = [];
+			
+			if (restaurants.length == 0) {
+				if (winners.length == 1) {
+					showScoreboard = true;
+				} else{
+					getNextPair();
+				}
 			} else {
 				getNextPair();
 			}
+			//if (winners.length === n/2 && tierRound === 1) {
+			//	tierRound = 2;
+			//} else if (winners.length === n/4 && tierRound === 2) {
+			//	tierRound = 3;
+			//} else if (winners.length === 2 && tierRound === 3) {
+			//	tierRound = 4;
+			//}
+
+			// Check if we should show the scoreboard
+			//if (tierRound === 4 && winners.length < 2) {
+			//	showScoreboard = true;
+			//} else if (tierRound === 4) {
+			//	currentPair = [...winners];
+			//} else {
+			//	getNextPair();
+			//}
+
 			isTransitioning = false;
-		}, 500);
+		}, 10);
 	}
+
+	// Get sorted restaurants by score
+	$: sortedRestaurants = allRestaurants
+		.slice()
+		.sort((a, b) => (scoreboard[b.id] || 0) - (scoreboard[a.id] || 0));
 
 	function toggleCard(restaurant: Restaurant, event?: Event) {
 		if (event) {
@@ -78,53 +127,82 @@
 	});
 </script>
 
-<div class="flex min-h-screen items-center justify-center p-4">
-	<div class="relative w-full max-w-4xl">
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-2">
-			{#each currentPair as restaurant, i}
-				<div class="flex flex-col">
-					<div class="flip-card-container relative h-[300px] overflow-visible md:h-[500px]">
-						<div
-							class="flip-card {flippedCards[restaurant.id] ? 'flipped' : ''} overflow-visible"
-							on:click={(e) => toggleCard(restaurant, e)}
-						>
-							<div class="flip-card-front shadow-md">
-								<div
-									class="absolute inset-0 bg-cover bg-center transition-transform duration-300"
-									style="background-image: url({restaurant.image})"
-								>
-									<div class="absolute inset-0 bg-black/40" />
+<div class="flex min-h-screen flex-col items-center justify-center p-4">
+	{#if !showScoreboard}
+		<h1 class="mb-8 text-4xl font-bold">
+			Round {currentRound}
+		</h1>
+
+		<div class="relative w-full max-w-4xl">
+			<div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+				{#each currentPair as restaurant, i}
+					<div class="flex flex-col">
+						<div class="flip-card-container relative h-[300px] overflow-visible md:h-[500px]">
+							<div
+								class="flip-card {flippedCards[restaurant.id] ? 'flipped' : ''} overflow-visible"
+								on:click={(e) => toggleCard(restaurant, e)}
+							>
+								<div class="flip-card-front shadow-md">
+									<div
+										class="absolute inset-0 bg-cover bg-center transition-transform duration-300"
+										style="background-image: url({restaurant.image})"
+									>
+										<div class="absolute inset-0 bg-black/40" />
+									</div>
+									<div class="absolute bottom-0 left-0 right-0 p-6">
+										<h2 class="text-2xl font-bold text-white">
+											{restaurant.name}
+										</h2>
+									</div>
 								</div>
-								<div class="absolute bottom-0 left-0 right-0 p-6">
-									<h2 class="text-2xl font-bold text-white">
-										{restaurant.name}
-									</h2>
-								</div>
-							</div>
-							<div class="flip-card-back">
-								<div class="h-full bg-white p-6">
-									<div class="flex h-full flex-col justify-between">
-										<div>
-											<h2 class="mb-4 text-2xl font-bold text-primary">{restaurant.name}</h2>
-											<p class="text-gray-700">{restaurant.description}</p>
-										</div>
-										<div class="flex justify-center">
-											<Button
-												class="h-12 w-12 rounded-full bg-green-500"
-												on:click={() => selectWinner(restaurant)}
-											>
-												<Checkmark />
-											</Button>
+								<div class="flip-card-back">
+									<div class="h-full bg-white p-6">
+										<div class="flex h-full flex-col justify-between">
+											<div>
+												<h2 class="mb-4 text-2xl font-bold text-primary">{restaurant.name}</h2>
+												<p class="text-gray-700">{restaurant.description}</p>
+											</div>
+											<div class="flex justify-center"  on:click={() => selectWinner(restaurant)}>
+												<Button
+													class="h-12 w-12 rounded-full bg-green-500"
+													
+												>
+													<Checkmark/>
+												</Button>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			{/each}
+				{/each}
+			</div>
 		</div>
-	</div>
+	{:else}
+		<div class="w-full max-w-4xl">
+			<h1 class="mb-8 text-4xl font-bold text-center">Final Rankings</h1>
+			<div class="space-y-4">
+				{#each sortedRestaurants as restaurant, index}
+					<div class="bg-white rounded-lg shadow-md p-4 flex items-center justify-between">
+						<div class="flex items-center space-x-4">
+							<span class="text-2xl font-bold {index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-500' : index === 2 ? 'text-amber-700' : 'text-gray-700'}">
+								#{index + 1}
+							</span>
+							<div>
+								<h2 class="text-xl font-semibold">{restaurant.name}</h2>
+								<p class="text-gray-600">Score: {scoreboard[restaurant.id]}</p>
+							</div>
+						</div>
+						<div 
+							class="w-16 h-16 bg-cover bg-center rounded-full"
+							style="background-image: url({restaurant.image})"
+						></div>
+					</div>
+				{/each}
+			</div>
+		</div>
+	{/if}
 </div>
 
 <style>

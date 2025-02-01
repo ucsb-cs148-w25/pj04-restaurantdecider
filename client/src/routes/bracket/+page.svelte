@@ -26,8 +26,6 @@
 	let currentPair: Restaurant[] = [];
 	let winners: Restaurant[] = [];
 	let currentRound = 1;
-	let tierRound = 1;
-	let selectedRestaurant: Restaurant | null = null;
 	let isTransitioning = false;
 	let flippedCards: { [key: number]: boolean } = {};
 	let scoreboard: { [key: number]: number } = {};
@@ -38,10 +36,7 @@
 		scoreboard[restaurant.id] = 0;
 	});
 
-	$: console.log('Current Round:', currentRound);
-
 	function getNextPair() {
-		console.log('Get next Pair Inside Current Round:', currentRound);
 		if (restaurants.length >= 2) {
 			currentPair = restaurants.splice(0, 2);
 		} else if (winners.length >= 2) {
@@ -49,18 +44,6 @@
 		} else{
 			showScoreboard = true;
 		}
-		//if (tierRound === 1) {
-		//	if (restaurants.length >= 2) {
-		//		currentPair = restaurants.splice(0, 2);
-		//	} else if (winners.length >= 2) {
-		//		tierRound++;
-		//		currentPair = winners.splice(0, 2);
-		//	}
-		//} else {
-		//	if (winners.length >= 2) {
-		//		currentPair = winners.splice(0, 2);
-		//	}
-		//}
 		currentPair = [...currentPair];
 	}
 
@@ -111,15 +94,12 @@
 	}
 
 	function selectWinner(winner: Restaurant) {
-		console.log('Select Winner Inside Current Round:', currentRound);
-
 		if (isTransitioning) return;
 		isTransitioning = true;
 
 		// Increment winner's score
 		
 		scoreboard[winner.id] = (scoreboard[winner.id] || 0) + 1;
-		console.log("Scoreboard:", scoreboard[winner.id]);
 
 		setTimeout(()=> {
 			winners = [...winners, winner];
@@ -129,30 +109,12 @@
 			if (restaurants.length == 0) {
 				if (winners.length == 1) {
 					tieBreaker();
-					//showScoreboard = true;
 				} else{
 					getNextPair();
 				}
 			} else {
 				getNextPair();
 			}
-			//if (winners.length === n/2 && tierRound === 1) {
-			//	tierRound = 2;
-			//} else if (winners.length === n/4 && tierRound === 2) {
-			//	tierRound = 3;
-			//} else if (winners.length === 2 && tierRound === 3) {
-			//	tierRound = 4;
-			//}
-
-			// Check if we should show the scoreboard
-			//if (tierRound === 4 && winners.length < 2) {
-			//	showScoreboard = true;
-			//} else if (tierRound === 4) {
-			//	currentPair = [...winners];
-			//} else {
-			//	getNextPair();
-			//}
-
 			isTransitioning = false;
 		}, 10);
 	}

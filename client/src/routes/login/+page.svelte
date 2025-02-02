@@ -61,20 +61,26 @@
 	}
 </script>
 
-<h1 class="text-3xl font-bold underline">Login</h1>
+<div class="flex items-center justify-center min-h-screen flex-col space-y-6">
+	<div class="text-center space-y-4">
+		<h1 class="text-3xl font-bold underline">Login</h1>
+		<form on:submit={handleSubmitLogin} class="space-y-4">
+			<Input bind:value={loginUsername} placeholder="Username/Email" class="max-w-sm mx-auto"></Input>
+			<Input bind:value={loginPassword} placeholder="Password" class="max-w-sm mx-auto" type="password"></Input>
+			<Button type="submit" class="w-full max-w-sm mx-auto">Submit</Button>
+		</form>
+	</div>
 
-<form on:submit={handleSubmitLogin}>
-	<Input bind:value={loginUsername} placeholder="Username/Email" class="max-w-sm"></Input>
-	<Input bind:value={loginPassword} placeholder="Password" class="max-w-sm" type="password"></Input>
-	<Button type="submit">Submit</Button>
-</form>
+	<div class="text-center space-y-4">
+		<h1 class="text-3xl font-bold underline">Sign up</h1>
+		<form on:submit={handleSubmitSignup} class="space-y-4">
+			<Input bind:value={signupUsername} placeholder="Username/Email" class="max-w-sm mx-auto"></Input>
+			<Input bind:value={signupPassword} placeholder="Password" class="max-w-sm mx-auto" type="password"></Input>
+			<Button type="submit" class="w-full max-w-sm mx-auto">Submit</Button>
+		</form>
+	</div>
 
-<h1 class="text-3xl font-bold underline">Sign up</h1>
-<form on:submit={handleSubmitSignup}>
-	<Input bind:value={signupUsername} placeholder="Username/Email" class="max-w-sm"></Input>
-	<Input bind:value={signupPassword} placeholder="Password" class="max-w-sm" type="password"
-	></Input>
-	<Button type="submit">Submit</Button>
-</form>
-
-<p><a href="/..">Return Home</a></p>
+	<p class="text-center">
+		<a href="/home" class="text-black-500 hover:underline">Return Home</a>
+	</p>
+</div>

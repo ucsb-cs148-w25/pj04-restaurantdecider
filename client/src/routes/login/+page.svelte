@@ -81,6 +81,6 @@
 	</div>
 
 	<p class="text-center">
-		<a href="/home" class="text-black-500 hover:underline">Return Home</a>
+		<a href="./" class="text-black-500 hover:underline">Return Home</a>
 	</p>
 </div>

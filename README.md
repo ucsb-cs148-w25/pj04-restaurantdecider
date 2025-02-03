@@ -37,7 +37,21 @@ like voting with relationship to a particular group.
 
 We'll leave this application open to the public. There is no publicly posted data.
 
-## Build Instructions
+## Local Development Instructions
+
+**Frontend**
+
+- cd into `client` and run the following
+- `yarn install`
+- `yarn dev`
+
+Backend
+
+- cd into `server` and run the following
+- `yarn install`
+- `yarn dev`
+
+## Prod Build Instructions
 
 Requires Docker and Docker Compose (tested on Docker Compose version v2.31.0-desktop.2).
 

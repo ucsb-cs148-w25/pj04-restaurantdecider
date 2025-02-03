@@ -15,8 +15,8 @@ on:
       - main
 
 env:
-  CLIENT_IMAGE_NAME: pj04_restaurantdecider_client
-  SERVER_IMAGE_NAME: pj04_restaurantdecider_server
+  CLIENT_IMAGE_NAME: pj04-restaurantdecider-client
+  SERVER_IMAGE_NAME: pj04-restaurantdecider-server
 
 jobs:
   # Run test build

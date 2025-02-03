@@ -37,22 +37,86 @@ like voting with relationship to a particular group.
 
 We'll leave this application open to the public. There is no publicly posted data.
 
-## Local Development Instructions
+## Installation
 
-**Frontend**
+### Prerequisites
 
-- cd into `client` and run the following
-- `yarn install`
-- `yarn dev`
+- Node.js (v18 or higher)
+- Yarn package manager
+- Docker and Docker Compose (v3.8 or higher)
+- Git
 
-Backend
+### Dependencies
 
-- cd into `server` and run the following
-- `yarn install`
-- `yarn dev`
+#### Frontend (Client)
 
-## Prod Build Instructions
+- SvelteKit (v2.0.0) - Frontend framework
+- Vite - Build tool and development server
+- TailwindCSS - Utility-first CSS framework
+- Bits-UI - UI component library
+- ESLint & Prettier - Code formatting and linting
 
-Requires Docker and Docker Compose (tested on Docker Compose version v2.31.0-desktop.2).
+#### Backend (Server)
 
-To run `docker-compose up --build`.
+- Express (v4.16.1) - Web application framework
+- DuckDB (v1.1.3-alpha.10) - Database system
+- Sequelize (v6.37.5) - ORM for database interactions
+- SQLite3 (v5.1.7) - Database engine
+- JWT (v9.0.2) - Authentication
+- bcryptjs (v2.4.3) - Password hashing
+- Other utilities: cors, morgan, dotenv
+
+### Installation Steps
+
+1. Clone the repository:
+
+   ```bash
+   git clone <repository-url>
+   cd <repository-name>
+   ```
+
+2. Start the application using Docker (recommended):
+
+   ```bash
+   docker-compose up --build
+   ```
+
+   This will start both the frontend and backend services. The frontend will be available at http://localhost:2500 and the backend at http://localhost:2530.
+
+3. Alternative: Manual Setup
+
+   Frontend Setup:
+
+   ```bash
+   cd client
+   yarn install
+   yarn dev
+   ```
+
+   The frontend development server will start at http://localhost:5173
+
+   Backend Setup:
+
+   ```bash
+   cd server
+   yarn install
+   yarn dev
+   ```
+
+   The backend server will start at http://localhost:3000
+
+## Functionality
+
+Weat is designed to make the process of finding and deciding on a restaurant easy.
+
+An average user experience might look like:
+
+- Log in
+- Search for a restaurant by placing a pin / selecting radius
+- Vote on each pair of restaurants
+- View the final scoreboard
+
+## Known Bugs
+
+- Authentication does not set cookies (Issue(s) #71)
+- Restaurant Bracket logic is bugged (Issue(s) #78 #79)

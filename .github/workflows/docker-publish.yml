@@ -25,6 +25,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Set up .env file
+        run: |
+          echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> client/.env
+          echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> server/.env
+        
       - name: Run test build
         run: |
           if [ -f docker compose.test.yml ]; then
@@ -45,6 +51,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set up .env file
+        run: |
+          echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> client/.env
+          echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> server/.env
 
       - name: Build image
         run: docker compose build

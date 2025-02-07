@@ -1,34 +1,43 @@
-<h1>Search for Restaurants</h1>
+<Card.Root class="w-2/3 mx-auto mt-8">
+  <Card.Header class="text-center"> 
+    <Card.Title tag="h1">Search for Restaurants</Card.Title>
+  </Card.Header>
+  <Card.Content>
+    <div class="mt-4 self-start pl-4">
+      <p>Radius (miles)</p>
+      <Input placeholder="Radius" class="max-w-xs" type="number" bind:value={radius}></Input>
+    </div>
+    
+    <div class="mt-4 self-start pl-4">
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger class={buttonVariants({ variant: "outline" })}>Show {numToShow} Restaurants</DropdownMenu.Trigger>
+        <DropdownMenu.Content class="w-56">
+          <DropdownMenu.Group>
+            <DropdownMenu.RadioGroup bind:value={numToShow}>
+              <DropdownMenu.RadioItem value={8}>8</DropdownMenu.RadioItem>
+              <DropdownMenu.RadioItem value={16}>16</DropdownMenu.RadioItem>
+              <DropdownMenu.RadioItem value={32}>32</DropdownMenu.RadioItem>
+            </DropdownMenu.RadioGroup>
+          </DropdownMenu.Group>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+    </div>
 
-<p>Radius (miles)</p>
-<Input placeholder="Radius" class="max-w-xs" type="number" bind:value={radius}></Input>
-
-<DropdownMenu.Root>
-	<DropdownMenu.Trigger class={buttonVariants({ variant: "outline" })}>Show {numToShow} restaurants</DropdownMenu.Trigger>
-	<DropdownMenu.Content class="w-56">
-		<DropdownMenu.Group>
-			<DropdownMenu.RadioGroup bind:value={numToShow}>
-				<DropdownMenu.RadioItem value={8}>8</DropdownMenu.RadioItem>
-				<DropdownMenu.RadioItem value={16}>16</DropdownMenu.RadioItem>
-				<DropdownMenu.RadioItem value={32}>32</DropdownMenu.RadioItem>
-			</DropdownMenu.RadioGroup>
-		</DropdownMenu.Group>
-	</DropdownMenu.Content>
-</DropdownMenu.Root>
+    <div class="search-container self-start mt-4 pl-4 w-full max-w-4xl">
+      <Input
+        id="search-box"
+        type="text"
+        placeholder="Search for a location"
+        class="search-input w-full"
+      />
+    </div>
+  </Card.Content>
+</Card.Root>
 
 <div class="location-picker">
-	<div class="search-container">
-		<Input
-			id="search-box"
-			type="text"
-			placeholder="Search for a location"
-			class="search-input"
-		/>
-	</div>
-	
 	<div bind:this={mapContainer} class="map-container"></div>
 	
-	<div class="coordinates">
+	<div class="coordinates pl-4">
 		<p>Selected Location:</p>
 		{#if latitude !== 0 && longitude !== 0}
 				<p>Latitude: {latitude.toFixed(6)}</p>
@@ -39,9 +48,21 @@
 	</div>
 </div>
 
-<form on:submit={handleSubmit}>
-		<Button type="submit">Search</Button>
-</form>
+<div class="flex flex-col items-center fixed bottom-12 w-full space-y-4">
+	<form on:submit={handleSubmit}>
+			<Button 
+				type="submit"
+				class="text-white bg-black hover:bg-gray-600"
+			>
+				Search
+			</Button>
+	</form>
+
+	<p class="text-center">
+		<a href="./" class="text-black-500 hover:underline">Return Home</a>
+	</p>
+
+</div>
 
 <script lang="js">
 		import { onMount } from 'svelte';
@@ -50,6 +71,7 @@
 		import { buttonVariants } from '$lib/components/ui/button';
 		import { Input } from '$lib/components/ui/input';
 		import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+		import * as Card from "$lib/components/ui/card";
 		import { apiBaseUrl } from '$lib/index.js';
 		import { getRestaurantsList, setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 
@@ -169,9 +191,9 @@
 
 <style>
 	.map-container {
-		width: 100%;
+		width: 66.66%;
 		height: 400px;  /* or whatever height you prefer */
-		margin: 20px 0;
+		margin: 20px auto;
 	}
 
 	.hidden {
@@ -186,5 +208,12 @@
 	
 	.search-container button {
 		padding: 8px 16px;
+	}
+
+	.coordinates {
+		width: 66.66%; 
+		margin: 0 auto;  
+		padding-left: 5px; 
+		margin-top: 16px; 
 	}
 </style>

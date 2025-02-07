@@ -13,7 +13,7 @@
 	}
 
 	let allRestaurants: Restaurant[] = [];
-	let restaurants: Restaurant[] = [];	
+	let restaurants: Restaurant[] = [];
 	let currentPair: Restaurant[] = [];
 	let winners: Restaurant[] = [];
 	let currentRound = 1;
@@ -24,38 +24,38 @@
 	let starting = true;
 
 	function getNextPair() {
-		console.log("getNextPair");
-		console.log("restaurants:", restaurants);
+		console.log('getNextPair');
+		console.log('restaurants:', restaurants);
 		currentPair = [];
-		console.log("cleared currentPair:", currentPair);
+		console.log('cleared currentPair:', currentPair);
 		if (restaurants.length >= 2) {
-			console.log("restaurants[0]:", restaurants[0]);
-			console.log("restaurants[1]:", restaurants[1]);
+			console.log('restaurants[0]:', restaurants[0]);
+			console.log('restaurants[1]:', restaurants[1]);
 			currentPair = restaurants.splice(0, 2);
-			console.log("restaurants splice");
-			console.log("this is current pair:", currentPair);
-			console.log("this is restaurants: (after splice)", restaurants);
-			console.log("this is winners:", winners);
+			console.log('restaurants splice');
+			console.log('this is current pair:', currentPair);
+			console.log('this is restaurants: (after splice)', restaurants);
+			console.log('this is winners:', winners);
 		} else if (winners.length >= 2) {
 			currentPair = winners.splice(0, 2);
-			console.log("in get next pair winners section");
-			console.log("this is current pair:", currentPair);
-			console.log("this is winners:", winners);
-		} else{
+			console.log('in get next pair winners section');
+			console.log('this is current pair:', currentPair);
+			console.log('this is winners:', winners);
+		} else {
 			showScoreboard = true;
 		}
 
-		console.log("this is current pair: (end of get next)", currentPair);
+		console.log('this is current pair: (end of get next)', currentPair);
 		currentPair = [...currentPair];
 		restaurants = [...restaurants];
 	}
 
 	function tieBreaker() {
-		console.log("tieBreaker");
+		console.log('tieBreaker');
 		// Group restaurants by their scores
 		const scoreGroups: { [score: number]: Restaurant[] } = {};
-		
-		allRestaurants.forEach(restaurant => {
+
+		allRestaurants.forEach((restaurant) => {
 			const score = scoreboard[restaurant.id] || 0;
 			if (!scoreGroups[score]) {
 				scoreGroups[score] = [];
@@ -81,7 +81,7 @@
 		const tiedRestaurants = scoreGroups[highestScoreWithTies];
 
 		// Increment scores for all restaurants with higher scores
-		allRestaurants.forEach(restaurant => {
+		allRestaurants.forEach((restaurant) => {
 			const score = scoreboard[restaurant.id] || 0;
 			if (score > highestScoreWithTies) {
 				scoreboard[restaurant.id] = score + 1;
@@ -98,29 +98,30 @@
 	}
 
 	function selectWinner(winner: Restaurant) {
-		console.log("Select Winner");
+		console.log('Select Winner');
 		if (starting) {
-			let temp = restaurants.splice(0,2);
+			let temp = restaurants.splice(0, 2);
 			starting = false;
 		}
 		if (isTransitioning) return;
 		isTransitioning = true;
 
 		// Increment winner's score
-		
-		scoreboard[winner.id] = (scoreboard[winner.id] || 0) + 1;
-		console.log("this is restaurants: (select Winner)", restaurants)
 
-		setTimeout(()=> {
+		scoreboard[winner.id] = (scoreboard[winner.id] || 0) + 1;
+		console.log('this is restaurants: (select Winner)', restaurants);
+
+		setTimeout(() => {
+			flippedCards = {};
 			winners = [...winners, winner];
-			currentRound = currentRound + 1;  
+			currentRound = currentRound + 1;
 			currentPair = [];
-			console.log("this is winners: (select Winner)", winners);
+			console.log('this is winners: (select Winner)', winners);
 
 			if (restaurants.length < 2) {
 				if (winners.length == 1) {
 					tieBreaker();
-				} else{
+				} else {
 					getNextPair();
 				}
 			} else {
@@ -153,15 +154,14 @@
 		}));
 		console.log('RESTAURANTS: ', allRestaurants);
 		restaurants = [...allRestaurants];
-		console.log("restaurants in mount:", restaurants);
+		console.log('restaurants in mount:', restaurants);
 
 		// Initialize scoreboard with 0 points for each restaurant
-		allRestaurants.forEach(restaurant => {
+		allRestaurants.forEach((restaurant) => {
 			scoreboard[restaurant.id] = 0;
 		});
 
 		// Update restaurants array with the new data
-		
 
 		// Get the first pair to start the bracket
 		//getNextPair();
@@ -176,12 +176,12 @@
 					const response = await fetch(`${apiBaseUrl}/maps/restaurantphoto`, {
 						method: 'POST',
 						headers: {
-							'Content-Type': 'application/json',
+							'Content-Type': 'application/json'
 						},
 						body: JSON.stringify({
 							resource_id: restaurant.menuImages[0],
 							max_width_px: 400
-						}),
+						})
 					});
 					if (response.ok) {
 						const imageUrl = URL.createObjectURL(await response.blob());
@@ -193,7 +193,7 @@
 				}
 			}
 			loadedImages++;
-			
+
 			// Once all images are processed (either loaded or failed), get the first pair
 			if (loadedImages === totalImages) {
 				getNextPair();
@@ -239,12 +239,15 @@
 												<h2 class="mb-4 text-2xl font-bold text-primary">{restaurant.name}</h2>
 												<p class="text-gray-700">{restaurant.description}</p>
 											</div>
-											<div class="flex justify-center"  on:click={() => selectWinner(restaurant)}>
-												<Button
-													class="h-12 w-12 rounded-full bg-green-500"
-													
-												>
-													<Checkmark/>
+											<div
+												class="flex justify-center"
+												on:click={(e) => {
+													e.stopPropagation();
+													selectWinner(restaurant);
+												}}
+											>
+												<Button class="h-12 w-12 rounded-full bg-green-500">
+													<Checkmark />
 												</Button>
 											</div>
 										</div>
@@ -258,20 +261,28 @@
 		</div>
 	{:else}
 		<div class="w-full max-w-4xl">
-			<h1 class="mb-8 text-4xl font-bold text-center">Final Rankings</h1>
+			<h1 class="mb-8 text-center text-4xl font-bold">Final Rankings</h1>
 			<div class="space-y-4">
 				{#each sortedRestaurants as restaurant, index}
-					<div class="bg-white rounded-lg shadow-md p-4 flex items-center justify-between">
+					<div class="flex items-center justify-between rounded-lg bg-white p-4 shadow-md">
 						<div class="flex items-center space-x-4">
-							<span class="text-2xl font-bold {index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-500' : index === 2 ? 'text-amber-700' : 'text-gray-700'}">
+							<span
+								class="text-2xl font-bold {index === 0
+									? 'text-yellow-500'
+									: index === 1
+										? 'text-gray-500'
+										: index === 2
+											? 'text-amber-700'
+											: 'text-gray-700'}"
+							>
 								#{index + 1}
 							</span>
 							<div>
 								<h2 class="text-xl font-semibold">{restaurant.name}</h2>
 							</div>
 						</div>
-						<div 
-							class="w-16 h-16 bg-cover bg-center rounded-full"
+						<div
+							class="h-16 w-16 rounded-full bg-cover bg-center"
 							style="background-image: url({restaurant.image})"
 						></div>
 					</div>

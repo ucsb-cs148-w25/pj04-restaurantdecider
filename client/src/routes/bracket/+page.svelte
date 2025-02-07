@@ -24,34 +24,20 @@
 	let starting = true;
 
 	function getNextPair() {
-		console.log('getNextPair');
-		console.log('restaurants:', restaurants);
 		currentPair = [];
-		console.log('cleared currentPair:', currentPair);
 		if (restaurants.length >= 2) {
-			console.log('restaurants[0]:', restaurants[0]);
-			console.log('restaurants[1]:', restaurants[1]);
 			currentPair = restaurants.splice(0, 2);
-			console.log('restaurants splice');
-			console.log('this is current pair:', currentPair);
-			console.log('this is restaurants: (after splice)', restaurants);
-			console.log('this is winners:', winners);
 		} else if (winners.length >= 2) {
 			currentPair = winners.splice(0, 2);
-			console.log('in get next pair winners section');
-			console.log('this is current pair:', currentPair);
-			console.log('this is winners:', winners);
 		} else {
 			showScoreboard = true;
 		}
 
-		console.log('this is current pair: (end of get next)', currentPair);
 		currentPair = [...currentPair];
 		restaurants = [...restaurants];
 	}
 
 	function tieBreaker() {
-		console.log('tieBreaker');
 		// Group restaurants by their scores
 		const scoreGroups: { [score: number]: Restaurant[] } = {};
 
@@ -98,7 +84,6 @@
 	}
 
 	function selectWinner(winner: Restaurant) {
-		console.log('Select Winner');
 		if (starting) {
 			let temp = restaurants.splice(0, 2);
 			starting = false;
@@ -109,14 +94,12 @@
 		// Increment winner's score
 
 		scoreboard[winner.id] = (scoreboard[winner.id] || 0) + 1;
-		console.log('this is restaurants: (select Winner)', restaurants);
 
 		setTimeout(() => {
 			flippedCards = {};
 			winners = [...winners, winner];
 			currentRound = currentRound + 1;
 			currentPair = [];
-			console.log('this is winners: (select Winner)', winners);
 
 			if (restaurants.length < 2) {
 				if (winners.length == 1) {
@@ -154,7 +137,6 @@
 		}));
 		console.log('RESTAURANTS: ', allRestaurants);
 		restaurants = [...allRestaurants];
-		console.log('restaurants in mount:', restaurants);
 
 		// Initialize scoreboard with 0 points for each restaurant
 		allRestaurants.forEach((restaurant) => {

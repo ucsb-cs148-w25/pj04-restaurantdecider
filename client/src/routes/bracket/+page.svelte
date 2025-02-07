@@ -167,6 +167,9 @@
 		//getNextPair();
 
 		// Load images after initial mount
+		let loadedImages = 0;
+		const totalImages = restaurantsData.restaurants.length;
+
 		restaurantsData.restaurants.forEach(async (restaurant, index) => {
 			if (restaurant.menuImages && restaurant.menuImages[0]) {
 				try {
@@ -189,13 +192,14 @@
 					console.error('Error fetching restaurant photo:', error);
 				}
 			}
+			loadedImages++;
+			
+			// Once all images are processed (either loaded or failed), get the first pair
+			if (loadedImages === totalImages) {
+				getNextPair();
+			}
 		});
-		getNextPair();
 	});
-
-	//onMount(() => {
-	//	getNextPair();
-	//});
 </script>
 
 <div class="flex min-h-screen flex-col items-center justify-center p-4">

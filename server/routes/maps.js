@@ -1,9 +1,10 @@
 import express from "express";
 import fetch from "node-fetch";
+import { authMiddleware } from './authMiddleware.js'
 
 const router = express.Router();
 
-router.post("/restaurants", async (req, res) => {
+router.post("/restaurants", authMiddleware, async (req, res) => {
   console.log("Received request body:", req.body);
   const { latitude, longitude, radius, listSize } = req.body;
 
@@ -85,7 +86,7 @@ router.post("/restaurants", async (req, res) => {
   }
 });
 
-router.post("/restaurantphoto", async (req, res) => {
+router.post("/restaurantphoto", authMiddleware, async (req, res) => {
   const { resource_id, max_width_px } = req.body;
   try {
     const response = await fetch(

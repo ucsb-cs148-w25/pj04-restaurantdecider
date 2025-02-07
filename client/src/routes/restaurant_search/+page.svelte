@@ -52,6 +52,7 @@
 		import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 		import { apiBaseUrl } from '$lib/index.js';
 		import { getRestaurantsList, setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
+		import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 
 		let { data } = $props();
 		let numToShow = $state(8);
@@ -90,8 +91,10 @@
 			fetch(`${apiBaseUrl}/maps/restaurants`, {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${getAuthToken()}`
 				},
+				credentials: 'include',
 				body: JSON.stringify(dataToSend)
 			})
 			.then(response => response.json())

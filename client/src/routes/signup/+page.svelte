@@ -1,20 +1,65 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
+	import { apiBaseUrl } from '$lib/index.js';
+	import { setUsername } from '$lib/stores/userStore.svelte.js';
+	import { goto } from '$app/navigation';
+
+	let username = '';
+	let password = '';
+	let confirmPassword = '';
+	let errorMessage = '';
+
+	async function handleSubmitSignup(event: Event) {
+		event.preventDefault();
+		try {
+			const response = await fetch(`${apiBaseUrl}/users/register`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				credentials: 'include',
+				body: JSON.stringify({
+					username: username,
+					password: password
+				})
+			});
+			if (response.ok) {
+				goto('/restaurant_search');
+			} else {
+				console.error('Signup failed:', response.statusText);
+				errorMessage = 'Signup failed: ' + response.statusText;
+			}
+		} catch (error) {
+			console.error('Signup error:', error);
+			errorMessage = 'Signup error: ' + error;
+		}
+	}
 </script>
 
-<h1>Sign Up</h1>
 
-<p>Username/Email:</p>
-<Input placeholder="Username/Email" class="max-w-sm"></Input>
+<header class="absolute top-0 left-0 right-0 flex justify-between p-4">
+  <a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
+  <div class="space-x-2">
+    <Button href="/login" variant="outline" size="sm" class="bg-black text-white">Sign In</Button>
+  </div>
+</header>
 
-<p>Password:</p>
-<Input placeholder="Password" class="max-w-sm"></Input>
+<div class="flex items-center justify-center min-h-screen flex-col space-y-6">
+	<div class="text-center space-y-6 w-full max-w-sm mx-auto">
+		<h1 class="text-3xl font-bold underline">Sign Up</h1>
+		<form on:submit={handleSubmitSignup} class="space-y-4">
+			<Input bind:value={username} placeholder="Username/Email" class="max-w-sm mx-auto"></Input>
+			<Input bind:value={password} placeholder="Password" class="max-w-sm mx-auto" type="password"></Input>
+			<Input bind:value={confirmPassword} placeholder="Confirm Password" class="max-w-sm mx-auto" type="password"></Input>
+			<Button type="submit" class="w-full max-w-sm mx-auto">Submit</Button>
+			{#if errorMessage}
+				<p class="text-red-500">{errorMessage}</p>
+			{/if}
+		</form>
+	</div>
 
-<p>Reenter password:</p>
-<Input placeholder="Password" class="max-w-sm"></Input>
-
-<p></p>
-<Button href="/..">Sign Up</Button>
-
-<p><a href="/..">Return Home</a></p>
+	<p class="text-center">
+		<a href="./" class="text-black-500 hover:underline">Return Home</a>
+	</p>
+</div>

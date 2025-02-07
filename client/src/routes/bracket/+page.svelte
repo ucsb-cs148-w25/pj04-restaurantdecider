@@ -4,6 +4,7 @@
 	import Checkmark from '$lib/svg/checkmark.svelte';
 	import { getRestaurantsList, setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { apiBaseUrl } from '$lib/index.js';
+	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 
 	interface Restaurant {
 		id: number;
@@ -45,7 +46,9 @@
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${getAuthToken()}`
 						},
+						credentials: 'include',
 						body: JSON.stringify({
 							resource_id: restaurant.menuImages[0],
 							max_width_px: 400

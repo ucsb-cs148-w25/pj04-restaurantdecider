@@ -29,6 +29,8 @@ app.set("view engine", "jade");
 
 app.use(cors({
   origin: "*",
+  credentials: true,
+  exposedHeaders: ["set-cookie"]
 }))
 app.use(logger("dev"));
 app.use(express.json());

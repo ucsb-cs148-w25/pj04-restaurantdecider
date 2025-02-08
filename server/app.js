@@ -14,7 +14,7 @@ import mapsRouter from "./routes/maps.js";
 
 import dotenv from 'dotenv'
 dotenv.config()
-console.log('Google Maps API Key:', process.env.MAPS_API_KEY);
+// console.log('Google Maps API Key:', process.env.MAPS_API_KEY);
 // allows us to use ES module syntax
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

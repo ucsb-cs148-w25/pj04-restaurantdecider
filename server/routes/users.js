@@ -20,8 +20,8 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ error: "Username already taken" });
     }
 
-    if (password !== confirmPassword) {
-      return res.status(401).json({ error: 'Passwords do not match' });
+    if (password != confirmPassword) {
+      return res.status(400).json({ error: 'Passwords do not match' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

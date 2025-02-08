@@ -21,11 +21,12 @@
 				credentials: 'include',
 				body: JSON.stringify({
 					username: username,
-					password: password
+					password: password,
+          confirmPassword: confirmPassword
 				})
 			});
 			if (response.ok) {
-				goto('/restaurant_search');
+				goto('/login');
 			} else {
 				console.error('Signup failed:', response.statusText);
 				errorMessage = 'Signup failed: ' + response.statusText;
@@ -41,12 +42,12 @@
 <header class="absolute top-0 left-0 right-0 flex justify-between p-4">
   <a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
   <div class="space-x-2">
-    <Button href="/login" variant="outline" size="sm" class="bg-black text-white">Sign In</Button>
+    <Button href="/login" variant="outline" size="sm" class="text-white bg-black">Sign In</Button>
   </div>
 </header>
 
-<div class="flex items-center justify-center min-h-screen flex-col space-y-6">
-	<div class="text-center space-y-6 w-full max-w-sm mx-auto">
+<div class="flex flex-col items-center justify-center min-h-screen space-y-6">
+	<div class="w-full max-w-sm mx-auto text-center space-y-6">
 		<h1 class="text-3xl font-bold underline">Sign Up</h1>
 		<form on:submit={handleSubmitSignup} class="space-y-4">
 			<Input bind:value={username} placeholder="Username/Email" class="max-w-sm mx-auto"></Input>

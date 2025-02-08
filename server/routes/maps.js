@@ -1,10 +1,11 @@
 import express from "express";
 import fetch from "node-fetch";
+import { authMiddleware } from './authMiddleware.js'
 
 const router = express.Router();
 
-router.post("/restaurants", async (req, res) => {
-  console.log("Received request body:", req.body);
+router.post("/restaurants", authMiddleware, async (req, res) => {
+  // console.log("Received request body:", req.body);
   const { latitude, longitude, radius, listSize } = req.body;
 
   // Validate required fields
@@ -43,7 +44,7 @@ router.post("/restaurants", async (req, res) => {
       rankPreference: "DISTANCE",
     };
 
-    console.log("Sending request to Google Places API:", requestBody);
+    // console.log("Sending request to Google Places API:", requestBody);
 
     const response = await fetch(url, {
       method: "POST",
@@ -57,7 +58,7 @@ router.post("/restaurants", async (req, res) => {
     });
 
     const data = await response.json();
-    console.log("Google Places API response:", data);
+    // console.log("Google Places API response:", data);
 
     if (!data.places) {
       console.error("Google Places API error:", data.error || "Unknown error");
@@ -85,7 +86,7 @@ router.post("/restaurants", async (req, res) => {
   }
 });
 
-router.post("/restaurantphoto", async (req, res) => {
+router.post("/restaurantphoto", authMiddleware, async (req, res) => {
   const { resource_id, max_width_px } = req.body;
   try {
     const response = await fetch(

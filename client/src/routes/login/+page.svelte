@@ -23,6 +23,7 @@
 				});
 				if (response.ok) {
 					const data = await response.json();
+					console.log(data);
 					setUsername(data.username);
 					goto('/restaurant_search');
 				}
@@ -50,6 +51,7 @@
 			});
 
 			const data = await response.json();
+			console.log(data);
 			setUsername(data.username);
 			goto('/restaurant_search');
 		} catch (error) {

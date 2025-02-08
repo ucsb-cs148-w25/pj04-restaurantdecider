@@ -75,7 +75,12 @@ router.post('/login', async (req, res) => {
 
 router.get('/auto-login', authMiddleware, async (req, res) => {
   try {
-    const user = req.user;
+    const userId = req.user.userId;
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
     res.status(200).json({
       message: 'User auto-logged in successfully',
       username: user.username

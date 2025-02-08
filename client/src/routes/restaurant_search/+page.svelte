@@ -2,6 +2,7 @@
   <a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
   <div class="space-x-2">
     <form on:submit|preventDefault={handleSignOut}>
+      <Button href="/profile" variant="outline" size="sm" class="bg-black text-white">Profile</Button>
       <Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button>
     </form>
   </div>

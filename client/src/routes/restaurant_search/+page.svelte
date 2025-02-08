@@ -1,8 +1,9 @@
 <header class="fixed top-0 left-0 right-0 flex justify-between p-4 bg-white z-50">
   <a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
   <div class="space-x-2">
-    <Button href="/login" variant="outline" size="sm" class="bg-black text-white">Sign In</Button>
-    <Button href="/signup" variant="outline" size="sm" class="bg-black text-white">Sign Up</Button>
+    <form on:submit|preventDefault={handleSignOut}>
+      <Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button>
+    </form>
   </div>
 </header>
 

@@ -136,7 +136,7 @@
 			image: restaurant.menuImages[0] || '/placeholder.svg?height=400&width=300',
 			description: `Rating: ${restaurant.rating}, Reviews: ${restaurant.reviews}`
 		}));
-		console.log('RESTAURANTS: ', allRestaurants);
+		// console.log('RESTAURANTS: ', allRestaurants);
 		restaurants = [...allRestaurants];
 
 		// Initialize scoreboard with 0 points for each restaurant
@@ -159,8 +159,10 @@
 					const response = await fetch(`${apiBaseUrl}/maps/restaurantphoto`, {
 						method: 'POST',
 						headers: {
-							'Content-Type': 'application/json'
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${getAuthToken()}`
 						},
+						credentials: 'include',
 						body: JSON.stringify({
 							resource_id: restaurant.menuImages[0],
 							max_width_px: 400

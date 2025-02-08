@@ -1,47 +1,58 @@
-<h1>Search for Restaurants</h1>
+<header class="top-0 left-0 right-0 flex justify-between p-4">
+  <a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
+  <div class="space-x-2">
+	<form on:submit={handleSignOut}>
+		<Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button>
+	</form>
+  </div>
+</header>
 
-<p>Radius (miles)</p>
-<Input placeholder="Radius" class="max-w-xs" type="number" bind:value={radius}></Input>
+<div>
+	<h1>Search for Restaurants</h1>
 
-<DropdownMenu.Root>
-	<DropdownMenu.Trigger class={buttonVariants({ variant: "outline" })}>Show {numToShow} restaurants</DropdownMenu.Trigger>
-	<DropdownMenu.Content class="w-56">
-		<DropdownMenu.Group>
-			<DropdownMenu.RadioGroup bind:value={numToShow}>
-				<DropdownMenu.RadioItem value={8}>8</DropdownMenu.RadioItem>
-				<DropdownMenu.RadioItem value={16}>16</DropdownMenu.RadioItem>
-				<DropdownMenu.RadioItem value={32}>32</DropdownMenu.RadioItem>
-			</DropdownMenu.RadioGroup>
-		</DropdownMenu.Group>
-	</DropdownMenu.Content>
-</DropdownMenu.Root>
+	<p>Radius (miles)</p>
+	<Input placeholder="Radius" class="max-w-xs" type="number" bind:value={radius}></Input>
 
-<div class="location-picker">
-	<div class="search-container">
-		<Input
-			id="search-box"
-			type="text"
-			placeholder="Search for a location"
-			class="search-input"
-		/>
+	<DropdownMenu.Root>
+		<DropdownMenu.Trigger class={buttonVariants({ variant: "outline" })}>Show {numToShow} restaurants</DropdownMenu.Trigger>
+		<DropdownMenu.Content class="w-56">
+			<DropdownMenu.Group>
+				<DropdownMenu.RadioGroup bind:value={numToShow}>
+					<DropdownMenu.RadioItem value={8}>8</DropdownMenu.RadioItem>
+					<DropdownMenu.RadioItem value={16}>16</DropdownMenu.RadioItem>
+					<DropdownMenu.RadioItem value={32}>32</DropdownMenu.RadioItem>
+				</DropdownMenu.RadioGroup>
+			</DropdownMenu.Group>
+		</DropdownMenu.Content>
+	</DropdownMenu.Root>
+
+	<div class="location-picker">
+		<div class="search-container">
+			<Input
+				id="search-box"
+				type="text"
+				placeholder="Search for a location"
+				class="search-input"
+			/>
+		</div>
+		
+		<div bind:this={mapContainer} class="map-container"></div>
+		
+		<div class="coordinates">
+			<p>Selected Location:</p>
+			{#if latitude !== 0 && longitude !== 0}
+					<p>Latitude: {latitude.toFixed(6)}</p>
+					<p>Longitude: {longitude.toFixed(6)}</p>
+			{:else}
+					<p>No location selected</p>
+			{/if}
+		</div>
 	</div>
-	
-	<div bind:this={mapContainer} class="map-container"></div>
-	
-	<div class="coordinates">
-		<p>Selected Location:</p>
-		{#if latitude !== 0 && longitude !== 0}
-				<p>Latitude: {latitude.toFixed(6)}</p>
-				<p>Longitude: {longitude.toFixed(6)}</p>
-		{:else}
-				<p>No location selected</p>
-		{/if}
-	</div>
+
+	<form on:submit={handleSubmit}>
+			<Button type="submit">Search</Button>
+	</form>
 </div>
-
-<form on:submit={handleSubmit}>
-		<Button type="submit">Search</Button>
-</form>
 
 <script lang="js">
 		import { onMount } from 'svelte';
@@ -51,7 +62,7 @@
 		import { Input } from '$lib/components/ui/input';
 		import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 		import { apiBaseUrl } from '$lib/index.js';
-		import { getRestaurantsList, setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
+		import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 		import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 
 		let { data } = $props();
@@ -78,6 +89,18 @@
 			};
 			document.head.appendChild(script);
 		});
+
+		async function handleSignOut() {
+			await fetch(`${apiBaseUrl}/users/signout`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${getAuthToken()}`
+				},
+				credentials: 'include',
+			});
+			goto('/');
+		}
 	
 		let handleSubmit = (e) => {
 			e.preventDefault();

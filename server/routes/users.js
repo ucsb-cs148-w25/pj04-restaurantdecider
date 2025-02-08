@@ -85,4 +85,13 @@ router.get('/auto-login', authMiddleware, async (req, res) => {
   }
 });
 
+router.post('/signout', authMiddleware, async (req, res) => {
+  try {
+    res.clearCookie('auth');
+    res.status(200).json({ message: 'User signed out successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 export default router;

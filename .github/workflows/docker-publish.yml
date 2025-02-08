@@ -2,9 +2,9 @@ name: Docker
 
 on:
   push:
-    # Publish `master` as Docker `latest` image.
+    # Publish `main` as Docker `latest` image.
     branches:
-      - master
+      - main
     # Publish `v1.2.3` tags as releases.
     tags:
       - v*
@@ -12,11 +12,11 @@ on:
   # Build images on PRs.
   pull_request:
     branches:
-      - master
+      - main
 
 env:
-  CLIENT_IMAGE_NAME: pj04_restaurantdecider_client
-  SERVER_IMAGE_NAME: pj04_restaurantdecider_server
+  CLIENT_IMAGE_NAME: pj04-restaurantdecider-client
+  SERVER_IMAGE_NAME: pj04-restaurantdecider-server
 
 jobs:
   # Run test build
@@ -25,13 +25,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Set up .env file
+        run: |
+          echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> client/.env
+          echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> server/.env
+        
       - name: Run test build
         run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
+          if [ -f docker compose.test.yml ]; then
+            docker compose --file docker-compose.test.yml build
+            docker compose --file docker-compose.test.yml run sut
           else
-            docker-compose build
+            docker compose build
           fi
 
   # Push image to GitHub Packages.
@@ -46,8 +52,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up .env file
+        run: |
+          echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> client/.env
+          echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> server/.env
+
       - name: Build image
-        run: docker-compose build
+        run: docker compose build
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
@@ -68,7 +79,7 @@ jobs:
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
 
           # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
+          [ "$VERSION" == "main" ] && VERSION=latest
 
           echo CLIENT_IMAGE_ID=$CLIENT_IMAGE_ID
           echo SERVER_IMAGE_ID=$SERVER_IMAGE_ID

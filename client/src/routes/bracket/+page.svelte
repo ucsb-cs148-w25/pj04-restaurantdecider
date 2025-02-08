@@ -14,55 +14,6 @@
 
 	let allRestaurants: Restaurant[] = [];
 	let restaurants: Restaurant[] = [];
-
-	onMount(() => {
-		const restaurantsData = getRestaurantsList();
-
-		allRestaurants = restaurantsData.restaurants.map((restaurant, index) => ({
-			id: index + 1,
-			name: restaurant.name,
-			image: restaurant.menuImages[0] || '/placeholder.svg?height=400&width=300',
-			description: `Rating: ${restaurant.rating}, Reviews: ${restaurant.reviews}`
-		}));
-		console.log('RESTAURANTS: ', allRestaurants);
-
-		// Initialize scoreboard with 0 points for each restaurant
-		allRestaurants.forEach(restaurant => {
-			scoreboard[restaurant.id] = 0;
-		});
-
-		// Update restaurants array with the new data
-		restaurants = [...allRestaurants];
-
-		// Get the first pair to start the bracket
-		getNextPair();
-
-		// Load images after initial mount
-		restaurantsData.restaurants.forEach(async (restaurant, index) => {
-			if (restaurant.menuImages && restaurant.menuImages[0]) {
-				try {
-					const response = await fetch(`${apiBaseUrl}/maps/restaurantphoto`, {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify({
-							resource_id: restaurant.menuImages[0],
-							max_width_px: 400
-						}),
-					});
-					if (response.ok) {
-						const imageUrl = URL.createObjectURL(await response.blob());
-						allRestaurants[index].image = imageUrl;
-						restaurants = [...allRestaurants]; // Trigger reactivity
-					}
-				} catch (error) {
-					console.error('Error fetching restaurant photo:', error);
-				}
-			}
-		});
-	});
-	
 	let currentPair: Restaurant[] = [];
 	let winners: Restaurant[] = [];
 	let currentRound = 1;
@@ -70,23 +21,27 @@
 	let flippedCards: { [key: number]: boolean } = {};
 	let scoreboard: { [key: number]: number } = {};
 	let showScoreboard = false;
+	let starting = true;
 
 	function getNextPair() {
+		currentPair = [];
 		if (restaurants.length >= 2) {
 			currentPair = restaurants.splice(0, 2);
 		} else if (winners.length >= 2) {
 			currentPair = winners.splice(0, 2);
-		} else{
+		} else {
 			showScoreboard = true;
 		}
+
 		currentPair = [...currentPair];
+		restaurants = [...restaurants];
 	}
 
 	function tieBreaker() {
 		// Group restaurants by their scores
 		const scoreGroups: { [score: number]: Restaurant[] } = {};
-		
-		allRestaurants.forEach(restaurant => {
+
+		allRestaurants.forEach((restaurant) => {
 			const score = scoreboard[restaurant.id] || 0;
 			if (!scoreGroups[score]) {
 				scoreGroups[score] = [];
@@ -112,7 +67,7 @@
 		const tiedRestaurants = scoreGroups[highestScoreWithTies];
 
 		// Increment scores for all restaurants with higher scores
-		allRestaurants.forEach(restaurant => {
+		allRestaurants.forEach((restaurant) => {
 			const score = scoreboard[restaurant.id] || 0;
 			if (score > highestScoreWithTies) {
 				scoreboard[restaurant.id] = score + 1;
@@ -121,30 +76,35 @@
 
 		// Set up the next pair from tied restaurants
 		if (tiedRestaurants.length >= 2) {
-			currentPair = tiedRestaurants.slice(0, 2);
-			winners = tiedRestaurants.slice(2);
+			currentPair = tiedRestaurants.splice(0, 2);
+			winners = tiedRestaurants.splice(2);
 		} else {
 			showScoreboard = true;
 		}
 	}
 
 	function selectWinner(winner: Restaurant) {
+		if (starting) {
+			let temp = restaurants.splice(0, 2);
+			starting = false;
+		}
 		if (isTransitioning) return;
 		isTransitioning = true;
 
 		// Increment winner's score
-		
+
 		scoreboard[winner.id] = (scoreboard[winner.id] || 0) + 1;
 
-		setTimeout(()=> {
+		setTimeout(() => {
+			flippedCards = {};
 			winners = [...winners, winner];
-			currentRound = currentRound + 1;  
+			currentRound = currentRound + 1;
 			currentPair = [];
-			
-			if (restaurants.length == 0) {
+
+			if (restaurants.length < 2) {
 				if (winners.length == 1) {
 					tieBreaker();
-				} else{
+				} else {
 					getNextPair();
 				}
 			} else {
@@ -167,7 +127,60 @@
 	}
 
 	onMount(() => {
-		getNextPair();
+		const restaurantsData = getRestaurantsList();
+
+		allRestaurants = restaurantsData.restaurants.map((restaurant, index) => ({
+			id: index + 1,
+			name: restaurant.name,
+			image: restaurant.menuImages[0] || '/placeholder.svg?height=400&width=300',
+			description: `Rating: ${restaurant.rating}, Reviews: ${restaurant.reviews}`
+		}));
+		console.log('RESTAURANTS: ', allRestaurants);
+		restaurants = [...allRestaurants];
+
+		// Initialize scoreboard with 0 points for each restaurant
+		allRestaurants.forEach((restaurant) => {
+			scoreboard[restaurant.id] = 0;
+		});
+
+		// Update restaurants array with the new data
+
+		// Get the first pair to start the bracket
+		//getNextPair();
+
+		// Load images after initial mount
+		let loadedImages = 0;
+		const totalImages = restaurantsData.restaurants.length;
+
+		restaurantsData.restaurants.forEach(async (restaurant, index) => {
+			if (restaurant.menuImages && restaurant.menuImages[0]) {
+				try {
+					const response = await fetch(`${apiBaseUrl}/maps/restaurantphoto`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({
+							resource_id: restaurant.menuImages[0],
+							max_width_px: 400
+						})
+					});
+					if (response.ok) {
+						const imageUrl = URL.createObjectURL(await response.blob());
+						allRestaurants[index].image = imageUrl;
+						restaurants = [...allRestaurants]; // Trigger reactivity
+					}
+				} catch (error) {
+					console.error('Error fetching restaurant photo:', error);
+				}
+			}
+			loadedImages++;
+
+			// Once all images are processed (either loaded or failed), get the first pair
+			if (loadedImages === totalImages) {
+				getNextPair();
+			}
+		});
 	});
 </script>
 
@@ -208,12 +221,15 @@
 												<h2 class="mb-4 text-2xl font-bold text-primary">{restaurant.name}</h2>
 												<p class="text-gray-700">{restaurant.description}</p>
 											</div>
-											<div class="flex justify-center"  on:click={() => selectWinner(restaurant)}>
-												<Button
-													class="h-12 w-12 rounded-full bg-green-500"
-													
-												>
-													<Checkmark/>
+											<div
+												class="flex justify-center"
+												on:click={(e) => {
+													e.stopPropagation();
+													selectWinner(restaurant);
+												}}
+											>
+												<Button class="h-12 w-12 rounded-full bg-green-500">
+													<Checkmark />
 												</Button>
 											</div>
 										</div>
@@ -227,20 +243,28 @@
 		</div>
 	{:else}
 		<div class="w-full max-w-4xl">
-			<h1 class="mb-8 text-4xl font-bold text-center">Final Rankings</h1>
+			<h1 class="mb-8 text-center text-4xl font-bold">Final Rankings</h1>
 			<div class="space-y-4">
 				{#each sortedRestaurants as restaurant, index}
-					<div class="bg-white rounded-lg shadow-md p-4 flex items-center justify-between">
+					<div class="flex items-center justify-between rounded-lg bg-white p-4 shadow-md">
 						<div class="flex items-center space-x-4">
-							<span class="text-2xl font-bold {index === 0 ? 'text-yellow-500' : index === 1 ? 'text-gray-500' : index === 2 ? 'text-amber-700' : 'text-gray-700'}">
+							<span
+								class="text-2xl font-bold {index === 0
+									? 'text-yellow-500'
+									: index === 1
+										? 'text-gray-500'
+										: index === 2
+											? 'text-amber-700'
+											: 'text-gray-700'}"
+							>
 								#{index + 1}
 							</span>
 							<div>
 								<h2 class="text-xl font-semibold">{restaurant.name}</h2>
 							</div>
 						</div>
-						<div 
-							class="w-16 h-16 bg-cover bg-center rounded-full"
+						<div
+							class="h-16 w-16 rounded-full bg-cover bg-center"
 							style="background-image: url({restaurant.image})"
 						></div>
 					</div>

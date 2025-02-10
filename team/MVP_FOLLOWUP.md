@@ -38,7 +38,6 @@
 - **Concept**
   - Reduces decision-making stress.
   - Unique concept compared to existing solutions.
-  - Locally based for authenticity.
 
 ### Suggestions for Improvement
 

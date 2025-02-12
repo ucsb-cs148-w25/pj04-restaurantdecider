@@ -30,7 +30,7 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
   try {
     const url = "https://places.googleapis.com/v1/places:searchNearby";
     const requestBody = {
-      includedTypes: ["restaurant"],
+      includedTypes: ["restaurant", "coffee_shop", "cafe", "bakery"],
       maxResultCount: limit,
       locationRestriction: {
         circle: {
@@ -58,7 +58,6 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
     });
 
     const data = await response.json();
-    // console.log("Google Places API response:", data);
 
     if (!data.places) {
       console.error("Google Places API error:", data.error || "Unknown error");

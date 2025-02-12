@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   client:
+    image: ghcr.io/ucsb-cs148-w25/pj04-restaurantdecider/pj04-restaurantdecider-client:latest
     build:
       context: ./client
       dockerfile: Dockerfile
@@ -15,6 +16,7 @@ services:
       - server
 
   server:
+    image: ghcr.io/ucsb-cs148-w25/pj04-restaurantdecider/pj04-restaurantdecider-server:latest
     build:
       context: ./server
       dockerfile: Dockerfile

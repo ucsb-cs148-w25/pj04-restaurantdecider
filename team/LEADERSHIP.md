@@ -10,3 +10,4 @@
 | Mon 01/27 | Irene Li          | Led lecture 5 standup meeting                          | 
 | Fri 02/03 | Karthik Bhattaram | Led standup meeting                                    | 
 | Mon 02/10 | Tanay Biradar     | Led standup meeting and feedback followup              |
+| Fri 02/14 | Danny You         | Led second Retro                                       |

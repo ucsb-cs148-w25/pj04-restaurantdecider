@@ -11,10 +11,11 @@ import cors from "cors";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 import mapsRouter from "./routes/maps.js";
+import rankingRouter from "./routes/ranking.js";
 
 import dotenv from 'dotenv'
 dotenv.config()
-console.log('Google Maps API Key:', process.env.MAPS_API_KEY);
+// console.log('Google Maps API Key:', process.env.MAPS_API_KEY);
 // allows us to use ES module syntax
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,7 +29,9 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
 app.use(cors({
-  origin: "*",
+  origin: process.env.NODE_ENV === 'production' ? 'https://cs148.tanaybiradar.com' : '*',
+  credentials: true,
+  exposedHeaders: ["set-cookie"]
 }))
 app.use(logger("dev"));
 app.use(express.json());
@@ -39,6 +42,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/", indexRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/maps", mapsRouter);
+app.use("/api/ranking", rankingRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

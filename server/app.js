@@ -29,7 +29,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
 app.use(cors({
-  origin: "*",
+  origin: process.env.NODE_ENV === 'production' ? 'https://cs148.tanaybiradar.com' : '*',
   credentials: true,
   exposedHeaders: ["set-cookie"]
 }))

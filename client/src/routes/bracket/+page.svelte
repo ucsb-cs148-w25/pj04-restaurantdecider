@@ -136,6 +136,7 @@
 			image: restaurant.menuImages[0] || '/placeholder.svg?height=400&width=300',
 			description: `Rating: ${restaurant.rating}, Reviews: ${restaurant.reviews}`
 		}));
+
 		// console.log('RESTAURANTS: ', allRestaurants);
 		restaurants = [...allRestaurants];
 

@@ -49,14 +49,17 @@
 		<div bind:this={mapContainer} class="map-container"></div>
 	</div>
 
-	<div class="flex flex-col items-center fixed w-full space-y-4">
-		<form on:submit={handleSubmit}>
+	<div class="flex flex-col items-center w-full mt-8">
+		<form on:submit={handleSubmit} class="flex flex-col items-center">
 		<Button 
 			type="submit"
-			class="text-white bg-black hover:bg-gray-600"
+			class="text-white bg-black hover:bg-gray-600 mb-2"
 		>
 			Search
 		</Button>
+		{#if errorMessage}
+			<p class="text-red-500 font-medium text-center">{errorMessage}</p>
+		{/if}
 		</form>
 	</div>
   </div>
@@ -84,6 +87,7 @@
     let searchBox;
     let isLoading = true;
     let scriptLoaded = false;
+    let errorMessage = $state('');
 
     // Load Google Maps script dynamically
     onMount(async () => {
@@ -112,6 +116,28 @@
   
     let handleSubmit = (e) => {
       e.preventDefault();
+
+      // Clear any previous error
+      errorMessage = '';
+
+      // Validate coordinates
+      if (latitude === 0 && longitude === 0) {
+        errorMessage = "Please select a location on the map";
+        return;
+      }
+
+      // Validate radius
+      if (!radius || radius <= 0) {
+        errorMessage = "Please enter a valid radius (greater than 0)";
+        return;
+      }
+
+      // Validate number of restaurants
+      if (!numToShow || numToShow <= 0) {
+        errorMessage = "Please select a valid number of restaurants to show";
+        return;
+      }
+
       let dataToSend = {
         "latitude": latitude,
         "longitude": longitude,
@@ -228,6 +254,13 @@
       padding-left: 5px; 
       margin-top: 16px; 
     }
+
+    .location-picker {
+		position: relative;
+		width: 100%;
+		height: 400px;
+		margin-top: 2rem;
+	}
 
     :global(body) {
       margin: 0;

@@ -8,263 +8,312 @@
   </div>
 </header>
 
-<div class="pt-16 pb-24 min-h-screen">
-	<Card.Root class="w-2/3 mx-auto mt-8">
-	<Card.Header class="text-center"> 
-		<Card.Title tag="h1">Search for Restaurants</Card.Title>
-	</Card.Header>
-	<Card.Content>
-		<div class="mt-4 self-start pl-4">
-		<p>Radius (miles)</p>
-		<Input placeholder="Radius" class="max-w-xs" type="number" bind:value={radius}></Input>
-		</div>
-		
-		<div class="mt-4 self-start pl-4">
-		<DropdownMenu.Root>
-			<DropdownMenu.Trigger class={buttonVariants({ variant: "outline" })}>Show {numToShow} Restaurants</DropdownMenu.Trigger>
-			<DropdownMenu.Content class="w-56">
-			<DropdownMenu.Group>
-				<DropdownMenu.RadioGroup bind:value={numToShow}>
-				<DropdownMenu.RadioItem value={8}>8</DropdownMenu.RadioItem>
-				<DropdownMenu.RadioItem value={16}>16</DropdownMenu.RadioItem>
-				<DropdownMenu.RadioItem value={32}>32</DropdownMenu.RadioItem>
-				</DropdownMenu.RadioGroup>
-			</DropdownMenu.Group>
-			</DropdownMenu.Content>
-		</DropdownMenu.Root>
-		</div>
+<div class="pt-16 pb-24 min-h-screen flex justify-center items-start space-x-8">
+  <!-- Card Section -->
+  <Card.Root class="w-2/5 mt-8 h-200">
+    <Card.Header class="text-center">
+      <Card.Title tag="h1">Search for Restaurants</Card.Title>
+    </Card.Header>
+    <Card.Content>
+      <div class="flex items-center space-x-8 mt-4 self-start pl-4">
+        <!-- Radius Input -->
+        <div class="flex items-center">
+          <p class="mr-2">Radius (miles)</p>
+          <Input 
+            placeholder="Radius" 
+            class="max-w-xs" 
+            type="number" 
+            bind:value={radius}
+          />
+        </div>
+        
+		<div class="flex flex-col items-start">
+          <p class="mb-2">Number of restaurants</p>
+			<div class="flex space-x-4 mb-8">
+			<Button 
+				class="bg-black text-white" 
+				on:click={() => numToShow = 8}
+			>
+				8
+			</Button>
 
-		<div class="search-container self-start mt-4 pl-4 w-full max-w-4xl">
-		<Input
-			id="search-box"
-			type="text"
-			placeholder="Search for a location"
-			class="search-input w-full"
-		/>
+			<Button 
+				class="bg-black text-white" 
+				on:click={() => numToShow = 16}
+			>
+				16
+			</Button>
+
+			<Button 
+				class="bg-black text-white" 
+				on:click={() => numToShow = 32}
+			>
+				32
+			</Button>
+			</div>
 		</div>
-	</Card.Content>
-	</Card.Root>
+      </div>
 
-	<div class="location-picker">
-		<div bind:this={mapContainer} class="map-container"></div>
-	</div>
+      <div class="search-container self-start mt-2 pl-4 w-full max-w-4xl">
+        <Input id="search-box" type="text" placeholder="Search for a location" class="search-input w-full" />
+      </div>
 
-	<div class="flex flex-col items-center w-full mt-8">
-		<form on:submit={handleSubmit} class="flex flex-col items-center">
-		<Button 
-			type="submit"
-			class="text-white bg-black hover:bg-gray-600 mb-2"
-		>
-			Search
-		</Button>
+	  <div class="flex flex-col items-start pl-4 mt-8">
+		<div class="flex space-x-4 mb-8">
+			<Button 
+				class="bg-black text-white" 
+			>
+				Champion Style
+			</Button>
+			<Button 
+				class="bg-black text-white" 
+			>
+				Bracket Style
+			</Button>
+			<Button 
+				type="submit" 
+				class="text-white bg-black hover:bg-gray-600"
+				on:click={handleSubmit}
+			>
+				Search
+			</Button>
+  		</div>
+
 		{#if errorMessage}
 			<p class="text-red-500 font-medium text-center">{errorMessage}</p>
 		{/if}
-		</form>
-	</div>
+      </div>
+
+    </Card.Content>
+  </Card.Root>
+
+  <!-- Map Section -->
+  <div class="location-picker w-2/5 mt-8">
+    <div bind:this={mapContainer} class="map-container"></div>
   </div>
+</div>
 
-  <script lang="js">
-    import { onMount } from 'svelte';
-    import { goto } from '$app/navigation';
-    import { Button } from '$lib/components/ui/button';
-    import { buttonVariants } from '$lib/components/ui/button';
-    import { Input } from '$lib/components/ui/input';
-    import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-    import * as Card from "$lib/components/ui/card";
-    import { apiBaseUrl } from '$lib/index.js';
-    import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
-    import { getAuthToken } from '$lib/stores/userStore.svelte.js';
+<script lang="js">
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+  import { Button } from '$lib/components/ui/button';
+  import { buttonVariants } from '$lib/components/ui/button';
+  import { Input } from '$lib/components/ui/input';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+  import * as Card from "$lib/components/ui/card";
+  import { apiBaseUrl } from '$lib/index.js';
+  import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
+  import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 
-    let { data } = $props();
-    let numToShow = $state(8);
-    let latitude = $state(0);
-    let longitude = $state(0);
-    let radius = $state(0);
-    let mapContainer;
-    let map;
-    let marker;
-    let searchBox;
-    let isLoading = true;
-    let scriptLoaded = false;
-    let errorMessage = $state('');
+  let { data } = $props();
+  let numToShow = $state(8);
+  let latitude = $state(0);
+  let longitude = $state(0);
+  let radius = $state(0);
+  let mapContainer;
+  let map;
+  let marker;
+  let searchBox;
+  let isLoading = true;
+  let scriptLoaded = false;
+  let errorMessage = $state('');
 
-    // Load Google Maps script dynamically
-    onMount(async () => {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        scriptLoaded = true;
-        initializeMap();
-      };
-      document.head.appendChild(script);
+  // Load Google Maps script dynamically
+  onMount(async () => {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      scriptLoaded = true;
+      initializeMap();
+    };
+    document.head.appendChild(script);
+  });
+
+  async function handleSignOut() {
+    await fetch(`${apiBaseUrl}/users/signout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAuthToken()}`
+      },
+      credentials: 'include',
     });
+    goto('/');
+  }
 
-    async function handleSignOut() {
-      await fetch(`${apiBaseUrl}/users/signout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${getAuthToken()}`
-        },
-        credentials: 'include',
+  let handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Clear any previous error
+    errorMessage = '';
+
+    // Validate coordinates
+    if (latitude === 0 && longitude === 0) {
+      errorMessage = "Please select a location on the map";
+      return;
+    }
+
+    // Validate radius
+    if (!radius || radius <= 0) {
+      errorMessage = "Please enter a valid radius (greater than 0)";
+      return;
+    }
+
+    // Validate number of restaurants
+    if (!numToShow || numToShow <= 0) {
+      errorMessage = "Please select a valid number of restaurants to show";
+      return;
+    }
+
+    let dataToSend = {
+      "latitude": latitude,
+      "longitude": longitude,
+      "radius": radius,
+      "listSize": numToShow
+    }
+
+    fetch(`${apiBaseUrl}/maps/restaurants`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAuthToken()}`
+      },
+      credentials: 'include',
+      body: JSON.stringify(dataToSend)
+    })
+    .then(response => response.json())
+    .then(data => {
+      setRestaurantsList(data);
+      goto('/bracket');
+    })
+    .catch(error => {
+      console.error('Error fetching restaurants:', error);
+    })
+  }
+
+  function updateCoordinates(lat, lng) {
+    latitude = lat;
+    longitude = lng;
+  }
+
+  async function initializeMap() {
+    try {
+      const { Map } = await google.maps.importLibrary("maps");
+      const places = await google.maps.importLibrary("places");
+      const { Marker } = await google.maps.importLibrary("marker");
+
+      // initialize map and pin
+      map = new Map(mapContainer, {
+        zoom: data.mapConfig.defaultZoom,
+        center: data.mapConfig.defaultCenter,
+        mapTypeId: 'roadmap'
       });
-      goto('/');
+      marker = new Marker({ map, draggable: true });
+
+      // initialize the search box
+      const input = document.getElementById('search-box');
+      searchBox = new places.SearchBox(input);  // Use places directly here
+
+      // set up event listeners
+      map.addListener('bounds_changed', () => {
+        searchBox.setBounds(map.getBounds());
+      });
+
+      searchBox.addListener('places_changed', () => {
+        // where are we?
+        const places = searchBox.getPlaces();
+        if (places.length === 0) return;
+        const place = places[0];
+
+        if (place.geometry.viewport) {
+          map.fitBounds(place.geometry.viewport);
+        } else {
+          map.setCenter(place.geometry.location);
+          map.setZoom(17);
+        }
+
+        marker.setPosition(place.geometry.location);
+        updateCoordinates(place.geometry.location.lat(), place.geometry.location.lng());
+      });
+
+      map.addListener('dragend', (e) => {
+        marker.setPosition(e.latLng);
+        updateCoordinates(e.latLng.lat(), e.latLng.lng());
+      });
+
+      map.addListener('click', (e) => {
+        marker.setPosition(e.latLng);
+        updateCoordinates(e.latLng.lat(), e.latLng.lng());
+      });
+
+      isLoading = false;
+    } catch (error) {
+      console.error('Error initializing map:', error);
+      isLoading = false;
     }
-  
-    let handleSubmit = (e) => {
-      e.preventDefault();
+  }
+</script>
 
-      // Clear any previous error
-      errorMessage = '';
+<style>
+  .map-container {
+    width: 100%;
+    height: 600px;
+	border-radius: 12px;
+  }
 
-      // Validate coordinates
-      if (latitude === 0 && longitude === 0) {
-        errorMessage = "Please select a location on the map";
-        return;
-      }
+  .hidden {
+    display: none;
+  }
 
-      // Validate radius
-      if (!radius || radius <= 0) {
-        errorMessage = "Please enter a valid radius (greater than 0)";
-        return;
-      }
+  .search-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
 
-      // Validate number of restaurants
-      if (!numToShow || numToShow <= 0) {
-        errorMessage = "Please select a valid number of restaurants to show";
-        return;
-      }
+  .search-container button {
+    padding: 8px 16px;
+  }
 
-      let dataToSend = {
-        "latitude": latitude,
-        "longitude": longitude,
-        "radius": radius,
-        "listSize": numToShow
-      }
+  .coordinates {
+    width: 66.66%;
+    margin: 0 auto;
+    padding-left: 5px;
+    margin-top: 16px;
+  }
 
-      fetch(`${apiBaseUrl}/maps/restaurants`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${getAuthToken()}`
-        },
-        credentials: 'include',
-        body: JSON.stringify(dataToSend)
-      })
-      .then(response => response.json())
-      .then(data => {
-        setRestaurantsList(data);
-        goto('/bracket');
-      })
-      .catch(error => {
-        console.error('Error fetching restaurants:', error);
-      })
-    }
+  .location-picker {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    margin-top: 2rem;
+  }
 
-    function updateCoordinates(lat, lng) {
-      latitude = lat;
-      longitude = lng;
-    }
+  :global(body) {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
 
-    async function initializeMap() {
-      try {
-        const { Map } = await google.maps.importLibrary("maps");
-        const places = await google.maps.importLibrary("places");
-        const { Marker } = await google.maps.importLibrary("marker");
-      
-        // initialize map and pin
-        map = new Map(mapContainer, {
-          zoom: data.mapConfig.defaultZoom,
-          center: data.mapConfig.defaultCenter,
-          mapTypeId: 'roadmap'
-        });
-        marker = new Marker({ map, draggable: true });
-      
-        // initialize the search box
-        const input = document.getElementById('search-box');
-        searchBox = new places.SearchBox(input);  // Use places directly here
+  .pt-16.pb-24 {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 32px; 
+  }
 
-        // set up event listeners
-        map.addListener('bounds_changed', () => {
-          searchBox.setBounds(map.getBounds());
-        });
-  
-        searchBox.addListener('places_changed', () => {
-          // where are we?
-          const places = searchBox.getPlaces();
-          if (places.length === 0) return;
-          const place = places[0];
-  
-          if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-          } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);
-          }
-  
-          marker.setPosition(place.geometry.location);
-          updateCoordinates(place.geometry.location.lat(), place.geometry.location.lng());
-        });
+  /* Make the card and map take equal width */
+  .pt-16.pb-24 > .card-root,
+  .pt-16.pb-24 > .location-picker {
+    flex: 1;
+  }
 
-        map.addListener('dragend', (e) => {
-          marker.setPosition(e.latLng);
-          updateCoordinates(e.latLng.lat(), e.latLng.lng());
-        });
-
-        map.addListener('click', (e) => {
-          marker.setPosition(e.latLng);
-          updateCoordinates(e.latLng.lat(), e.latLng.lng());
-        });
-  
-        isLoading = false;
-      } catch (error) {
-        console.error('Error initializing map:', error);
-        isLoading = false;
-      }
-    }
-  </script>
-
-  <style>
-    .map-container {
-      width: 66.66%;
-      height: 400px;
-      margin: 20px auto;
-    }
-
-    .hidden {
-      display: none;
-    }
-    
-    .search-container {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    
-    .search-container button {
-      padding: 8px 16px;
-    }
-
-    .coordinates {
-      width: 66.66%; 
-      margin: 0 auto;  
-      padding-left: 5px; 
-      margin-top: 16px; 
-    }
-
-    .location-picker {
-		position: relative;
-		width: 100%;
-		height: 400px;
-		margin-top: 2rem;
-	}
-
-    :global(body) {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-    }
-  </style>
+  .card-root {
+    max-width: 100px;
+  }
+  .location-picker {
+    max-width: 600px;
+  }
+</style>

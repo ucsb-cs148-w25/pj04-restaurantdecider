@@ -7,3 +7,7 @@ export function getUsername() {
 export function setUsername(newUsername) {
 	username.text = newUsername;
 }
+
+export function getAuthToken() {
+	return document.cookie?.split('; ')?.find(row => row?.startsWith('auth='))?.split('=')[1]
+}

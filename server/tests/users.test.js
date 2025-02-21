@@ -1,7 +1,7 @@
 /* users.test.js */
 import request from 'supertest';
 import express from 'express';
-import router from './users.js';
+import router from '../routes/users.js';
 import { User } from '../utils/db.js';
 
 // Mock the User model methods

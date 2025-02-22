@@ -15,13 +15,13 @@
   <!-- Card Section -->
   <Card.Root class="card-root w-2/5 mt-8">
     <Card.Header class="text-center">
-      <Card.Title tag="h1">Search for Restaurants</Card.Title>
+      <Card.Title tag="h1" class="text-5xl">Search for Restaurants</Card.Title>
     </Card.Header>
     <Card.Content>
       <div class="flex items-center space-x-8 mt-4 self-start pl-4">
         <!-- Radius Input -->
         <div class="flex items-center">
-          <p class="mr-2">Radius (miles)</p>
+          <p class="mr-2 text-xl">Radius (miles)</p>
           <Input 
             placeholder="Radius" 
             class="max-w-xs" 
@@ -31,24 +31,24 @@
         </div>
         
 		<div class="flex flex-col items-start">
-          <p class="mb-2">Number of restaurants</p>
+          <p class="mb-2 text-xl">Number of restaurants</p>
 			<div class="flex space-x-4 mb-8">
 			<Button 
-				class="bg-black text-white" 
+				class="bg-gray-600 text-white hover:bg-gray-500" 
 				on:click={() => numToShow = 8}
 			>
 				8
 			</Button>
 
 			<Button 
-				class="bg-black text-white" 
+				class="bg-gray-600 text-white hover:bg-gray-500" 
 				on:click={() => numToShow = 16}
 			>
 				16
 			</Button>
 
 			<Button 
-				class="bg-black text-white" 
+				class="bg-gray-600 text-white hover:bg-gray-500" 
 				on:click={() => numToShow = 32}
 			>
 				32
@@ -64,12 +64,12 @@
 	  <div class="flex flex-col items-start pl-4 mt-8">
 		<div class="flex space-x-4 mb-8">
 			<Button 
-				class="bg-black text-white" 
+				class="bg-gray-600 text-white hover:bg-gray-500" 
 			>
 				Champion Style
 			</Button>
 			<Button 
-				class="bg-black text-white" 
+				class="bg-gray-600 text-white hover:bg-gray-500" 
 			>
 				Bracket Style
 			</Button>
@@ -77,8 +77,11 @@
       </div>
 
 	  <form on:submit={handleSubmit} class="flex flex-col items-center">
-		<Button type="submit" class="text-white bg-black hover:bg-gray-600 mb-2">
-			Search
+		<Button type="submit" class="text-white bg-gray-800 hover:bg-gray-500 mb-2 flex items-center justify-center space-x-2">
+			<span>Search</span>
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+				<path d="M11.742 10.344a6.5 6.5 0 1 0-1.398 1.398l4.25 4.25a1 1 0 1 0 1.414-1.414l-4.25-4.25zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+			</svg>
 		</Button>
 		{#if errorMessage}
 			<p class="text-red-500 font-medium text-center">{errorMessage}</p>

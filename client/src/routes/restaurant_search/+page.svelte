@@ -261,7 +261,7 @@
 body {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  min-height: 80vh;
 }
 
 /* Map Container */
@@ -270,7 +270,7 @@ body {
   height: 100%;
   border-radius: 12px;
   flex-grow: 1;
-  min-height: 800px;
+  min-height: 80vh;
 }
 
 /* Hidden Elements */
@@ -286,7 +286,7 @@ body {
 }
 
 .search-container button {
-  padding: 8px 16px;
+  padding: 16px 16px;
 }
 
 /* Coordinates */
@@ -300,10 +300,10 @@ body {
 /* Location Picker */
 .location-picker {
   position: relative;
-  width: 100%;
-  height: 400px;
+  width: 40vw;
+  height: 80vh;
   margin-top: 2rem;
-  max-width: 600px;
+  max-width: 40vw;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -327,7 +327,7 @@ body {
 .card-root {
   display: flex;
   flex-direction: column;
-  height: 600px;
+  height: 80vh;
 }
 
 .card-root .card-content {

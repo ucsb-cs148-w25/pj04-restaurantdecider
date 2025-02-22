@@ -10,7 +10,7 @@
 
 <div class="pt-16 pb-24 min-h-screen flex justify-center items-start space-x-8">
   <!-- Card Section -->
-  <Card.Root class="w-2/5 mt-8 h-200">
+  <Card.Root class="card-root w-2/5 mt-8">
     <Card.Header class="text-center">
       <Card.Title tag="h1">Search for Restaurants</Card.Title>
     </Card.Header>
@@ -70,19 +70,17 @@
 			>
 				Bracket Style
 			</Button>
-			<Button 
-				type="submit" 
-				class="text-white bg-black hover:bg-gray-600"
-				on:click={handleSubmit}
-			>
-				Search
-			</Button>
   		</div>
+      </div>
 
+	  <form on:submit={handleSubmit} class="flex flex-col items-center">
+		<Button type="submit" class="text-white bg-black hover:bg-gray-600 mb-2">
+			Search
+		</Button>
 		{#if errorMessage}
 			<p class="text-red-500 font-medium text-center">{errorMessage}</p>
 		{/if}
-      </div>
+	  </form>
 
     </Card.Content>
   </Card.Root>
@@ -257,63 +255,81 @@
 </script>
 
 <style>
-  .map-container {
-    width: 100%;
-    height: 600px;
-	border-radius: 12px;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
 
-  .hidden {
-    display: none;
-  }
+/* Map Container */
+.map-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  flex-grow: 1;
+  min-height: 800px;
+}
 
-  .search-container {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
+/* Hidden Elements */
+.hidden {
+  display: none;
+}
 
-  .search-container button {
-    padding: 8px 16px;
-  }
+/* Search Container */
+.search-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
 
-  .coordinates {
-    width: 66.66%;
-    margin: 0 auto;
-    padding-left: 5px;
-    margin-top: 16px;
-  }
+.search-container button {
+  padding: 8px 16px;
+}
 
-  .location-picker {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    margin-top: 2rem;
-  }
+/* Coordinates */
+.coordinates {
+  width: 66.66%;
+  margin: 0 auto;
+  padding-left: 5px;
+  margin-top: 16px;
+}
 
-  :global(body) {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-  }
+/* Location Picker */
+.location-picker {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  margin-top: 2rem;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
 
-  .pt-16.pb-24 {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 32px; 
-  }
+/* Flexbox Container */
+.pt-16.pb-24 {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 32px;
+}
 
-  /* Make the card and map take equal width */
-  .pt-16.pb-24 > .card-root,
-  .pt-16.pb-24 > .location-picker {
-    flex: 1;
-  }
+.pt-16.pb-24 > .card-root,
+.pt-16.pb-24 > .location-picker {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-  .card-root {
-    max-width: 100px;
-  }
-  .location-picker {
-    max-width: 600px;
-  }
+.card-root {
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+}
+
+.card-root .card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
 </style>

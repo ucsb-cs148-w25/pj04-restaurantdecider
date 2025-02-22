@@ -34,21 +34,21 @@
           <p class="mb-2 text-xl">Number of restaurants</p>
 			<div class="flex space-x-4 mb-8">
 			<Button 
-				class="bg-gray-600 text-white hover:bg-gray-500" 
+				class="bg-gray-200 text-black hover:bg-blue-300" 
 				on:click={() => numToShow = 8}
 			>
 				8
 			</Button>
 
 			<Button 
-				class="bg-gray-600 text-white hover:bg-gray-500" 
+				class="bg-gray-200 text-black hover:bg-blue-300" 
 				on:click={() => numToShow = 16}
 			>
 				16
 			</Button>
 
 			<Button 
-				class="bg-gray-600 text-white hover:bg-gray-500" 
+				class="bg-gray-200 text-black hover:bg-blue-300" 
 				on:click={() => numToShow = 32}
 			>
 				32
@@ -64,12 +64,12 @@
 	  <div class="flex flex-col items-start pl-4 mt-8">
 		<div class="flex space-x-4 mb-8">
 			<Button 
-				class="bg-gray-600 text-white hover:bg-gray-500" 
+				class="bg-gray-200 text-black hover:bg-blue-300"
 			>
 				Champion Style
 			</Button>
 			<Button 
-				class="bg-gray-600 text-white hover:bg-gray-500" 
+				class="bg-gray-200 text-black hover:bg-blue-300" 
 			>
 				Bracket Style
 			</Button>

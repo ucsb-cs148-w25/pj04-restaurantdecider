@@ -77,7 +77,7 @@
       </div>
 
 	  <form on:submit={handleSubmit} class="flex flex-col items-center">
-		<Button type="submit" class="text-white bg-gray-800 hover:bg-gray-500 mb-2 flex items-center justify-center space-x-2">
+		<Button type="submit" class="text-white bg-black hover:bg-gray-500 mb-2 flex items-center justify-center space-x-2">
 			<span>Search</span>
 			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
 				<path d="M11.742 10.344a6.5 6.5 0 1 0-1.398 1.398l4.25 4.25a1 1 0 1 0 1.414-1.414l-4.25-4.25zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>

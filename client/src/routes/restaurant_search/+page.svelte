@@ -1,11 +1,14 @@
-<header class="fixed top-0 left-0 right-0 flex justify-between p-4 bg-white z-50">
-  <a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
-  <div class="space-x-2">
-    <form on:submit|preventDefault={handleSignOut}>
-      <Button href="/profile" variant="outline" size="sm" class="bg-black text-white">Profile</Button>
-      <Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button>
-    </form>
-  </div>
+<header class="fixed left-0 right-0 top-0 z-50 flex justify-between bg-white p-4">
+	<a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
+	<div class="space-x-2">
+		<form on:submit|preventDefault={handleSignOut}>
+			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"
+				>Profile</Button
+			>
+			<Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button
+			>
+		</form>
+	</div>
 </header>
 
 <div class="pt-16 pb-24 min-h-screen flex justify-center items-start space-x-8">
@@ -92,166 +95,166 @@
 </div>
 
 <script lang="js">
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { Button } from '$lib/components/ui/button';
-  import { buttonVariants } from '$lib/components/ui/button';
-  import { Input } from '$lib/components/ui/input';
-  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-  import * as Card from "$lib/components/ui/card";
-  import { apiBaseUrl } from '$lib/index.js';
-  import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
-  import { getAuthToken } from '$lib/stores/userStore.svelte.js';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { Button } from '$lib/components/ui/button';
+	import { buttonVariants } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import * as Card from '$lib/components/ui/card';
+	import { apiBaseUrl } from '$lib/index.js';
+	import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
+	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 
-  let { data } = $props();
-  let numToShow = $state(8);
-  let latitude = $state(0);
-  let longitude = $state(0);
-  let radius = $state(0);
-  let mapContainer;
-  let map;
-  let marker;
-  let searchBox;
-  let isLoading = true;
-  let scriptLoaded = false;
-  let errorMessage = $state('');
+	let { data } = $props();
+	let numToShow = $state(8);
+	let latitude = $state(0);
+	let longitude = $state(0);
+	let radius = $state(0);
+	let mapContainer;
+	let map;
+	let marker;
+	let searchBox;
+	let isLoading = true;
+	let scriptLoaded = false;
+	let errorMessage = $state('');
 
-  // Load Google Maps script dynamically
-  onMount(async () => {
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => {
-      scriptLoaded = true;
-      initializeMap();
-    };
-    document.head.appendChild(script);
-  });
+	// Load Google Maps script dynamically
+	onMount(async () => {
+		const script = document.createElement('script');
+		script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places`;
+		script.async = true;
+		script.defer = true;
+		script.onload = () => {
+			scriptLoaded = true;
+			initializeMap();
+		};
+		document.head.appendChild(script);
+	});
 
-  async function handleSignOut() {
-    await fetch(`${apiBaseUrl}/users/signout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getAuthToken()}`
-      },
-      credentials: 'include',
-    });
-    goto('/');
-  }
+	async function handleSignOut() {
+		await fetch(`${apiBaseUrl}/users/signout`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${getAuthToken()}`
+			},
+			credentials: 'include'
+		});
+		goto('/');
+	}
 
-  let handleSubmit = (e) => {
-    e.preventDefault();
+	let handleSubmit = (e) => {
+		e.preventDefault();
 
-    // Clear any previous error
-    errorMessage = '';
+		// Clear any previous error
+		errorMessage = '';
 
-    // Validate coordinates
-    if (latitude === 0 && longitude === 0) {
-      errorMessage = "Please select a location on the map";
-      return;
-    }
+		// Validate coordinates
+		if (latitude === 0 && longitude === 0) {
+			errorMessage = 'Please select a location on the map';
+			return;
+		}
 
-    // Validate radius
-    if (!radius || radius <= 0) {
-      errorMessage = "Please enter a valid radius (greater than 0)";
-      return;
-    }
+		// Validate radius
+		if (!radius || radius <= 0) {
+			errorMessage = 'Please enter a valid radius (greater than 0)';
+			return;
+		}
 
-    // Validate number of restaurants
-    if (!numToShow || numToShow <= 0) {
-      errorMessage = "Please select a valid number of restaurants to show";
-      return;
-    }
+		// Validate number of restaurants
+		if (!numToShow || numToShow <= 0) {
+			errorMessage = 'Please select a valid number of restaurants to show';
+			return;
+		}
 
-    let dataToSend = {
-      "latitude": latitude,
-      "longitude": longitude,
-      "radius": radius,
-      "listSize": numToShow
-    }
+		let dataToSend = {
+			latitude: latitude,
+			longitude: longitude,
+			radius: radius,
+			listSize: numToShow
+		};
 
-    fetch(`${apiBaseUrl}/maps/restaurants`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getAuthToken()}`
-      },
-      credentials: 'include',
-      body: JSON.stringify(dataToSend)
-    })
-    .then(response => response.json())
-    .then(data => {
-      setRestaurantsList(data);
-      goto('/bracket');
-    })
-    .catch(error => {
-      console.error('Error fetching restaurants:', error);
-    })
-  }
+		fetch(`${apiBaseUrl}/maps/restaurants`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${getAuthToken()}`
+			},
+			credentials: 'include',
+			body: JSON.stringify(dataToSend)
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				setRestaurantsList(data);
+				goto('/bracket');
+			})
+			.catch((error) => {
+				console.error('Error fetching restaurants:', error);
+			});
+	};
 
-  function updateCoordinates(lat, lng) {
-    latitude = lat;
-    longitude = lng;
-  }
+	function updateCoordinates(lat, lng) {
+		latitude = lat;
+		longitude = lng;
+	}
 
-  async function initializeMap() {
-    try {
-      const { Map } = await google.maps.importLibrary("maps");
-      const places = await google.maps.importLibrary("places");
-      const { Marker } = await google.maps.importLibrary("marker");
+	async function initializeMap() {
+		try {
+			const { Map } = await google.maps.importLibrary('maps');
+			const places = await google.maps.importLibrary('places');
+			const { Marker } = await google.maps.importLibrary('marker');
 
-      // initialize map and pin
-      map = new Map(mapContainer, {
-        zoom: data.mapConfig.defaultZoom,
-        center: data.mapConfig.defaultCenter,
-        mapTypeId: 'roadmap'
-      });
-      marker = new Marker({ map, draggable: true });
+			// initialize map and pin
+			map = new Map(mapContainer, {
+				zoom: data.mapConfig.defaultZoom,
+				center: data.mapConfig.defaultCenter,
+				mapTypeId: 'roadmap'
+			});
+			marker = new Marker({ map, draggable: true });
 
-      // initialize the search box
-      const input = document.getElementById('search-box');
-      searchBox = new places.SearchBox(input);  // Use places directly here
+			// initialize the search box
+			const input = document.getElementById('search-box');
+			searchBox = new places.SearchBox(input); // Use places directly here
 
-      // set up event listeners
-      map.addListener('bounds_changed', () => {
-        searchBox.setBounds(map.getBounds());
-      });
+			// set up event listeners
+			map.addListener('bounds_changed', () => {
+				searchBox.setBounds(map.getBounds());
+			});
 
-      searchBox.addListener('places_changed', () => {
-        // where are we?
-        const places = searchBox.getPlaces();
-        if (places.length === 0) return;
-        const place = places[0];
+			searchBox.addListener('places_changed', () => {
+				// where are we?
+				const places = searchBox.getPlaces();
+				if (places.length === 0) return;
+				const place = places[0];
 
-        if (place.geometry.viewport) {
-          map.fitBounds(place.geometry.viewport);
-        } else {
-          map.setCenter(place.geometry.location);
-          map.setZoom(17);
-        }
+				if (place.geometry.viewport) {
+					map.fitBounds(place.geometry.viewport);
+				} else {
+					map.setCenter(place.geometry.location);
+					map.setZoom(17);
+				}
 
-        marker.setPosition(place.geometry.location);
-        updateCoordinates(place.geometry.location.lat(), place.geometry.location.lng());
-      });
+				marker.setPosition(place.geometry.location);
+				updateCoordinates(place.geometry.location.lat(), place.geometry.location.lng());
+			});
 
-      map.addListener('dragend', (e) => {
-        marker.setPosition(e.latLng);
-        updateCoordinates(e.latLng.lat(), e.latLng.lng());
-      });
+			marker.addListener('dragend', (e) => {
+				const position = marker.getPosition();
+				updateCoordinates(position.lat(), position.lng());
+			});
 
-      map.addListener('click', (e) => {
-        marker.setPosition(e.latLng);
-        updateCoordinates(e.latLng.lat(), e.latLng.lng());
-      });
+			map.addListener('click', (e) => {
+				marker.setPosition(e.latLng);
+				updateCoordinates(e.latLng.lat(), e.latLng.lng());
+			});
 
-      isLoading = false;
-    } catch (error) {
-      console.error('Error initializing map:', error);
-      isLoading = false;
-    }
-  }
+			isLoading = false;
+		} catch (error) {
+			console.error('Error initializing map:', error);
+			isLoading = false;
+		}
+	}
 </script>
 
 <style>

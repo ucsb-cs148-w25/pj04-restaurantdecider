@@ -4,7 +4,6 @@ const router = express.Router();
 let rankedRestaurants = [];
 
 router.post("/rankings", (req, res) => {
-
     try {
         const { restaurants } = req.body;
         if (!Array.isArray(restaurants)) {

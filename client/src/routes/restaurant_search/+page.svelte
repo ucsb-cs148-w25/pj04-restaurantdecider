@@ -1,3 +1,102 @@
+<header class="fixed left-0 right-0 top-0 z-50 flex justify-between bg-white p-4">
+	<a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
+	<div class="space-x-2">
+		<form on:submit|preventDefault={handleSignOut}>
+			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"
+				>Profile</Button
+			>
+			<Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button
+			>
+		</form>
+	</div>
+</header>
+
+<div class="pt-16 pb-24 min-h-screen flex justify-center items-start space-x-8">
+  <!-- Card Section -->
+  <Card.Root class="card-root w-2/5 mt-8">
+    <Card.Header class="text-center">
+      <Card.Title tag="h1" class="text-5xl">Search for Restaurants</Card.Title>
+    </Card.Header>
+    <Card.Content>
+      <div class="flex items-center space-x-8 mt-4 self-start pl-4">
+        <!-- Radius Input -->
+        <div class="flex items-center">
+          <p class="mr-2 text-xl">Radius (miles)</p>
+          <Input 
+            placeholder="Radius" 
+            class="max-w-xs" 
+            type="number" 
+            bind:value={radius}
+          />
+        </div>
+        
+		<div class="flex flex-col items-start">
+          <p class="mb-2 text-xl">Number of restaurants</p>
+			<div class="flex space-x-4 mb-9">
+			<Button 
+				class="bg-gray-200 text-black hover:bg-blue-300 w-16" 
+				on:click={() => numToShow = 8}
+			>
+				8
+			</Button>
+
+			<Button 
+				class="bg-gray-200 text-black hover:bg-blue-300 w-16" 
+				on:click={() => numToShow = 16}
+			>
+				16
+			</Button>
+
+			<Button 
+				class="bg-gray-200 text-black hover:bg-blue-300 w-16" 
+				on:click={() => numToShow = 32}
+			>
+				32
+			</Button>
+			</div>
+		</div>
+      </div>
+
+      <div class="search-container self-start mt-2 pl-4 w-full max-w-4xl">
+        <Input id="search-box" type="text" placeholder="Search for a location" class="search-input w-full" />
+      </div>
+
+	  <div class="flex flex-col items-start pl-4 mt-8">
+		<div class="flex space-x-4 mb-8">
+			<Button 
+				class="bg-gray-200 text-black hover:bg-blue-300 w-32"
+			>
+				Champion Style
+			</Button>
+			<Button 
+				class="bg-gray-200 text-black hover:bg-blue-300 w-32" 
+			>
+				Bracket Style
+			</Button>
+  		</div>
+      </div>
+
+	  <form on:submit={handleSubmit} class="flex flex-col items-center">
+		<Button type="submit" class="text-white bg-black hover:bg-gray-500 mb-2 flex items-center justify-center space-x-2">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+				<path d="M11.742 10.344a6.5 6.5 0 1 0-1.398 1.398l4.25 4.25a1 1 0 1 0 1.414-1.414l-4.25-4.25zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+			</svg>
+			<span>Search</span>
+		</Button>
+		{#if errorMessage}
+			<p class="text-red-500 font-medium text-center">{errorMessage}</p>
+		{/if}
+	  </form>
+
+    </Card.Content>
+  </Card.Root>
+
+  <!-- Map Section -->
+  <div class="location-picker w-2/5 mt-8">
+    <div bind:this={mapContainer} class="map-container"></div>
+  </div>
+</div>
+
 <script lang="js">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
@@ -161,116 +260,82 @@
 	}
 </script>
 
-<header class="fixed left-0 right-0 top-0 z-50 flex justify-between bg-white p-4">
-	<a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
-	<div class="space-x-2">
-		<form on:submit|preventDefault={handleSignOut}>
-			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"
-				>Profile</Button
-			>
-			<Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button
-			>
-		</form>
-	</div>
-</header>
-
-<div class="mx-auto min-h-screen w-2/3 pb-24 pt-16">
-	<Card.Root class="mx-auto mt-8">
-		<Card.Header class="text-center">
-			<Card.Title tag="h1">Search for Restaurants</Card.Title>
-		</Card.Header>
-		<Card.Content>
-			<div class="mt-4 self-start pl-4">
-				<p>Radius (miles)</p>
-				<Input placeholder="Radius" class="max-w-xs" type="number" bind:value={radius}></Input>
-			</div>
-
-			<div class="mt-4 self-start pl-4">
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger class={buttonVariants({ variant: 'outline' })}
-						>Show {numToShow} Restaurants</DropdownMenu.Trigger
-					>
-					<DropdownMenu.Content class="w-56">
-						<DropdownMenu.Group>
-							<DropdownMenu.RadioGroup bind:value={numToShow}>
-								<DropdownMenu.RadioItem value={8}>8</DropdownMenu.RadioItem>
-								<DropdownMenu.RadioItem value={16}>16</DropdownMenu.RadioItem>
-								<DropdownMenu.RadioItem value={32}>32</DropdownMenu.RadioItem>
-							</DropdownMenu.RadioGroup>
-						</DropdownMenu.Group>
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
-			</div>
-
-			<div class="search-container mt-4 w-full max-w-4xl self-start pl-4">
-				<Input
-					id="search-box"
-					type="text"
-					placeholder="Search for a location"
-					class="search-input w-full"
-				/>
-			</div>
-		</Card.Content>
-	</Card.Root>
-
-	<div class="location-picker">
-		<div bind:this={mapContainer} class="h-96 w-full overflow-hidden rounded-lg">
-			{#if isLoading}
-				<div class="flex h-full w-full items-center justify-center">
-					<p>Loading...</p>
-				</div>
-			{/if}
-		</div>
-	</div>
-
-	<div class="mt-8 flex w-full flex-col items-center">
-		<form on:submit={handleSubmit} class="flex flex-col items-center">
-			<Button type="submit" class="mb-2 bg-black text-white hover:bg-gray-600">Search</Button>
-			{#if errorMessage}
-				<p class="text-center font-medium text-red-500">{errorMessage}</p>
-			{/if}
-		</form>
-	</div>
-</div>
-
 <style>
-	.map-container {
-		width: 66.66%;
-		height: 400px;
-		margin: 20px auto;
-	}
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 80vh;
+}
 
-	.hidden {
-		display: none;
-	}
+/* Map Container */
+.map-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  flex-grow: 1;
+  min-height: 80vh;
+}
 
-	.search-container {
-		display: flex;
-		gap: 8px;
-		margin-bottom: 8px;
-	}
+/* Hidden Elements */
+.hidden {
+  display: none;
+}
 
-	.search-container button {
-		padding: 8px 16px;
-	}
+/* Search Container */
+.search-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
 
-	.coordinates {
-		width: 66.66%;
-		margin: 0 auto;
-		padding-left: 5px;
-		margin-top: 16px;
-	}
+.search-container button {
+  padding: 16px 16px;
+}
 
-	.location-picker {
-		position: relative;
-		width: 100%;
-		height: 400px;
-		margin-top: 2rem;
-	}
+/* Coordinates */
+.coordinates {
+  width: 66.66%;
+  margin: 0 auto;
+  padding-left: 5px;
+  margin-top: 16px;
+}
 
-	:global(body) {
-		margin: 0;
-		padding: 0;
-		min-height: 100vh;
-	}
+/* Location Picker */
+.location-picker {
+  position: relative;
+  width: 40vw;
+  height: 80vh;
+  margin-top: 2rem;
+  max-width: 40vw;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+/* Flexbox Container */
+.pt-16.pb-24 {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 32px;
+}
+
+.pt-16.pb-24 > .card-root,
+.pt-16.pb-24 > .location-picker {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-root {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+
+.card-root .card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
 </style>

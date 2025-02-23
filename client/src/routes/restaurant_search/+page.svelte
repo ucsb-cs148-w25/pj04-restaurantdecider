@@ -180,6 +180,12 @@
 			return;
 		}
 
+		//Validate ranking style
+		if (!rankingStyle || rankingStyle <= 0) {
+			errorMessage = 'Please select a valid ranking style';
+			return;
+		}
+
 		let dataToSend = {
 			latitude: latitude,
 			longitude: longitude,

@@ -205,7 +205,11 @@
 			.then((response) => response.json())
 			.then((data) => {
 				setRestaurantsList(data);
-				goto('/bracket');
+				if (rankingStyle === 1) {
+					goto('/champion');
+				} else if (rankingStyle === 2) {
+					goto('/bracket');
+				}
 			})
 			.catch((error) => {
 				console.error('Error fetching restaurants:', error);

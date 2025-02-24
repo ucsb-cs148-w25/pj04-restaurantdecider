@@ -30,6 +30,6 @@
 * What advice would you give to the next person leading a retro based on what you learned today? Be brave to speak up.
 ## Experiment/Change
 
-* A brief description of what constitutes your change/experiment: 
-* A brief assessment of how its results (did it improve things? move the needle at all?): 
-* A decision going forward: keep the change, revert to previous procedure, make a new change? 
+* A brief description of what constitutes your change/experiment: The change is for everyone to start completing more issues (preferably in groups) and to meet up after class to work on these issues.
+* A brief assessment of how its results (did it improve things? move the needle at all?): Everyone did complete issues, and progress was made in the project, especially in the UI design and the restaruant search page. The pair groups worked together during and after class and were productive.
+* A decision going forward: keep the change, revert to previous procedure, make a new change? We are going to keep the change and keep on making issues mostly pair groups so that issues are completed quicker and more progress is made in the project.

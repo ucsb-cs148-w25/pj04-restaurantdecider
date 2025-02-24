@@ -104,7 +104,8 @@ We'll leave this application open to the public. There is no publicly posted dat
    ```
 
    The backend server will start at http://localhost:3000
-   Add JWT_SECRET=<name> in .env
+
+   Add JWT_SECRET token in .env
 
 ## Functionality
 

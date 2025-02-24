@@ -33,26 +33,29 @@
 		<div class="flex flex-col items-start">
           <p class="mb-2 text-xl">Number of restaurants</p>
 			<div class="flex space-x-4 mb-9">
-			<Button 
-				class="bg-gray-200 text-black hover:bg-blue-300 w-16" 
-				on:click={() => numToShow = 8}
-			>
-				8
-			</Button>
+				<div on:click={() => {numToShow = 8; }}>
+				<Button 
+					class={numToShow === 8 ? "bg-blue-800 text-white w-16 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
+				>
+					8
+				</Button>
+				</div>
+				
+				<div on:click={() => {numToShow = 16; }}>
+				<Button 
+				class={numToShow === 16 ? "bg-blue-800 text-white w-16 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
+				>
+					16
+				</Button>
+				</div>
 
-			<Button 
-				class="bg-gray-200 text-black hover:bg-blue-300 w-16" 
-				on:click={() => numToShow = 16}
-			>
-				16
-			</Button>
-
-			<Button 
-				class="bg-gray-200 text-black hover:bg-blue-300 w-16" 
-				on:click={() => numToShow = 32}
-			>
-				32
-			</Button>
+				<div on:click={() => {numToShow = 32; }}>
+				<Button 
+					class={numToShow === 32 ? "bg-blue-800 text-white w-16 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
+				>
+					32
+				</Button>
+				</div>
 			</div>
 		</div>
       </div>
@@ -63,16 +66,21 @@
 
 	  <div class="flex flex-col items-start pl-4 mt-8">
 		<div class="flex space-x-4 mb-8">
+			<div on:click={() => {rankingStyle = 1; }}>
+				<Button 
+					class={rankingStyle === 1 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"}
+				>
+					Champion Style
+				</Button>
+			</div>
+
+			<div on:click={() => {rankingStyle = 2; }}>
 			<Button 
-				class="bg-gray-200 text-black hover:bg-blue-300 w-32"
-			>
-				Champion Style
-			</Button>
-			<Button 
-				class="bg-gray-200 text-black hover:bg-blue-300 w-32" 
+				class={rankingStyle === 2 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"} 
 			>
 				Bracket Style
 			</Button>
+			</div>
   		</div>
       </div>
 
@@ -110,7 +118,8 @@
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 
 	let { data } = $props();
-	let numToShow = $state(8);
+	let numToShow = $state(0);
+	let rankingStyle = $state(0); //champion (1) or bracket style (2)
 	let latitude = $state(0);
 	let longitude = $state(0);
 	let radius = $state(0);
@@ -168,6 +177,12 @@
 		// Validate number of restaurants
 		if (!numToShow || numToShow <= 0) {
 			errorMessage = 'Please select a valid number of restaurants to show';
+			return;
+		}
+
+		//Validate ranking style
+		if (!rankingStyle || rankingStyle <= 0) {
+			errorMessage = 'Please select a valid ranking style';
 			return;
 		}
 

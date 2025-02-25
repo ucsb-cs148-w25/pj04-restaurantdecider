@@ -52,7 +52,7 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": process.env.MAPS_API_KEY,
         "X-Goog-FieldMask":
-          "places.displayName,places.formattedAddress,places.photos,places.rating,places.userRatingCount,places.priceLevel,places.editorialSummary,places.types",
+          "places.displayName,places.formattedAddress,places.photos,places.rating,places.userRatingCount,places.priceLevel,places.editorialSummary,places.types,places.regularOpeningHours,places.websiteUri,places.googleMapsUri,places.reviews",
       },
       body: JSON.stringify(requestBody),
     });
@@ -98,7 +98,11 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
         menuImages: place.photos ? place.photos.map((photo) => photo.name) : [],
         priceLevel: place.priceLevel || 0,
         type: type,
-        description: place.editorialSummary?.text || ""
+        description: place.editorialSummary?.text || "",
+        hours: place.regularOpeningHours || [],
+        website: place.websiteUri || "",
+        mapsLink: place.googleMapsUri || "",
+        reviews: place.reviews || []
       };
     });
 

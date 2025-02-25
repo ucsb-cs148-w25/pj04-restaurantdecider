@@ -75,26 +75,33 @@
 				   Champion Style
 			   </Button>
 			   {#if isHoveredChampion}
-				   <div class="absolute left-1/2 transform -translate-x-1/2 mt-1 w-32 bg-gray-200 text-black text-center rounded transition-opacity duration-300 text-xs">
+				   <div class="absolute left-1/2 transform -translate-x-1/2 mt-1 w-32 bg-gray-200 text-black text-center rounded transition-opacity duration-300 text-xs"
+				   	on:click={(event) => event.stopPropagation()}
+					on:mouseenter={() => { isHoveredChampion = false; }}
+					on:mouseleave={() => { isHoveredChampion = false; }}>
 					   Only get number one ranked restaurant (Will take less time)
 				   </div>
 			   {/if}
 		   </div>
 	
-			<div class="relative" on:click={() => {rankingStyle = 2; }}
-				on:mouseenter={() => { isHoveredBracket = true; }}
-				on:mouseleave={() => { isHoveredBracket = false; }}>
-				<Button 
-					class={rankingStyle === 2 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"} 
-				>
-					Bracket Style
-				</Button>
-				{#if isHoveredBracket}
-				   <div class="absolute left-1/2 transform -translate-x-1/2 mt-1 w-32 bg-gray-200 text-black text-center rounded transition-opacity duration-300 text-xs">
-					   Get a ranked scoreboard with all restaurants<br />(Will take more time)
-				   </div>
-			   {/if}
-			</div>
+		   <div class="relative" on:click={() => { rankingStyle = 2; }}
+			on:mouseenter={() => { isHoveredBracket = true; }}
+			on:mouseleave={() => { isHoveredBracket = false; }}>
+		   <Button 
+			   class={rankingStyle === 2 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"} 
+		   >
+			   Bracket Style
+		   </Button>
+		   {#if isHoveredBracket}
+			   <div class="absolute left-1/2 transform -translate-x-1/2 mt-1 w-32 bg-gray-200 text-black text-center rounded transition-opacity duration-300 text-xs"
+			   on:click={(event) => event.stopPropagation()}
+			   on:mouseenter={() => { isHoveredBracket = false; }}
+			   on:mouseleave={() => { isHoveredBracket = false; }}>
+				   Get a ranked scoreboard with all restaurants<br />(Will take more time)
+			   </div>
+		   {/if}
+	   </div>
+	   
 		</div>
 	</div>
 

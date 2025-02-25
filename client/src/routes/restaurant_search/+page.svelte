@@ -66,23 +66,37 @@
 
 	  <div class="flex flex-col items-start pl-4 mt-8">
 		<div class="flex space-x-4 mb-8">
-			<div on:click={() => {rankingStyle = 1; }}>
+			<div class="relative" on:click={() => { rankingStyle = 1; }}
+				on:mouseenter={() => { isHoveredChampion = true; }}
+				on:mouseleave={() => { isHoveredChampion = false; }}>
+			   <Button 
+				   class={rankingStyle === 1 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"}
+			   >
+				   Champion Style
+			   </Button>
+			   {#if isHoveredChampion}
+				   <div class="absolute left-1/2 transform -translate-x-1/2 mt-1 w-32 bg-gray-200 text-black text-center rounded transition-opacity duration-300 text-xs">
+					   Only get number one ranked restaurant (Will take less time)
+				   </div>
+			   {/if}
+		   </div>
+	
+			<div class="relative" on:click={() => {rankingStyle = 2; }}
+				on:mouseenter={() => { isHoveredBracket = true; }}
+				on:mouseleave={() => { isHoveredBracket = false; }}>
 				<Button 
-					class={rankingStyle === 1 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"}
+					class={rankingStyle === 2 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"} 
 				>
-					Champion Style
+					Bracket Style
 				</Button>
+				{#if isHoveredBracket}
+				   <div class="absolute left-1/2 transform -translate-x-1/2 mt-1 w-32 bg-gray-200 text-black text-center rounded transition-opacity duration-300 text-xs">
+					   Get a ranked scoreboard with all restaurants<br />(Will take more time)
+				   </div>
+			   {/if}
 			</div>
-
-			<div on:click={() => {rankingStyle = 2; }}>
-			<Button 
-				class={rankingStyle === 2 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"} 
-			>
-				Bracket Style
-			</Button>
-			</div>
-  		</div>
-      </div>
+		</div>
+	</div>
 
 	  <form on:submit={handleSubmit} class="flex flex-col items-center">
 		<Button type="submit" class="text-white bg-black hover:bg-gray-500 mb-2 flex items-center justify-center space-x-2">
@@ -130,6 +144,8 @@
 	let isLoading = true;
 	let scriptLoaded = false;
 	let errorMessage = $state('');
+	let isHoveredChampion = $state(false);
+	let isHoveredBracket = $state(false);
 
 	// Load Google Maps script dynamically
 	onMount(async () => {

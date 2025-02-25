@@ -305,48 +305,12 @@
 																	<li>{day}</li>
 																{/each}
 															{:else}
-																<li>Monday: 11:00 AM - 10:00 PM</li>
-																<li>Tuesday: 11:00 AM - 10:00 PM</li>
-																<li>Wednesday: 11:00 AM - 10:00 PM</li>
-																<li>Thursday: 11:00 AM - 10:00 PM</li>
-																<li>Friday: 11:00 AM - 11:00 PM</li>
-																<li>Saturday: 11:00 AM - 11:00 PM</li>
-																<li>Sunday: 12:00 PM - 9:00 PM</li>
+																<li>Hours Unavailable</li>
 															{/if}
 														</ul>
 													</details>
 												</div>
-												
-												<!-- Menu Highlights -->
-												<div class="mb-4">
-													<h3 class="text-sm font-semibold text-gray-700">Menu Highlights</h3>
-													<div class="mt-1 grid grid-cols-2 gap-2">
-														{#if restaurant.type === 'Restaurant' || restaurant.type === 'Café' || restaurant.type === 'Bakery'}
-															<!-- First Menu Item -->
-															<div class="p-2 text-xs bg-gray-100 rounded-md">
-																<span class="font-medium">{restaurant.type === 'Restaurant' ? 'House Special' : restaurant.type === 'Café' ? 'Signature Coffee' : 'Fresh Bread'}</span>
-																<div class="flex items-center mt-1">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="gold" class="bi bi-star-fill" viewBox="0 0 16 16">
-																		<path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-																	</svg>
-																	<span class="ml-1">Popular</span>
-																</div>
-															</div>
-														{:else}
-															<!-- Default Menu Item -->
-															<div class="p-2 text-xs bg-gray-100 rounded-md">
-																<span class="font-medium">Specialty Dish</span>
-																<div class="flex items-center mt-1">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="gold" class="bi bi-star-fill" viewBox="0 0 16 16">
-																		<path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-																	</svg>
-																	<span class="ml-1">Popular</span>
-																</div>
-															</div>
-														{/if}
-													</div>
-												</div>
-												
+
 												<!-- Reviews Section (if available) -->
 												{#if restaurant.reviewsData && restaurant.reviewsData.length > 0}
 													<div class="mb-4">

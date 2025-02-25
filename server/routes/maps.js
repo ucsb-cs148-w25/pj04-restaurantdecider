@@ -52,7 +52,7 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": process.env.MAPS_API_KEY,
         "X-Goog-FieldMask":
-          "places.displayName,places.formattedAddress,places.photos,places.rating,places.userRatingCount",
+          "places.displayName,places.formattedAddress,places.photos,places.rating,places.userRatingCount,places.priceLevel,places.editorialSummary,places.types",
       },
       body: JSON.stringify(requestBody),
     });
@@ -68,13 +68,39 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
       });
     }
 
-    const restaurants = data.places.map((place) => ({
-      name: place.displayName?.text || "No name available",
-      reviews: place.userRatingCount || 0,
-      rating: place.rating || 0,
-      address: place.formattedAddress || "",
-      menuImages: place.photos ? place.photos.map((photo) => photo.name) : [],
-    }));
+    const restaurants = data.places.map((place) => {
+      // Get restaurant type from types array
+      let type = "Restaurant";
+      if (place.types && place.types.length > 0) {
+        // Convert snake_case to Title Case and use the first relevant type
+        const typeMapping = {
+          restaurant: "Restaurant",
+          cafe: "Café",
+          bakery: "Bakery",
+          bar: "Bar",
+          meal_takeaway: "Takeout Restaurant",
+          food: "Food"
+        };
+        
+        for (const t of place.types) {
+          if (typeMapping[t]) {
+            type = typeMapping[t];
+            break;
+          }
+        }
+      }
+      
+      return {
+        name: place.displayName?.text || "No name available",
+        reviews: place.userRatingCount || 0,
+        rating: place.rating || 0,
+        address: place.formattedAddress || "",
+        menuImages: place.photos ? place.photos.map((photo) => photo.name) : [],
+        priceLevel: place.priceLevel || 0,
+        type: type,
+        description: place.editorialSummary?.text || ""
+      };
+    });
 
     res.status(200).json({ restaurants });
   } catch (error) {

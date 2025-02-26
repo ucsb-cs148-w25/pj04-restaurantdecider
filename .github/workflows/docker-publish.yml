@@ -30,6 +30,8 @@ jobs:
         run: |
           echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> client/.env
           echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> server/.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> client/.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> server/.env
         
       - name: Run test build
         run: |
@@ -56,6 +58,8 @@ jobs:
         run: |
           echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> client/.env
           echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> server/.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> client/.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> server/.env
 
       - name: Build image
         run: docker compose build

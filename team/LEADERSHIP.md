@@ -8,8 +8,8 @@
 | Fri 01/17 | Tanay Biradar     | Led team discussion of Sprint01                        | 
 | Fri 01/24 | Winston Wang      | Led first Retro                                        | 
 | Mon 01/27 | Irene Li          | Led lecture 5 standup meeting                          | 
-| Fri 02/03 | Karthik Bhattaram | Led lecture 6 standup meeting                          | 
-| Mon 02/10 | Tanay Biradar     | Led standup meeting and feedback followup              |
+| Wed 1/29  | Karthik Bhattaram | Led lecture 6 standup meeting                          | 
+| Mon 02/10 | Tanay Biradar     | Led lecture 9 standup meeting and feedback followup    |
 | Fri 02/14 | Danny You         | Led second Retro                                       |
 | Mon 02/19 | Edison Zhang      | Led lecture 11 standup meeting                         |
 | Fri 02/21 | Irene Li          | Led lab 7 meeting                                      |

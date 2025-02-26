@@ -1,6 +1,6 @@
 ## lab07 sprint meeting
 
-- [] Chloe Weng - sick; working on reformatting the UI design of the restaurant search frontend page; no blockers
+- [ ] Chloe Weng - sick; working on reformatting the UI design of the restaurant search frontend page; no blockers
 - [x] Edison Zhang - working on issue of reformatting Google Maps component; no blockers
 - [x] Tanay Biradar - working on implementing component testing and updating TESTING doc on repo; no blockers
 - [x] Irene Li - working on reformatting the UI design of the restaurant search frontend page; making sure all In Progress issues on Kanban board have acceptance criteria; no blockers

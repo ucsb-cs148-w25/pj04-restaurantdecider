@@ -150,7 +150,7 @@
 					 (restaurant.reviews.length || 0) : 0),
 			priceLevel: restaurant.priceLevel,
 			type: restaurant.type || 'Restaurant',
-			description: restaurant.description || `Rating: ${restaurant.rating}`,
+			description: restaurant.description,
 			hours: restaurant.hours || {},
 			website: restaurant.website || '',
 			mapsLink: restaurant.mapsLink || '',

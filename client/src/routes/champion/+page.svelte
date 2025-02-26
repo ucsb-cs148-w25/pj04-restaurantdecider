@@ -91,7 +91,7 @@
 					 (restaurant.reviews.length || 0) : 0),
 			priceLevel: restaurant.priceLevel,
 			type: restaurant.type || 'Restaurant',
-			description: restaurant.description || `Rating: ${restaurant.rating}`,
+			description: restaurant.description,
 			hours: restaurant.hours || {},
 			website: restaurant.website || '',
 			mapsLink: restaurant.mapsLink || '',
@@ -139,7 +139,7 @@
 	});
 </script>
 
-<div class="flex min-h-screen flex-col items-center justify-center p-4">
+<div class="flex flex-col items-center justify-center min-h-screen p-4">
 	{#if !showChampion}
 		<h1 class="mb-8 text-4xl font-bold">
 			Round {currentRound}
@@ -156,9 +156,9 @@
 								class="flip-card {flippedCards[restaurant.id] ? 'flipped' : ''} overflow-visible"
 								on:click={(e) => toggleCard(restaurant, e)}
 							>
-								<div class="flip-card-front shadow-md">
+								<div class="shadow-md flip-card-front">
 									<div
-										class="absolute inset-0 bg-cover bg-center transition-transform duration-300"
+										class="absolute inset-0 bg-center bg-cover transition-transform duration-300"
 										style="background-image: url({restaurant.image})"
 									>
 										<div class="absolute inset-0 bg-black/40" />
@@ -248,13 +248,13 @@
 														<h3 class="text-sm font-semibold text-gray-700">Reviews</h3>
 														<div class="mt-2">
 															{#each restaurant.reviewsData.slice(0, 1) as review}
-																<div class="mb-2 p-2 bg-gray-50 rounded-md text-xs">
+																<div class="p-2 mb-2 text-xs bg-gray-50 rounded-md">
 																	{#if review.authorAttribution}
 																		<div class="flex items-center mb-1">
 																			{#if review.authorAttribution.photoUri}
-																				<img src={review.authorAttribution.photoUri} alt="Reviewer" class="w-5 h-5 rounded-full mr-1" />
+																				<img src={review.authorAttribution.photoUri} alt="Reviewer" class="w-5 h-5 mr-1 rounded-full" />
 																			{:else}
-																				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle mr-1" viewBox="0 0 16 16">
+																				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mr-1 bi bi-person-circle" viewBox="0 0 16 16">
 																					<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
 																					<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 1-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 1 8 1"/>
 																				</svg>
@@ -285,7 +285,7 @@
 																	
 																	<!-- Review date if available -->
 																	{#if review.relativePublishTimeDescription}
-																		<p class="text-gray-500 mt-1 text-xs">{review.relativePublishTimeDescription}</p>
+																		<p class="mt-1 text-xs text-gray-500">{review.relativePublishTimeDescription}</p>
 																	{/if}
 																</div>
 															{/each}
@@ -319,7 +319,7 @@
 													selectWinner(restaurant);
 												}}
 											>
-												<Button class="w-12 h-12 rounded-full bg-green-500">
+												<Button class="w-12 h-12 bg-green-500 rounded-full">
 													<Checkmark />
 												</Button>
 											</div>
@@ -334,7 +334,7 @@
 		</div>
 	{:else if champion}
 		<div class="w-full max-w-4xl">
-			<h1 class="mb-8 text-center text-4xl font-bold">Champion</h1>
+			<h1 class="mb-8 text-4xl font-bold text-center">Champion</h1>
 			<div class="space-y-4">
 				<div class="flip-card-container relative mx-auto h-[500px] w-full max-w-lg overflow-visible">
 					<!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -343,9 +343,9 @@
 						class="flip-card {flippedCards[champion.id] ? 'flipped' : ''} overflow-visible"
 						on:click={(e) => toggleCard(champion, e)}
 					>
-						<div class="flip-card-front shadow-md">
+						<div class="shadow-md flip-card-front">
 							<div
-								class="absolute inset-0 bg-cover bg-center transition-transform duration-300"
+								class="absolute inset-0 bg-center bg-cover transition-transform duration-300"
 								style="background-image: url({champion.image})"
 							>
 								<div class="absolute inset-0 bg-black/40" />
@@ -453,13 +453,13 @@
 												<h3 class="text-sm font-semibold text-gray-700">Reviews</h3>
 												<div class="mt-2">
 													{#each champion.reviewsData.slice(0, 1) as review}
-														<div class="mb-2 p-2 bg-gray-50 rounded-md text-xs">
+														<div class="p-2 mb-2 text-xs bg-gray-50 rounded-md">
 															{#if review.authorAttribution}
 																<div class="flex items-center mb-1">
 																	{#if review.authorAttribution.photoUri}
-																		<img src={review.authorAttribution.photoUri} alt="Reviewer" class="w-5 h-5 rounded-full mr-1" />
+																		<img src={review.authorAttribution.photoUri} alt="Reviewer" class="w-5 h-5 mr-1 rounded-full" />
 																	{:else}
-																		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle mr-1" viewBox="0 0 16 16">
+																		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mr-1 bi bi-person-circle" viewBox="0 0 16 16">
 																			<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
 																			<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 1-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 1 8 1"/>
 																		</svg>
@@ -490,7 +490,7 @@
 															
 															<!-- Review date if available -->
 															{#if review.relativePublishTimeDescription}
-																<p class="text-gray-500 mt-1 text-xs">{review.relativePublishTimeDescription}</p>
+																<p class="mt-1 text-xs text-gray-500">{review.relativePublishTimeDescription}</p>
 															{/if}
 														</div>
 													{/each}

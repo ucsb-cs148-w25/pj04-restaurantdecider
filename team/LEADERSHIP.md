@@ -16,11 +16,28 @@
 | Mon 02/24 | Winston Wang      | Led lecture 12 meeting                                 |
 | Wed 02/26 | Tanay Biradar     | Led lecture 13 standup meeting                         |
 
-# Lab 7 Leadership Roles
+# CURRENT LEADERSHIP ROLES (Lab 7)
 Tanay Biradar: Product Owner <br />
+
 Edison Zhang: Scrum Master, Retro 3 Leader <br />
+
 Chloe Weng: Testing/QA Coordinator, Final Presentation Leader <br />
+
 Winston Wang: Design Document Coordinator <br />
+
 Irene Li: UX Coordinator <br />
+
 Karthik Bhattaram: Deployment Document Coordinator <br />
+
 Danny You: User Manual Coordinator <br />
+
+# PREVIOUS LEADERSHIP ROLES
+Initial Product Owner: Irene Li <br />
+
+Initial Scrum Master: Tanay Biradar <br />
+
+First Retro Leader: Winston Wang <br />
+
+Second Retro Leader: Danny You <br />
+
+

@@ -17,10 +17,10 @@
 | Wed 02/26 | Tanay Biradar     | Led lecture 13 standup meeting                         |
 
 # Lab 7 Leadership Roles
-Tanay Biradar: Product Owner
-Edison Zhang: Scrum Master, Retro 3 Leader
-Chloe Weng: Testing/QA Coordinator, Final Presentation Leader
-Winston Wang: Design Document Coordinator
-Irene Li: UX Coordinator
-Karthik Bhattaram: Deployment Document Coordinator
-Danny You: User Manual Coordinator
+Tanay Biradar: Product Owner <br />
+Edison Zhang: Scrum Master, Retro 3 Leader <br />
+Chloe Weng: Testing/QA Coordinator, Final Presentation Leader <br />
+Winston Wang: Design Document Coordinator <br />
+Irene Li: UX Coordinator <br />
+Karthik Bhattaram: Deployment Document Coordinator <br />
+Danny You: User Manual Coordinator <br />

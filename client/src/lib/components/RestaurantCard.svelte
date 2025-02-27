@@ -187,11 +187,12 @@
 							
 							<!-- Action Buttons -->
 							<div class="flex flex-wrap mb-3 gap-2">
+								{#if restaurant.website}
 								<a 
-									href={restaurant.website || '#'} 
+									href={restaurant.website} 
 									target="_blank" 
 									rel="noopener noreferrer" 
-									class="inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary/80 {!restaurant.website ? 'opacity-50 cursor-not-allowed' : ''}"
+									class="inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary/80"
 									on:click={(e) => e.stopPropagation()}
 								>
 									<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="mr-1 bi bi-menu-button-wide" viewBox="0 0 16 16">
@@ -200,6 +201,7 @@
 									</svg>
 									Menu
 								</a>
+								{/if}
 								<a 
 									href={restaurant.mapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(restaurant.name + ' ' + (restaurant.address || ''))}`} 
 									target="_blank" 
@@ -215,6 +217,7 @@
 								</a>
 							</div>
 						</div>
+						{#if typeof onSelectWinner === 'function' && onSelectWinner.toString() !== '() => {}'}
 						<div
 							class="flex justify-center mt-4"
 							on:click={(e) => {
@@ -226,6 +229,7 @@
 								<Checkmark />
 							</Button>
 						</div>
+						{/if}
 					</div>
 				</div>
 			</div>

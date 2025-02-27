@@ -1,4 +1,5 @@
 ## Lecture 13 Sprint Meeting
+Led by: Tanay Biradar
 
 ### Attendance
 - [X] Tanay Biradar

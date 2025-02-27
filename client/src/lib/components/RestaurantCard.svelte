@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import Checkmark from '$lib/svg/checkmark.svelte';
+	import { onMount, afterUpdate } from 'svelte';
 	
 	export let restaurant;
 	export let flipped = false;
@@ -22,6 +23,27 @@
 		mapsLink?: string;
 		reviewsData?: any[];
 	}
+	
+	// Reference to the scrollable content div
+	let scrollableContent;
+	let prevRestaurantId;
+	let prevFlippedState = flipped;
+	let hoursDetails;
+	
+	// Reset scroll position when restaurant changes or card flips
+	afterUpdate(() => {
+		if (scrollableContent && 
+			(prevRestaurantId !== restaurant.id || prevFlippedState !== flipped)) {
+			scrollableContent.scrollTop = 0;
+			prevRestaurantId = restaurant.id;
+			prevFlippedState = flipped;
+			
+			// Ensure hours details is collapsed when restaurant changes or card flips
+			if (hoursDetails) {
+				hoursDetails.removeAttribute('open');
+			}
+		}
+	});
 </script>
 
 <div class="flex flex-col">
@@ -46,7 +68,7 @@
 				</div>
 			</div>
 			<div class="flip-card-back">
-				<div class="h-full p-6 overflow-y-auto bg-white">
+				<div class="h-full p-6 overflow-y-auto bg-white" bind:this={scrollableContent}>
 					<div class="flex flex-col justify-between h-full">
 						<div>
 							<h2 class="mb-2 text-2xl font-bold text-primary">{restaurant.name}</h2>
@@ -98,7 +120,7 @@
 							<!-- Hours Information -->
 							<div class="mb-3">
 								<h3 class="text-sm font-semibold text-gray-700">Hours</h3>
-								<details class="text-sm text-gray-700">
+								<details class="text-sm text-gray-700" bind:this={hoursDetails}>
 									<summary class="cursor-pointer hover:text-primary" on:click={(e) => e.stopPropagation()}>View hours</summary>
 									<ul class="pl-4 mt-1">
 										{#if restaurant.hours && restaurant.hours.weekdayDescriptions && restaurant.hours.weekdayDescriptions.length > 0}

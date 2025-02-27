@@ -99,7 +99,7 @@
 							<div class="mb-3">
 								<h3 class="text-sm font-semibold text-gray-700">Hours</h3>
 								<details class="text-sm text-gray-700">
-									<summary class="cursor-pointer hover:text-primary">View hours</summary>
+									<summary class="cursor-pointer hover:text-primary" on:click={(e) => e.stopPropagation()}>View hours</summary>
 									<ul class="pl-4 mt-1">
 										{#if restaurant.hours && restaurant.hours.weekdayDescriptions && restaurant.hours.weekdayDescriptions.length > 0}
 											{#each restaurant.hours.weekdayDescriptions as day}
@@ -165,14 +165,26 @@
 							
 							<!-- Action Buttons -->
 							<div class="flex flex-wrap mb-3 gap-2">
-								<a href={restaurant.website || '#'} target="_blank" rel="noopener noreferrer" class="inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary/80 {!restaurant.website ? 'opacity-50 cursor-not-allowed' : ''}">
+								<a 
+									href={restaurant.website || '#'} 
+									target="_blank" 
+									rel="noopener noreferrer" 
+									class="inline-flex items-center rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-white hover:bg-primary/80 {!restaurant.website ? 'opacity-50 cursor-not-allowed' : ''}"
+									on:click={(e) => e.stopPropagation()}
+								>
 									<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="mr-1 bi bi-menu-button-wide" viewBox="0 0 16 16">
 										<path d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v2A1.5 1.5 0 0 1 14.5 5h-13A1.5 1.5 0 0 1 0 3.5zM1.5 1a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5z"/>
 										<path d="M2 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m10.823.323-.396-.396A.25.25 0 0 1 12.604 2h.792a.25.25 0 0 1 .177.427l-.396.396a.25.25 0 0 1-.354 0M0 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm1 3v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2zm0-1h14v-2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1zm2.5-6.5a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm7 0a.5.5 0 0 0 0 1h1.5a.5.5 0 0 0 0-1z"/>
 									</svg>
 									Menu
 								</a>
-								<a href={restaurant.mapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(restaurant.name + ' ' + (restaurant.address || ''))}`} target="_blank" rel="noopener noreferrer" class="inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700">
+								<a 
+									href={restaurant.mapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(restaurant.name + ' ' + (restaurant.address || ''))}`} 
+									target="_blank" 
+									rel="noopener noreferrer" 
+									class="inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
+									on:click={(e) => e.stopPropagation()}
+								>
 									<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="mr-1 bi bi-geo-alt" viewBox="0 0 16 16">
 										<path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
 										<path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>

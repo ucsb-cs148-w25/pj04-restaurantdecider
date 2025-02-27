@@ -1,5 +1,6 @@
 ## Lecture 13 Sprint Meeting
 Led by: Tanay Biradar
+Date: Wed 02/26
 
 ### Attendance
 - [X] Tanay Biradar

@@ -1,4 +1,5 @@
-# lec02 sprint meeting
+# lec02 sprint meeting (Mon 01/13)
+Led by: Tanay Biradar
 
 ## Attendance
 - [x] Tanay Biradar

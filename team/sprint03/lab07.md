@@ -1,4 +1,5 @@
-## lab07 sprint meeting
+## lab07 Sprint Meeting (Fri 02/21)
+Led by: Irene Li
 
 - [ ] Chloe Weng - sick; working on reformatting the UI design of the restaurant search frontend page; no blockers
 - [x] Edison Zhang - working on issue of reformatting Google Maps component; no blockers

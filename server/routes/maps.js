@@ -6,20 +6,21 @@ const router = express.Router();
 
 router.post("/restaurants", authMiddleware, async (req, res) => {
   // console.log("Received request body:", req.body);
-  const { latitude, longitude, radius, listSize } = req.body;
+  const { latitude, longitude, radius, listSize, user_preferences } = req.body;
 
   // Validate required fields
-  if (!latitude || !longitude || !radius || !listSize) {
+  if (!latitude || !longitude || !radius || !listSize || !user_preferences) {
     console.error("Missing required fields:", {
       latitude,
       longitude,
       radius,
       listSize,
+      user_preferences
     });
     return res.status(400).json({
       error: "INVALID_REQUEST",
       message: "Missing required fields",
-      details: { latitude, longitude, radius, listSize },
+      details: { latitude, longitude, radius, listSize, user_preferences},
     });
   }
 
@@ -30,7 +31,7 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
   try {
     const url = "https://places.googleapis.com/v1/places:searchNearby";
     const requestBody = {
-      includedTypes: ["restaurant", "coffee_shop", "cafe", "bakery"],
+      includedTypes: user_preferences,
       maxResultCount: limit,
       locationRestriction: {
         circle: {

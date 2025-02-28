@@ -84,6 +84,21 @@
   		</div>
       </div>
 
+	  <div class="flex flex-col items-start">
+		<p class="mb-2 text-xl">Select Types of Places</p>
+		
+		{#each options as option}
+		  <label class="flex items-center">
+			<input 
+			  type="checkbox" 
+			  checked={selectedOptions.includes(option)} 
+			  on:change={() => toggleOption(option)} 
+			/>
+			<span class="ml-2">{option}</span>
+		  </label>
+		{/each}
+	  </div>
+	  
 	  <form on:submit={handleSubmit} class="flex flex-col items-center">
 		<Button type="submit" class="text-white bg-black hover:bg-gray-500 mb-2 flex items-center justify-center space-x-2">
 			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -123,6 +138,7 @@
 	let latitude = $state(0);
 	let longitude = $state(0);
 	let radius = $state(0);
+	let user_preferences = $state(["restaurant", "coffee_shop", "cafe", "bakery"]);
 	let mapContainer;
 	let map;
 	let marker;
@@ -131,6 +147,22 @@
 	let scriptLoaded = false;
 	let errorMessage = $state('');
 
+	let selectedOptions = ['Restaurant', 'Cafe', 'Coffee shop', 'Bakery'];
+	const options = ['Restaurant', 'Cafe', 'Coffee shop', 'Bakery'];
+
+	function toggleOption(option) {
+		if (selectedOptions.includes(option)) {
+			selectedOptions = selectedOptions.filter(item => item !== option);
+			user_preferences = user_preferences.filter(item => item !== option.toLowerCase());
+		} else {
+			selectedOptions.push(option);
+			if(option === "Coffee shop"){
+				user_preferences.push("coffee_shop");
+			} else{
+				user_preferences.push(option.toLowerCase());
+			}
+		}
+	}
 	// Load Google Maps script dynamically
 	onMount(async () => {
 		const script = document.createElement('script');
@@ -186,11 +218,18 @@
 			return;
 		}
 
+		//Validate user preferences
+		if (!user_preferences || user_preferences.length === 0) {
+			errorMessage = 'Please select at least one user preference';
+			return;
+		}
+
 		let dataToSend = {
 			latitude: latitude,
 			longitude: longitude,
 			radius: radius,
-			listSize: numToShow
+			listSize: numToShow,
+			user_preferences: user_preferences,
 		};
 
 		fetch(`${apiBaseUrl}/maps/restaurants`, {

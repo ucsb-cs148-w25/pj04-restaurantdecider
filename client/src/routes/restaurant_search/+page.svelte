@@ -169,8 +169,8 @@
 		}
 
 		// Validate radius
-		if (!radius || radius <= 0) {
-			errorMessage = 'Please enter a valid radius (greater than 0)';
+		if (!radius || radius <= 0 || radius > 30) {
+			errorMessage = 'Please enter a valid radius (greater than 0 and less than 30)';
 			return;
 		}
 

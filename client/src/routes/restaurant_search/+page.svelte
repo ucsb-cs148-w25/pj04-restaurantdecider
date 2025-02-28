@@ -147,8 +147,8 @@
 	let scriptLoaded = false;
 	let errorMessage = $state('');
 
-	let selectedOptions = ['restaurant', 'cafe', 'coffeeshop', 'bakery'];
-	const options = ['restaurant', 'cafe', 'coffeeshop', 'bakery'];
+	let selectedOptions = ['Restaurant', 'Cafe', 'Coffee shop', 'Bakery'];
+	const options = ['Restaurant', 'Cafe', 'Coffee shop', 'Bakery'];
 
 	function toggleOption(option) {
 		if (selectedOptions.includes(option)) {

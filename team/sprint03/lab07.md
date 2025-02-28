@@ -15,3 +15,4 @@ Led by: Irene Li
 - implementing component test in our project
 - cleared up and organized user feedback we want from the other team and the teaching team
 - cleared up how to deploy our web application for the other team
+- error catching for restaurant search: radius 0 or negative, number of restaurants not chosen, champion/bracket style not chosen, location not picked

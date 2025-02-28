@@ -17,6 +17,7 @@
 | Fri 02/21 | Irene Li          | Led lab 7 meeting                                      |
 | Mon 02/24 | Winston Wang      | Led lecture 12 standup meeting                         |
 | Wed 02/26 | Tanay Biradar     | Led lecture 13 standup meeting                         |
+| Fri 02/28 | Irene Li          | Led lab 8 meeting                                      |
 
 # CURRENT LEADERSHIP ROLES (Lab 7)
 Tanay Biradar: Product Owner <br />

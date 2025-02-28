@@ -123,6 +123,7 @@
 	let latitude = $state(0);
 	let longitude = $state(0);
 	let radius = $state(0);
+	let user_preferences = $state(["restaurant", "coffee_shop", "cafe", "bakery"]);
 	let mapContainer;
 	let map;
 	let marker;
@@ -186,11 +187,18 @@
 			return;
 		}
 
+		//Validate user preferences
+		if (!user_preferences || user_preferences.length === 0) {
+			errorMessage = 'Please select at least one user preference';
+			return;
+		}
+
 		let dataToSend = {
 			latitude: latitude,
 			longitude: longitude,
 			radius: radius,
-			listSize: numToShow
+			listSize: numToShow,
+			user_preferences: user_preferences,
 		};
 
 		fetch(`${apiBaseUrl}/maps/restaurants`, {

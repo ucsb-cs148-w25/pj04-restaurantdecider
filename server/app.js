@@ -6,6 +6,8 @@ import createError from "http-errors";
 import { fileURLToPath } from "url";
 import { initializeDB } from "./utils/db.js";
 import cors from "cors";
+import http from "http";
+import { Server } from "socket.io";
 
 // custom modules
 import indexRouter from "./routes/index.js";
@@ -13,8 +15,8 @@ import usersRouter from "./routes/users.js";
 import mapsRouter from "./routes/maps.js";
 import rankingRouter from "./routes/ranking.js";
 
-import dotenv from 'dotenv'
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 // console.log('Google Maps API Key:', process.env.MAPS_API_KEY);
 // allows us to use ES module syntax
 const __filename = fileURLToPath(import.meta.url);
@@ -25,14 +27,32 @@ initializeDB();
 
 // Set up the Express app
 const app = express();
+// Create HTTP server
+const server = http.createServer(app);
+// Initialize Socket.IO
+const io = new Server(server, {
+  cors: {
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://cs148.tanaybiradar.com"
+        : "http://localhost:5173",
+    credentials: true,
+  },
+});
+
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'https://cs148.tanaybiradar.com' : 'http://localhost:5173',
-  credentials: true,
-  exposedHeaders: ["set-cookie"]
-}))
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://cs148.tanaybiradar.com"
+        : "http://localhost:5173",
+    credentials: true,
+    exposedHeaders: ["set-cookie"],
+  })
+);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -43,6 +63,10 @@ app.use("/api/", indexRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/maps", mapsRouter);
 app.use("/api/ranking", rankingRouter);
+
+// Setup socket handlers
+import { setupSocketHandlers } from "./socket/socketHandlers.js";
+setupSocketHandlers(io);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -58,5 +82,17 @@ app.use(function (err, req, res, next) {
 });
 
 const port = process.env.PORT || 3000; // Using environment variable PORT, fallback to 3000
+
+// Socket endpoint for client connections
+const socketEndpoint =
+  process.env.NODE_ENV === "production"
+    ? "https://148.cs148.tanaybiradar.com/socket"
+    : "http://localhost:3001/socket";
+
+// Use server.listen with port number
+server.listen(3001, () => {
+  console.log(`Server running on port ${port}`);
+  console.log(`Socket endpoint available at: ${socketEndpoint}`);
+});
 
 export default app;

@@ -84,6 +84,21 @@
   		</div>
       </div>
 
+	  <div class="flex flex-col items-start">
+		<p class="mb-2 text-xl">Select Types of Places</p>
+		
+		{#each options as option}
+		  <label class="flex items-center">
+			<input 
+			  type="checkbox" 
+			  checked={selectedOptions.includes(option)} 
+			  on:change={() => toggleOption(option)} 
+			/>
+			<span class="ml-2">{option}</span>
+		  </label>
+		{/each}
+	  </div>
+	  
 	  <form on:submit={handleSubmit} class="flex flex-col items-center">
 		<Button type="submit" class="text-white bg-black hover:bg-gray-500 mb-2 flex items-center justify-center space-x-2">
 			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -132,6 +147,16 @@
 	let scriptLoaded = false;
 	let errorMessage = $state('');
 
+	let selectedOptions = ['restaurant', 'cafe', 'coffeeshop', 'bakery'];
+	const options = ['restaurant', 'cafe', 'coffeeshop', 'bakery'];
+
+	function toggleOption(option) {
+		if (selectedOptions.includes(option)) {
+		selectedOptions = selectedOptions.filter(item => item !== option);
+		} else {
+		selectedOptions.push(option);
+		}
+	}
 	// Load Google Maps script dynamically
 	onMount(async () => {
 		const script = document.createElement('script');
@@ -170,8 +195,8 @@
 		}
 
 		// Validate radius
-		if (!radius || radius <= 0) {
-			errorMessage = 'Please enter a valid radius (greater than 0)';
+		if (!radius || radius <= 0 || radius > 30) {
+			errorMessage = 'Please enter a valid radius (greater than 0 and less than 30)';
 			return;
 		}
 

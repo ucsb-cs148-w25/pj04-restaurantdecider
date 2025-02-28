@@ -152,9 +152,15 @@
 
 	function toggleOption(option) {
 		if (selectedOptions.includes(option)) {
-		selectedOptions = selectedOptions.filter(item => item !== option);
+			selectedOptions = selectedOptions.filter(item => item !== option);
+			user_preferences = user_preferences.filter(item => item !== option.toLowerCase());
 		} else {
-		selectedOptions.push(option);
+			selectedOptions.push(option);
+			if(option === "Coffee shop"){
+				user_preferences.push("coffee_shop");
+			} else{
+				user_preferences.push(option.toLowerCase());
+			}
 		}
 	}
 	// Load Google Maps script dynamically

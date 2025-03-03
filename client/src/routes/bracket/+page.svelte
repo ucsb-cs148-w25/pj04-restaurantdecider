@@ -137,6 +137,18 @@
 		flippedCards[restaurant.id] = !flippedCards[restaurant.id];
 	}
 
+	async function handleSignOut() {
+		await fetch(`${apiBaseUrl}/users/signout`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${getAuthToken()}`
+			},
+			credentials: 'include'
+		});
+		goto('/');
+	}
+	
 	onMount(() => {
 		const restaurantsData = getRestaurantsList();
 
@@ -209,6 +221,19 @@
 	});
 </script>
 
+<header class="absolute top-0 left-0 right-0 flex justify-between p-4">
+	<a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
+	<div class="space-x-2">
+		<form on:submit|preventDefault={handleSignOut}>
+			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"
+				>Profile</Button
+			>
+			<Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button
+			>
+		</form>
+	</div>
+</header>
+
 <div class="flex flex-col items-center justify-center min-h-screen p-4">
 	{#if !showScoreboard}
 		<h1 class="mb-8 text-4xl font-bold">
@@ -230,12 +255,12 @@
 
 		<div class="absolute bottom-0 left-0 w-full flex justify-center">
 			<div class="flex flex-col items-center">
-				<div on:click={() => goto('/')}>
+				<div on:click={() => goto('/restaurant_search')}>
 					<Button 
 					variant="outline" 
 					class="mb-8" 
 				>
-					Return to Home
+					Back to Search
 				</Button>
 				</div>
 			</div>
@@ -271,12 +296,12 @@
 			</div>
 			<div class="flex justify-center mt-8">
 				<div class="flex flex-col items-center">
-					<div on:click={() => goto('/')}>
+					<div on:click={() => goto('/restaurant_search')}>
 						<Button 
 						variant="outline" 
 						class="mb-8" 
 					>
-						Return to Home
+						Back to Search
 					</Button>
 					</div>
 				</div>

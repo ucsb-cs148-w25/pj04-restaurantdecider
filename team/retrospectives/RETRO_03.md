@@ -1,7 +1,7 @@
 # Date of Retrospective: 2024-03-03
 
 - Led by: Edison Zhang
-- Present: Karthik Bhattaram, Irene Li, Chloe Weng, Winston Wang, Edison Zhang, Tanay Biradar
+- Present: Karthik Bhattaram, Irene Li, Chloe Weng, Winston Wang, Edison Zhang, Tanay Biradar, Danny You
 - Absent: None
 
 ## Action item

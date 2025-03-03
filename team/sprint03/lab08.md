@@ -7,7 +7,7 @@ Led by: Irene Li
 - [x] Irene Li 
 - [x] Winston Wang
 - [x] Karthik Bhattaram
-- [ ] Danny You
+- [x] Danny You
 
 ## Meeting Notes
 

@@ -7,7 +7,7 @@ On a scale 1-3, where 1 is beginner, 2 is intermediate, and 3 is advanced.
 | Name    | Svelte | SQL | Node.js / Express |
 | ------- | ------ | --- | ----------------- |
 | Chloe   | 1      | 2   | 2                 |
-| Danny   |        |     |                   |
+| Danny   | 1      | 2   ｜1                  |
 | Edison  | 2      | 3   | 1                 |
 | Irene   | 1      | 1   | 2                 |
 | Karthik | 1      | 2   | 1                 |

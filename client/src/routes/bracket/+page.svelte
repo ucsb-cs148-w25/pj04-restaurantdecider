@@ -6,6 +6,7 @@
 	import { apiBaseUrl } from '$lib/index.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import RestaurantCard from '$lib/components/RestaurantCard.svelte';
+	import { goto } from '$app/navigation';
 
 	interface Restaurant {
 		id: number;
@@ -214,7 +215,7 @@
 			Round {currentRound}
 		</h1>
 
-		<div class="relative w-full max-w-4xl">
+		<div class="relative w-full max-w-4xl pb-24">
 			<div class="grid grid-cols-1 gap-8 md:grid-cols-2">
 				{#each currentPair as restaurant, i}
 					<RestaurantCard 
@@ -224,6 +225,19 @@
 						onSelectWinner={selectWinner} 
 					/>
 				{/each}
+			</div>
+		</div>
+
+		<div class="absolute bottom-0 left-0 w-full flex justify-center">
+			<div class="flex flex-col items-center">
+				<div on:click={() => goto('/')}>
+					<Button 
+					variant="outline" 
+					class="mb-8" 
+				>
+					Return to Home
+				</Button>
+				</div>
 			</div>
 		</div>
 	{:else}
@@ -255,6 +269,19 @@
 					</div>
 				{/each}
 			</div>
+			<div class="flex justify-center mt-8">
+				<div class="flex flex-col items-center">
+					<div on:click={() => goto('/')}>
+						<Button 
+						variant="outline" 
+						class="mb-8" 
+					>
+						Return to Home
+					</Button>
+					</div>
+				</div>
+			</div>
 		</div>
 	{/if}
+
 </div>

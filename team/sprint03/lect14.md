@@ -13,3 +13,4 @@ Led by: Irene Li
 ### Meeting Notes
 - doing Retro 3 led by Edison Zhang
 - no important issues to be addressed (going to be working on completing issues and completing Lab 8)
+- important issues to work on: team rounds, sign in issues

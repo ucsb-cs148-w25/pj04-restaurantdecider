@@ -44,6 +44,10 @@
 			showScoreboard = true;
 		}
 
+		console.log("---------------");
+		console.log("CURRENT PAIR: ", currentPair);
+		console.log("RESTAURANTS: ", restaurants);
+		console.log("WINNERS: ", winners);
 		currentPair = [...currentPair];
 		restaurants = [...restaurants];
 	}
@@ -92,13 +96,15 @@
 		} else {
 			showScoreboard = true;
 		}
+		console.log("---------------");
+		console.log("TIE BREAKER CURRENT PAIR:", currentPair);
 	}
 
 	function selectWinner(winner: Restaurant) {
-		if (starting) {
-			let temp = restaurants.splice(0, 2);
-			starting = false;
-		}
+		//if (starting) {
+		//	let temp = restaurants.splice(0, 2);
+		//	starting = false;
+		//}
 		if (isTransitioning) return;
 		isTransitioning = true;
 

@@ -36,7 +36,7 @@
 - Implemented frontend for login and signup pages
 - Ensured number of restaurants displayed when searching is accurate (with Tanay)
 - Created restaurant bracket algorithm (with Edison)
-- Debugged bracket algorithm and created frontend for final scoreboard page for bracket rounds
+- Debugged bracket algorithm (with Edison) and created frontend for final scoreboard page for bracket rounds
 - Created and debugged champion style ranking algorithm
 - Created frontend for champion rounds and final champion scoreboard
 - Added header, return home, and return to search buttons for both champion and bracket ranking pages
@@ -48,4 +48,5 @@
 - Created a Google Maps component to fix issues with broken embed
 - Added ShadCN UI component library
 - Created restaurant bracket algorithm (with Irene)
+- Debugged bracket algorithm (with Irene)
 - Created and formatted UI design of bracket rounds tournament page

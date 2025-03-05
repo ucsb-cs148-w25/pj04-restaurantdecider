@@ -50,3 +50,4 @@
 - Created restaurant bracket algorithm (with Irene)
 - Debugged bracket algorithm (with Irene)
 - Created and formatted UI design of bracket rounds tournament page
+- Created grouping feature with sockets

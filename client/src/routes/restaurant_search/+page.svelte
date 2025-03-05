@@ -152,9 +152,21 @@
 
 	function toggleOption(option) {
 		if (selectedOptions.includes(option)) {
+<<<<<<< HEAD
 		selectedOptions = selectedOptions.filter(item => item !== option);
 		} else {
 		selectedOptions.push(option);
+=======
+			selectedOptions = selectedOptions.filter(item => item !== option);
+			user_preferences = user_preferences.filter(item => item !== option.toLowerCase());
+		} else {
+			selectedOptions.push(option);
+			if(option === "Coffee shop"){
+				user_preferences.push("coffee_shop");
+			} else{
+				user_preferences.push(option.toLowerCase());
+			}
+>>>>>>> 3c180d13332d0e4c322353295cc2f28023579541
 		}
 	}
 	// Load Google Maps script dynamically
@@ -238,7 +250,11 @@
 			.then((response) => response.json())
 			.then((data) => {
 				setRestaurantsList(data);
-				goto('/bracket');
+				if (rankingStyle === 1) {
+					goto('/champion');
+				} else if (rankingStyle === 2) {
+					goto('/bracket');
+				}
 			})
 			.catch((error) => {
 				console.error('Error fetching restaurants:', error);

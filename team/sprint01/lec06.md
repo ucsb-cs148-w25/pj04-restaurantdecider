@@ -1,4 +1,5 @@
-# Lecture 06 Sprint Meeting
+# Lecture 06 Sprint Meeting (Wed 01/29)
+Led by: Karthik Bhattaram
 
 ## Attendance
 * [X] Karthik Bhattaram

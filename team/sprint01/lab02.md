@@ -1,4 +1,5 @@
-## lab02 spring meeting
+## lab02 spring meeting (Fri 01/17)
+Led by: Chloe Weng
 
 - [x] Chloe Weng - deployed Hello World, no blockers, will contribute user stories to Kanban
 - [x] Edison Zhang - no updates/blockers, will create data model

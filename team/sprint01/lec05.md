@@ -1,4 +1,6 @@
-## Lec 05 Meeting
+## Lec 05 Meeting (Mon 01/27)
+Led by: Irene Li
+
 - [X] Edison Zhang
 - [X] Tanay Biradar
 - [X] Irene Li

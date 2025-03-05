@@ -10,6 +10,7 @@
 - Loaded restaurants into bracket for final ranking
 - Migrated username and authentication state to cookies
 - Modified CORS policy (implemented part of this through Irene's account)
+- Implemented testing features for components
   
 2. Karthik Bhattaram
 - Created a Svelte store and rturned profile info on login
@@ -35,10 +36,9 @@
 - Created and reformatted restaurant search page (with Chloe and Tanay)
 - Implemented frontend for login and signup pages
 - Ensured number of restaurants displayed when searching is accurate (with Tanay)
-- Created restaurant bracket algorithm (with Edison)
-- Debugged bracket algorithm (with Edison) and created frontend for final scoreboard page for bracket rounds
+- Created and debugged restaurant bracket algorithm (with Edison)
+- Created frontend for final scoreboard page for bracket rounds, frontend for champion rounds, and final champion scoreboard
 - Created and debugged champion style ranking algorithm
-- Created frontend for champion rounds and final champion scoreboard
 - Added header, return home, and return to search buttons for both champion and bracket ranking pages
 - Added error check on restaurant search page for choosing ranking style
 - Fixed restaurant search button to respond to user input

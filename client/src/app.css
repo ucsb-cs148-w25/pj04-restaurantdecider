@@ -72,6 +72,7 @@
   }
   body {
     background-color: #004aad; /* Directly set the background color */
-    color: var(--white);  
+    color: var(--white); 
+    font-family: 'DM Sans', sans-serif;
   }
 }

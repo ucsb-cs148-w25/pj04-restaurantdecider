@@ -230,7 +230,7 @@
 	</div>
 </header>
 
-<div class="flex flex-col items-center justify-center min-h-screen p-4">
+<div class="flex flex-col items-center justify-center min-h-screen pt-16">
 	{#if !showScoreboard}
 		<h1 class="mb-8 text-4xl font-bold">
 			Round {currentRound}

@@ -246,7 +246,24 @@
 			credentials: 'include',
 			body: JSON.stringify(dataToSend)
 		})
-			.then((response) => response.json())
+			.then(async (response) => {
+				if (!response.ok) {
+					// If status is not OK, try to read the response as text to see what we got
+					const errorText = await response.text();
+					console.error('Server response not OK:', response.status, errorText);
+					throw new Error(`Server returned ${response.status}: ${errorText.substring(0, 100)}...`);
+				}
+				
+				// Check Content-Type header to ensure we're getting JSON
+				const contentType = response.headers.get('content-type');
+				if (!contentType || !contentType.includes('application/json')) {
+					const text = await response.text();
+					console.error('Response was not JSON:', contentType, text.substring(0, 100));
+					throw new Error('Server did not return JSON');
+				}
+				
+				return response.json();
+			})
 			.then((data) => {
 				setRestaurantsList(data);
 				if (rankingStyle === 1) {
@@ -257,6 +274,7 @@
 			})
 			.catch((error) => {
 				console.error('Error fetching restaurants:', error);
+				errorMessage = `Error fetching restaurants: ${error.message}`;
 			});
 	};
 

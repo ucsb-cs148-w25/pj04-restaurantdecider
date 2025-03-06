@@ -1,5 +1,5 @@
-<header class="fixed left-0 right-0 top-0 z-50 flex justify-between bg-white p-4">
-	<a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
+<header class="header-bg absolute top-0 left-0 right-0 z-50 flex justify-between p-4">
+	<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem"></a>
 	<div class="space-x-2">
 		<form on:submit|preventDefault={handleSignOut}>
 			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"
@@ -35,7 +35,7 @@
 			<div class="flex space-x-4 mb-9">
 				<div on:click={() => {numToShow = 8; }}>
 				<Button 
-					class={numToShow === 8 ? "bg-blue-800 text-white w-16 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
+					class={numToShow === 8 ? "bg-blue-700 text-white w-16 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-16"}
 				>
 					8
 				</Button>
@@ -43,7 +43,7 @@
 				
 				<div on:click={() => {numToShow = 16; }}>
 				<Button 
-				class={numToShow === 16 ? "bg-blue-800 text-white w-16 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
+					class={numToShow === 16 ? "bg-blue-700 text-white w-16 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
 				>
 					16
 				</Button>
@@ -51,7 +51,7 @@
 
 				<div on:click={() => {numToShow = 32; }}>
 				<Button 
-					class={numToShow === 32 ? "bg-blue-800 text-white w-16 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
+					class={numToShow === 32 ? "bg-blue-700 text-white w-16 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
 				>
 					32
 				</Button>
@@ -68,7 +68,7 @@
 		<div class="flex space-x-4 mb-8">
 			<div on:click={() => {rankingStyle = 1; }}>
 				<Button 
-					class={rankingStyle === 1 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"}
+					class={rankingStyle === 1 ? "bg-blue-700 text-white w-32 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-32"}
 				>
 					Champion Style
 				</Button>
@@ -76,7 +76,7 @@
 
 			<div on:click={() => {rankingStyle = 2; }}>
 			<Button 
-				class={rankingStyle === 2 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"} 
+				class={rankingStyle === 2 ? "bg-blue-700 text-white w-32 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-32"} 
 			>
 				Bracket Style
 			</Button>
@@ -131,6 +131,7 @@
 	import { apiBaseUrl } from '$lib/index.js';
 	import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
+	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 
 	let { data } = $props();
 	let numToShow = $state(0);

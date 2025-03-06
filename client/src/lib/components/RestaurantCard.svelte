@@ -143,14 +143,10 @@
 											<div class="mb-2 p-2 bg-gray-50 rounded-md text-xs">
 												{#if review.authorAttribution}
 													<div class="flex items-center mb-1">
-														{#if review.authorAttribution.photoUri}
-															<img src={review.authorAttribution.photoUri} alt="Reviewer" class="w-5 h-5 rounded-full mr-1" />
-														{:else}
-															<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle mr-1" viewBox="0 0 16 16">
-																<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-																<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 1-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 1 8 1"/>
-															</svg>
-														{/if}
+														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle mr-1" viewBox="0 0 16 16">
+															<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+															<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 1-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 1 8 1"/>
+														</svg>
 														<span class="font-medium">{review.authorAttribution.displayName || 'Anonymous'}</span>
 													</div>
 												{/if}

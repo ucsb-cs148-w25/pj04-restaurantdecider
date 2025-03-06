@@ -167,9 +167,14 @@
 	// Load Google Maps script dynamically
 	onMount(async () => {
 		const script = document.createElement('script');
-		script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places`;
+		script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places&v=weekly`;
 		script.async = true;
 		script.defer = true;
+		script.crossOrigin = "anonymous";
+		// Add a specific error handler
+		script.onerror = (error) => {
+			console.error('Error loading Google Maps API:', error);
+		};
 		script.onload = () => {
 			scriptLoaded = true;
 			initializeMap();
@@ -242,7 +247,24 @@
 			credentials: 'include',
 			body: JSON.stringify(dataToSend)
 		})
-			.then((response) => response.json())
+			.then(async (response) => {
+				if (!response.ok) {
+					// If status is not OK, try to read the response as text to see what we got
+					const errorText = await response.text();
+					console.error('Server response not OK:', response.status, errorText);
+					throw new Error(`Server returned ${response.status}: ${errorText.substring(0, 100)}...`);
+				}
+				
+				// Check Content-Type header to ensure we're getting JSON
+				const contentType = response.headers.get('content-type');
+				if (!contentType || !contentType.includes('application/json')) {
+					const text = await response.text();
+					console.error('Response was not JSON:', contentType, text.substring(0, 100));
+					throw new Error('Server did not return JSON');
+				}
+				
+				return response.json();
+			})
 			.then((data) => {
 				setRestaurantsList(data);
 				if (rankingStyle === 1) {
@@ -253,6 +275,7 @@
 			})
 			.catch((error) => {
 				console.error('Error fetching restaurants:', error);
+				errorMessage = `Error fetching restaurants: ${error.message}`;
 			});
 	};
 

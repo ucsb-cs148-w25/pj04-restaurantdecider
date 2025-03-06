@@ -34,7 +34,6 @@
 	let flippedCards: { [key: number]: boolean } = {};
 	let scoreboard: { [key: number]: number } = {};
 	let showScoreboard = false;
-	let starting = true;
 
 	function getNextPair() {
 		currentPair = [];
@@ -97,10 +96,6 @@
 	}
 
 	function selectWinner(winner: Restaurant) {
-		if (starting) {
-			let temp = restaurants.splice(0, 2);
-			starting = false;
-		}
 		if (isTransitioning) return;
 		isTransitioning = true;
 

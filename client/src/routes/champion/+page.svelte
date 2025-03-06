@@ -35,7 +35,6 @@
 	let flippedCards: { [key: number]: boolean } = {};
 	let champion: Restaurant | null = null;
 	let showChampion = false;
-	let starting = true;
 
 	function getNextPair() {
 		if (restaurants.length >= 2) {
@@ -53,10 +52,6 @@
 	}
 
 	function selectWinner(winner: Restaurant) {
-		if (starting) {
-			let temp = restaurants.splice(0, 2);
-			starting = false;
-		}
 		if (isTransitioning) return;
 		isTransitioning = true;
 
@@ -114,7 +109,7 @@
 			reviewsData: Array.isArray(restaurant.reviews) ? restaurant.reviews : []
 		}));
 
-		// console.log(allRestaurants);
+		//console.log(allRestaurants);
 		restaurants = [...allRestaurants];
 
 		// Load images after initial mount

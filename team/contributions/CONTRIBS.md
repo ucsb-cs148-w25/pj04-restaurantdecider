@@ -24,7 +24,7 @@
 - Added an upper limit of 30 miles to radius input
   
 4. Danny You
-- 
+- No major contributions
 
 5. Chloe Weng
 - Created API endpoints for the login and signup functions (with Tanay)

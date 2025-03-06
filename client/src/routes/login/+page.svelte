@@ -6,6 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
+	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 
 	let loginUsername = '';
 	let loginPassword = '';
@@ -61,18 +62,18 @@
 </script>
 
 <header class="absolute top-0 left-0 right-0 flex justify-between p-4">
-  <a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
-  <div class="space-x-2">
-    <Button href="/signup" variant="outline" size="sm" class="bg-black text-white">Sign Up</Button>
-  </div>
+	<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem"></a>
+	<div class="space-x-2">
+		<Button href="/signup" variant="outline" size="sm" class="bg-black text-white">Sign Up</Button>
+	</div>
 </header>
 
 <div class="flex items-center justify-center min-h-screen flex-col space-y-6">
 	<div class="text-center space-y-6 w-full max-w-sm mx-auto">
-		<h1 class="text-3xl font-bold underline">Sign in</h1>
+		<h1 class="text-3xl font-bold">Sign in</h1>
 		<form on:submit={handleSubmitLogin} class="space-y-4">
-			<Input bind:value={loginUsername} placeholder="Username/Email" class="w-full"></Input>
-			<Input bind:value={loginPassword} placeholder="Password" class="w-full" type="password"></Input>
+			<Input bind:value={loginUsername} placeholder="Username/Email" class="w-full" style="background-color: white; color: gray;"></Input>
+			<Input bind:value={loginPassword} placeholder="Password" class="w-full" type="password" style="background-color: white; color: gray;"></Input>
 			<Button type="submit" class="w-full">Submit</Button>
 		</form>
 	</div>

@@ -64,6 +64,10 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+  
+  .header-bg {
+    background-color: #004aad; /* Match the body background color */
+  }
 }
 
 @layer base {
@@ -71,8 +75,9 @@
     @apply border-border;
   }
   body {
-    background-color: #004aad; /* Directly set the background color */
+    background-color: #004aad;
     color: var(--white); 
     font-family: 'DM Sans', sans-serif;
   }
+
 }

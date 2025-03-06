@@ -216,7 +216,7 @@
 						</div>
 						{#if typeof onSelectWinner === 'function' && onSelectWinner.toString() !== '() => {}'}
 						<div
-							class="flex justify-center mt-4"
+							class="flex justify-center mt-4 pb-2"
 							on:click={(e) => {
 								e.stopPropagation();
 								onSelectWinner(restaurant);

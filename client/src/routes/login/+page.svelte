@@ -72,8 +72,8 @@
 	<div class="text-center space-y-6 w-full max-w-sm mx-auto">
 		<h1 class="text-3xl font-bold">Sign in</h1>
 		<form on:submit={handleSubmitLogin} class="space-y-4">
-			<Input bind:value={loginUsername} placeholder="Username/Email" class="w-full" style="background-color: white; color: gray;"></Input>
-			<Input bind:value={loginPassword} placeholder="Password" class="w-full" type="password" style="background-color: white; color: gray;"></Input>
+			<Input bind:value={loginUsername} placeholder="Username/Email" class="w-full" style="background-color: white; color: black;"></Input>
+			<Input bind:value={loginPassword} placeholder="Password" class="w-full" type="password" style="background-color: white; color: black;"></Input>
 			<Button type="submit" class="w-full">Submit</Button>
 		</form>
 	</div>

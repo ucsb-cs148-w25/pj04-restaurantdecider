@@ -6,6 +6,7 @@
 	import { apiBaseUrl } from '$lib/index.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import RestaurantCard from '$lib/components/RestaurantCard.svelte';
+	import { Header } from '$lib/components/ui/header';
 
 	interface Restaurant {
 		id: number;
@@ -140,7 +141,9 @@
 	});
 </script>
 
-<div class="flex flex-col items-center justify-center min-h-screen p-4">
+<Header isAuthenticated={true} position="fixed" bgColor="bg-white" />
+
+<div class="flex flex-col items-center justify-center min-h-screen p-4 pt-16">
 	{#if !showChampion}
 		<h1 class="mb-8 text-4xl font-bold">
 			Round {currentRound}

@@ -1,15 +1,4 @@
-<header class="fixed left-0 right-0 top-0 z-50 flex justify-between bg-white p-4">
-	<a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
-	<div class="space-x-2">
-		<form on:submit|preventDefault={handleSignOut}>
-			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"
-				>Profile</Button
-			>
-			<Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button
-			>
-		</form>
-	</div>
-</header>
+<Header isAuthenticated={true} position="fixed" bgColor="bg-white" />
 
 <div class="pt-16 pb-24 min-h-screen flex justify-center items-start space-x-8">
   <!-- Card Section -->
@@ -131,6 +120,7 @@
 	import { apiBaseUrl } from '$lib/index.js';
 	import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
+	import { Header } from '$lib/components/ui/header';
 
 	let { data } = $props();
 	let numToShow = $state(0);
@@ -176,17 +166,7 @@
 		document.head.appendChild(script);
 	});
 
-	async function handleSignOut() {
-		await fetch(`${apiBaseUrl}/users/signout`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${getAuthToken()}`
-			},
-			credentials: 'include'
-		});
-		goto('/');
-	}
+	// Sign out functionality moved to Header component
 
 	let handleSubmit = (e) => {
 		e.preventDefault();

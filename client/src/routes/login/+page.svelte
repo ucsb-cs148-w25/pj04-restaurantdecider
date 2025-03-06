@@ -6,6 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
+	import { Header } from '$lib/components/ui/header';
 
 	let loginUsername = '';
 	let loginPassword = '';
@@ -60,12 +61,7 @@
 	}
 </script>
 
-<header class="absolute top-0 left-0 right-0 flex justify-between p-4">
-  <a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
-  <div class="space-x-2">
-    <Button href="/signup" variant="outline" size="sm" class="bg-black text-white">Sign Up</Button>
-  </div>
-</header>
+<Header isAuthenticated={false} position="absolute" showSignIn={false} />
 
 <div class="flex items-center justify-center min-h-screen flex-col space-y-6">
 	<div class="text-center space-y-6 w-full max-w-sm mx-auto">

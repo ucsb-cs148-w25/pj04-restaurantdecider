@@ -8,6 +8,7 @@
 	import RestaurantCard from '$lib/components/RestaurantCard.svelte';
 	import { Divide } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
+	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 
 	interface Restaurant {
 		id: number;
@@ -34,7 +35,6 @@
 	let flippedCards: { [key: number]: boolean } = {};
 	let champion: Restaurant | null = null;
 	let showChampion = false;
-	let starting = true;
 
 	function getNextPair() {
 		if (restaurants.length >= 2) {
@@ -52,10 +52,6 @@
 	}
 
 	function selectWinner(winner: Restaurant) {
-		if (starting) {
-			let temp = restaurants.splice(0, 2);
-			starting = false;
-		}
 		if (isTransitioning) return;
 		isTransitioning = true;
 
@@ -113,7 +109,7 @@
 			reviewsData: Array.isArray(restaurant.reviews) ? restaurant.reviews : []
 		}));
 
-		// console.log(allRestaurants);
+		//console.log(allRestaurants);
 		restaurants = [...allRestaurants];
 
 		// Load images after initial mount
@@ -155,7 +151,7 @@
 </script>
 
 <header class="absolute top-0 left-0 right-0 flex justify-between p-4">
-	<a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
+	<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem"></a>
 	<div class="space-x-2">
 		<form on:submit|preventDefault={handleSignOut}>
 			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"
@@ -167,7 +163,7 @@
 	</div>
 </header>
 
-<div class="flex flex-col items-center justify-center min-h-screen p-4">
+<div class="flex flex-col items-center justify-center min-h-screen pt-16">
 	{#if !showChampion}
 		<h1 class="mb-8 text-4xl font-bold">
 			Round {currentRound}
@@ -200,7 +196,7 @@
 		</div>
 	{/if}
 
-	<div class="absolute bottom-0 left-0 w-full flex justify-center">
+	<div class="bottom-0 left-0 w-full flex justify-center">
 		<div class="flex flex-col items-center">
 			<div on:click={() => goto('/restaurant_search')}>
 				<Button 

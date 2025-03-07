@@ -15,6 +15,7 @@
 | Wed 02/26 | Tanay Biradar     | Led lecture 13 standup meeting                         |
 | Fri 02/28 | Irene Li          | Led lab 8 meeting                                      |
 | Mon 03/03 | Irene Li          | Led lecture 14 standup meeting                         |
+| Wed 03/05 | Irene Li          | Led lecture 15 standup meeting                         |
 
 # CURRENT LEADERSHIP ROLES (Lab 7)
 Tanay Biradar: Product Owner <br />

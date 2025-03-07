@@ -69,6 +69,15 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
       });
     }
 
+    if (data.places.length < limit) {
+      console.error("Not enough restaurants found:", data.places.length);
+      return res.status(400).json({
+        error: "NOT_ENOUGH_RESTAURANTS",
+        message: "Not enough restaurants found",
+        details: { found: data.places.length, limit },
+     });
+    }
+
     const restaurants = data.places.map((place) => {
       // Get restaurant type from types array
       let type = "Restaurant";

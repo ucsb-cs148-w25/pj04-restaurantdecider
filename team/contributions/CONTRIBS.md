@@ -16,6 +16,7 @@
 - Created a Svelte store and rturned profile info on login
 - Made a profile page for users to access when logged in
 - Added option for users to preselect type of restaurant (with Winston)
+- Added error check if there are enough restaurants in vicinity
   
 3. Winston Wang
 - Produced an API endpoint that gives restaurants to rank
@@ -42,6 +43,7 @@
 - Added header, return home, and return to search buttons for both champion and bracket ranking pages
 - Added error check on restaurant search page for choosing ranking style
 - Fixed restaurant search button to respond to user input
+- Created WEAT logo and incorporated it into the web app, changed the UI design for all pages
 - Reformatted standup notes for consistency
 
 7. Edison Zhang

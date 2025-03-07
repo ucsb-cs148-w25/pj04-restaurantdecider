@@ -6,6 +6,7 @@
 	import { apiBaseUrl } from '$lib/index.js';
 	import { getAuthToken, setUserProfileData } from '$lib/stores/userStore.svelte.js';
 	import RestaurantCard from '$lib/components/RestaurantCard.svelte';
+	import { Divide } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 
 	interface Restaurant {
@@ -31,77 +32,22 @@
 	let currentRound = 1;
 	let isTransitioning = false;
 	let flippedCards: { [key: number]: boolean } = {};
-	let scoreboard: { [key: number]: number } = {};
-	let showScoreboard = false;
+	let champion: Restaurant | null = null;
+	let showChampion = false;
 	let starting = true;
 
 	function getNextPair() {
-		currentPair = [];
 		if (restaurants.length >= 2) {
 			currentPair = restaurants.splice(0, 2);
 		} else if (winners.length >= 2) {
 			currentPair = winners.splice(0, 2);
-		} else {
-			showScoreboard = true;
-		}
-
-		currentPair = [...currentPair];
-		restaurants = [...restaurants];
-	}
-
-	function tieBreaker() {
-		// Group restaurants by their scores
-		const scoreGroups: { [score: number]: Restaurant[] } = {};
-
-		allRestaurants.forEach((restaurant) => {
-			const score = scoreboard[restaurant.id] || 0;
-			if (!scoreGroups[score]) {
-				scoreGroups[score] = [];
-			}
-			scoreGroups[score].push(restaurant);
-		});
-
-		// Find the highest score that has ties
-		let highestScoreWithTies = -1;
-		Object.entries(scoreGroups).forEach(([score, restaurants]) => {
-			if (restaurants.length > 1 && Number(score) > highestScoreWithTies) {
-				highestScoreWithTies = Number(score);
-			}
-		});
-
-		// If no ties found, show scoreboard
-		if (highestScoreWithTies === -1) {
-			const champion = allRestaurants.reduce((prev, current) =>
-				(scoreboard[prev.id] || 0) > (scoreboard[current.id] || 0) ? prev : current
-			);
-			setUserProfileData({
-				champions: [champion.name]
-			});
-			showScoreboard = true;
-			return;
-		}
-
-		// Get the tied restaurants for the highest score
-		const tiedRestaurants = scoreGroups[highestScoreWithTies];
-
-		// Increment scores for all restaurants with higher scores
-		allRestaurants.forEach((restaurant) => {
-			const score = scoreboard[restaurant.id] || 0;
-			if (score > highestScoreWithTies) {
-				scoreboard[restaurant.id] = score + 1;
-			}
-		});
-
-		// Set up the next pair from tied restaurants
-		if (tiedRestaurants.length >= 2) {
-			currentPair = tiedRestaurants.splice(0, 2);
-			winners = tiedRestaurants.splice(2);
-		} else {
-			const champion = tiedRestaurants[0];  // The top winner from the tie
-        	setUserProfileData({
-				champions: [champion.name]
-			});
-			showScoreboard = true;
+		} else if (winners.length === 1 && restaurants.length === 1) {
+			currentPair = [...winners, ...restaurants];
+			winners = [];
+			restaurants = [];
+		} else if (winners.length === 1) {
+			champion = winners[0];
+			showChampion = true;
 		}
 	}
 
@@ -113,32 +59,25 @@
 		if (isTransitioning) return;
 		isTransitioning = true;
 
-		// Increment winner's score
-		scoreboard[winner.id] = (scoreboard[winner.id] || 0) + 1;
-
 		setTimeout(() => {
 			flippedCards = {};
 			winners = [...winners, winner];
 			currentRound = currentRound + 1;
-			currentPair = [];
 
-			if (restaurants.length < 2) {
-				if (winners.length == 1) {
-					tieBreaker();
-				} else {
-					getNextPair();
-				}
+			// Save the current round winner to the user's profile (store or backend)
+			if (winners.length === 1 && restaurants.length === 0) {
+				champion = winners[0];
+				showChampion = true;
+				// Save champion to the user's profile
+				setUserProfileData({
+					champions: [champion.name]
+				});
 			} else {
 				getNextPair();
 			}
 			isTransitioning = false;
-		}, 10);
+		}, 1000);
 	}
-
-	// Get sorted restaurants by score
-	$: sortedRestaurants = allRestaurants
-		.slice()
-		.sort((a, b) => (scoreboard[b.id] || 0) - (scoreboard[a.id] || 0));
 
 	function toggleCard(restaurant: Restaurant, event?: Event) {
 		if (event) {
@@ -158,7 +97,7 @@
 		});
 		goto('/');
 	}
-	
+
 	onMount(() => {
 		const restaurantsData = getRestaurantsList();
 
@@ -180,18 +119,8 @@
 			reviewsData: Array.isArray(restaurant.reviews) ? restaurant.reviews : []
 		}));
 
-		// console.log('RESTAURANTS: ', allRestaurants);
+		// console.log(allRestaurants);
 		restaurants = [...allRestaurants];
-
-		// Initialize scoreboard with 0 points for each restaurant
-		allRestaurants.forEach((restaurant) => {
-			scoreboard[restaurant.id] = 0;
-		});
-
-		// Update restaurants array with the new data
-
-		// Get the first pair to start the bracket
-		//getNextPair();
 
 		// Load images after initial mount
 		let loadedImages = 0;
@@ -204,7 +133,7 @@
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${getAuthToken()}`
+							Authorization: `Bearer ${getAuthToken()}`
 						},
 						credentials: 'include',
 						body: JSON.stringify({
@@ -245,7 +174,7 @@
 </header>
 
 <div class="flex flex-col items-center justify-center min-h-screen p-4">
-	{#if !showScoreboard}
+	{#if !showChampion}
 		<h1 class="mb-8 text-4xl font-bold">
 			Round {currentRound}
 		</h1>
@@ -262,61 +191,70 @@
 				{/each}
 			</div>
 		</div>
-
-		<div class="absolute bottom-0 left-0 w-full flex justify-center">
-			<div class="flex flex-col items-center">
-				<div on:click={() => goto('/restaurant_search')}>
-					<Button 
-					variant="outline" 
-					class="mb-8" 
-				>
-					Back to Search
-				</Button>
-				</div>
-			</div>
-		</div>
-	{:else}
-		<div class="w-full max-w-4xl">
-			<h1 class="mb-8 text-4xl font-bold text-center">Final Rankings</h1>
+	{:else if champion}
+		<div class="w-full max-w-4xl pb-24">
+			<h1 class="mb-8 text-4xl font-bold text-center">Champion</h1>
 			<div class="space-y-4">
-				{#each sortedRestaurants as restaurant, index}
-					<div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-md">
-						<div class="flex items-center space-x-4">
-							<span
-								class="text-2xl font-bold {index === 0
-									? 'text-yellow-500'
-									: index === 1
-										? 'text-gray-500'
-										: index === 2
-											? 'text-amber-700'
-											: 'text-gray-700'}"
-							>
-								#{index + 1}
-							</span>
-							<div>
-								<h2 class="text-xl font-semibold">{restaurant.name}</h2>
-							</div>
-						</div>
-						<div
-							class="w-16 h-16 bg-center bg-cover rounded-full"
-							style="background-image: url({restaurant.image})"
-						></div>
-					</div>
-				{/each}
-			</div>
-			<div class="flex justify-center mt-8">
-				<div class="flex flex-col items-center">
-					<div on:click={() => goto('/restaurant_search')}>
-						<Button 
-						variant="outline" 
-						class="mb-8" 
-					>
-						Back to Search
-					</Button>
-					</div>
+				<div class="relative mx-auto w-full max-w-lg">
+					<RestaurantCard 
+						restaurant={champion} 
+						flipped={flippedCards[champion.id]} 
+						onToggle={toggleCard} 
+					/>
 				</div>
 			</div>
 		</div>
 	{/if}
 
+	<div class="absolute bottom-0 left-0 w-full flex justify-center">
+		<div class="flex flex-col items-center">
+			<div on:click={() => goto('/restaurant_search')}>
+				<Button 
+				variant="outline" 
+				class="mb-8" 
+			>
+				Back to Search
+			</Button>
+			</div>
+		</div>
+	</div>
 </div>
+
+
+<style>
+	.flip-card-container {
+		perspective: 1500px;
+	}
+
+	.flip-card {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		transform-style: preserve-3d;
+		transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+		cursor: pointer;
+	}
+
+	.flip-card.flipped {
+		transform: rotateY(180deg);
+	}
+
+	.flip-card-front,
+	.flip-card-back {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		backface-visibility: hidden;
+		overflow: hidden;
+		border-radius: 0.5rem;
+	}
+
+	.flip-card-front {
+		background-color: #f3f4f6;
+	}
+
+	.flip-card-back {
+		transform: rotateY(180deg);
+		background-color: white;
+	}
+</style>

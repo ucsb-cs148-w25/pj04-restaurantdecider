@@ -1,4 +1,5 @@
-# Sprint 01 Planning
+# Sprint 01 Planning (Fri 01/17)
+Led by: Tanay Biradar
 
 1. Set of deliverables
 2. Identifies tasks to complete

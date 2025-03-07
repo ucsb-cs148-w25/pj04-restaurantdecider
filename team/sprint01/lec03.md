@@ -1,4 +1,5 @@
-## lec03 spring meeting
+## lec03 spring meeting (Wed 01/15)
+Led by: Edison Zhang
 
 - [x] Edison Zhang - Finished Lab1, no blockers
 - [x] Tanay Biradar - Updated GitIgnore and readme, finished lab01, no blockers

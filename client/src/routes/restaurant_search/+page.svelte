@@ -64,7 +64,33 @@
         <Input id="search-box" type="text" placeholder="Search for a location" class="search-input w-full" />
       </div>
 
-	  <div class="flex flex-col items-start pl-4 mt-8">
+	  <div class="flex flex-col items-start pl-4 mt-8"> 
+		<div class="flex space-x-4 mb-8">
+			<div on:click={() => {rankingStyle = 1; }}>
+				<Tooltip.Provider>
+					<Tooltip.Root>
+					  <Tooltip.Trigger class={rankingStyle === 1 ? "rounded-md bg-blue-700 text-white w-32 h-10 hover:text-white hover:bg-blue-700" : "rounded-md bg-gray-200 text-black hover:bg-blue-300 w-32 h-10"}>Champion Style</Tooltip.Trigger>
+					  <Tooltip.Content>
+						<p>Add to library</p>
+					  </Tooltip.Content>
+					</Tooltip.Root>
+				  </Tooltip.Provider>
+			</div>
+
+			<div on:click={() => {rankingStyle = 2; }}>
+				<Tooltip.Provider>
+					<Tooltip.Root>
+					  <Tooltip.Trigger class={rankingStyle === 2 ? "rounded-md bg-blue-700 text-white w-32 h-10 hover:text-white hover:bg-blue-700" : "rounded-md bg-gray-200 text-black hover:bg-blue-300 w-32 h-10"}>Bracket Style</Tooltip.Trigger>
+					  <Tooltip.Content>
+						<p>Add to library</p>
+					  </Tooltip.Content>
+					</Tooltip.Root>
+				  </Tooltip.Provider>
+			</div>
+  		</div>
+      </div>
+
+	  <!-- <div class="flex flex-col items-start pl-4 mt-8"> 
 		<div class="flex space-x-4 mb-8">
 			<div on:click={() => {rankingStyle = 1; }}>
 				<Button 
@@ -82,7 +108,7 @@
 			</Button>
 			</div>
   		</div>
-      </div>
+      </div>-->
 
 	  <div class="flex flex-col items-start">
 		<p class="mb-2 text-xl">Select Types of Places</p>
@@ -132,6 +158,7 @@
 	import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
+	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 
 	let { data } = $props();
 	let numToShow = $state(0);

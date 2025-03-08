@@ -1,5 +1,5 @@
-<header class="fixed left-0 right-0 top-0 z-50 flex justify-between bg-white p-4">
-	<a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
+<header class="header-bg absolute top-0 left-0 right-0 z-50 flex justify-between p-4">
+	<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem"></a>
 	<div class="space-x-2">
 		<form on:submit|preventDefault={handleSignOut}>
 			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"
@@ -35,7 +35,7 @@
 			<div class="flex space-x-4 mb-9">
 				<div on:click={() => {numToShow = 8; }}>
 				<Button 
-					class={numToShow === 8 ? "bg-blue-800 text-white w-16 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
+					class={numToShow === 8 ? "bg-blue-700 text-white w-16 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-16"}
 				>
 					8
 				</Button>
@@ -43,7 +43,7 @@
 				
 				<div on:click={() => {numToShow = 16; }}>
 				<Button 
-				class={numToShow === 16 ? "bg-blue-800 text-white w-16 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
+					class={numToShow === 16 ? "bg-blue-700 text-white w-16 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
 				>
 					16
 				</Button>
@@ -51,7 +51,7 @@
 
 				<div on:click={() => {numToShow = 32; }}>
 				<Button 
-					class={numToShow === 32 ? "bg-blue-800 text-white w-16 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
+					class={numToShow === 32 ? "bg-blue-700 text-white w-16 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-16"} 
 				>
 					32
 				</Button>
@@ -68,7 +68,7 @@
 		<div class="flex space-x-4 mb-8">
 			<div on:click={() => {rankingStyle = 1; }}>
 				<Button 
-					class={rankingStyle === 1 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"}
+					class={rankingStyle === 1 ? "bg-blue-700 text-white w-32 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-32"}
 				>
 					Champion Style
 				</Button>
@@ -76,7 +76,7 @@
 
 			<div on:click={() => {rankingStyle = 2; }}>
 			<Button 
-				class={rankingStyle === 2 ? "bg-blue-800 text-white w-32 hover:text-white hover:bg-blue-800" : "bg-gray-200 text-black hover:bg-blue-300 w-32"} 
+				class={rankingStyle === 2 ? "bg-blue-700 text-white w-32 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-32"} 
 			>
 				Bracket Style
 			</Button>
@@ -84,6 +84,21 @@
   		</div>
       </div>
 
+	  <div class="flex flex-col items-start">
+		<p class="mb-2 text-xl">Select Types of Places</p>
+		
+		{#each options as option}
+		  <label class="flex items-center">
+			<input 
+			  type="checkbox" 
+			  checked={selectedOptions.includes(option)} 
+			  on:change={() => toggleOption(option)} 
+			/>
+			<span class="ml-2">{option}</span>
+		  </label>
+		{/each}
+	  </div>
+	  
 	  <form on:submit={handleSubmit} class="flex flex-col items-center">
 		<Button type="submit" class="text-white bg-black hover:bg-gray-500 mb-2 flex items-center justify-center space-x-2">
 			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -116,6 +131,7 @@
 	import { apiBaseUrl } from '$lib/index.js';
 	import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
+	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 
 	let { data } = $props();
 	let numToShow = $state(0);
@@ -123,6 +139,7 @@
 	let latitude = $state(0);
 	let longitude = $state(0);
 	let radius = $state(0);
+	let user_preferences = $state(["restaurant", "coffee_shop", "cafe", "bakery"]);
 	let mapContainer;
 	let map;
 	let marker;
@@ -131,12 +148,33 @@
 	let scriptLoaded = false;
 	let errorMessage = $state('');
 
+	let selectedOptions = ['Restaurant', 'Cafe', 'Coffee shop', 'Bakery'];
+	const options = ['Restaurant', 'Cafe', 'Coffee shop', 'Bakery'];
+
+	function toggleOption(option) {
+		if (selectedOptions.includes(option)) {
+			selectedOptions = selectedOptions.filter(item => item !== option);
+			user_preferences = user_preferences.filter(item => item !== option.toLowerCase());
+		} else {
+			selectedOptions.push(option);
+			if(option === "Coffee shop"){
+				user_preferences.push("coffee_shop");
+			} else{
+				user_preferences.push(option.toLowerCase());
+			}
+		}
+	}
 	// Load Google Maps script dynamically
 	onMount(async () => {
 		const script = document.createElement('script');
-		script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places`;
+		script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places&v=weekly`;
 		script.async = true;
 		script.defer = true;
+		script.crossOrigin = "anonymous";
+		// Add a specific error handler
+		script.onerror = (error) => {
+			console.error('Error loading Google Maps API:', error);
+		};
 		script.onload = () => {
 			scriptLoaded = true;
 			initializeMap();
@@ -169,8 +207,8 @@
 		}
 
 		// Validate radius
-		if (!radius || radius <= 0) {
-			errorMessage = 'Please enter a valid radius (greater than 0)';
+		if (!radius || radius <= 0 || radius > 30) {
+			errorMessage = 'Please enter a valid radius (greater than 0 and less than 30)';
 			return;
 		}
 
@@ -186,11 +224,18 @@
 			return;
 		}
 
+		//Validate user preferences
+		if (!user_preferences || user_preferences.length === 0) {
+			errorMessage = 'Please select at least one user preference';
+			return;
+		}
+
 		let dataToSend = {
 			latitude: latitude,
 			longitude: longitude,
 			radius: radius,
-			listSize: numToShow
+			listSize: numToShow,
+			user_preferences: user_preferences,
 		};
 
 		fetch(`${apiBaseUrl}/maps/restaurants`, {
@@ -202,7 +247,24 @@
 			credentials: 'include',
 			body: JSON.stringify(dataToSend)
 		})
-			.then((response) => response.json())
+			.then(async (response) => {
+				if (!response.ok) {
+					// If status is not OK, try to read the response as text to see what we got
+					const errorText = await response.text();
+					console.error('Server response not OK:', response.status, errorText);
+					throw new Error(`Server returned ${response.status}: ${errorText.substring(0, 100)}...`);
+				}
+				
+				// Check Content-Type header to ensure we're getting JSON
+				const contentType = response.headers.get('content-type');
+				if (!contentType || !contentType.includes('application/json')) {
+					const text = await response.text();
+					console.error('Response was not JSON:', contentType, text.substring(0, 100));
+					throw new Error('Server did not return JSON');
+				}
+				
+				return response.json();
+			})
 			.then((data) => {
 				setRestaurantsList(data);
 				if (rankingStyle === 1) {
@@ -213,6 +275,7 @@
 			})
 			.catch((error) => {
 				console.error('Error fetching restaurants:', error);
+				errorMessage = `Error fetching restaurants: ${error.message}`;
 			});
 	};
 

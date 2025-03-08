@@ -5,12 +5,25 @@
 	import { getRestaurantsList, setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { apiBaseUrl } from '$lib/index.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
+	import RestaurantCard from '$lib/components/RestaurantCard.svelte';
+	import { Divide } from 'lucide-svelte';
+	import { goto } from '$app/navigation';
+	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 
 	interface Restaurant {
 		id: number;
 		name: string;
 		image: string;
-		description: string;
+		address?: string;
+		rating?: number;
+		reviews?: number;
+		priceLevel?: number;
+		type?: string;
+		description?: string;
+		hours?: any;
+		website?: string;
+		mapsLink?: string;
+		reviewsData?: any[];
 	}
 
 	let allRestaurants: Restaurant[] = [];
@@ -20,63 +33,59 @@
 	let currentRound = 1;
 	let isTransitioning = false;
 	let flippedCards: { [key: number]: boolean } = {};
-	let scoreboard: { [key: number]: number } = {};
-	let showScoreboard = false;
-	let starting = true;
+	let champion: Restaurant | null = null;
+	let showChampion = false;
 
 	function getNextPair() {
-		currentPair = [];
-        console.log('RESTAURANTS now: ', restaurants);
 		if (restaurants.length >= 2) {
 			currentPair = restaurants.splice(0, 2);
 		} else if (winners.length >= 2) {
 			currentPair = winners.splice(0, 2);
-		} else {
-			showScoreboard = true;
+		} else if (winners.length === 1 && restaurants.length === 1) {
+			currentPair = [...winners, ...restaurants];
+			winners = [];
+			restaurants = [];
+		} else if (winners.length === 1) {
+			champion = winners[0];
+			showChampion = true;
 		}
-
-		currentPair = [...currentPair];
-		restaurants = [...restaurants];
 	}
 
 	function selectWinner(winner: Restaurant) {
 		if (isTransitioning) return;
 		isTransitioning = true;
 
-		// Increment winner's score
-
-		scoreboard[winner.id] = (scoreboard[winner.id] || 0) + 1;
-
 		setTimeout(() => {
 			flippedCards = {};
 			winners = [...winners, winner];
 			currentRound = currentRound + 1;
-			currentPair = [];
-
-			if (restaurants.length < 2) {
-				if (winners.length > 1) {
-					getNextPair();
-				} else
-                {
-                    showScoreboard = true;
-                }
+			if (winners.length === 1 && restaurants.length === 0) {
+				champion = winners[0];
+				showChampion = true;
 			} else {
 				getNextPair();
 			}
 			isTransitioning = false;
-		}, 10);
+		}, 1000);
 	}
-
-	// Get sorted restaurants by score
-	$: sortedRestaurants = allRestaurants
-		.slice()
-		.sort((a, b) => (scoreboard[b.id] || 0) - (scoreboard[a.id] || 0));
 
 	function toggleCard(restaurant: Restaurant, event?: Event) {
 		if (event) {
 			event.stopPropagation();
 		}
 		flippedCards[restaurant.id] = !flippedCards[restaurant.id];
+	}
+
+	async function handleSignOut() {
+		await fetch(`${apiBaseUrl}/users/signout`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${getAuthToken()}`
+			},
+			credentials: 'include'
+		});
+		goto('/');
 	}
 
 	onMount(() => {
@@ -86,21 +95,22 @@
 			id: index + 1,
 			name: restaurant.name,
 			image: restaurant.menuImages[0] || '/placeholder.svg?height=400&width=300',
-			description: `Rating: ${restaurant.rating}, Reviews: ${restaurant.reviews}`
+			address: restaurant.address,
+			rating: restaurant.rating,
+			reviews: typeof restaurant.userRatingCount === 'number' ? restaurant.userRatingCount : 
+					(typeof restaurant.reviews === 'object' && restaurant.reviews ? 
+					 (restaurant.reviews.length || 0) : 0),
+			priceLevel: restaurant.priceLevel,
+			type: restaurant.type || 'Restaurant',
+			description: restaurant.description,
+			hours: restaurant.hours || {},
+			website: restaurant.website || '',
+			mapsLink: restaurant.mapsLink || '',
+			reviewsData: Array.isArray(restaurant.reviews) ? restaurant.reviews : []
 		}));
 
-		console.log('RESTAURANTS: ', allRestaurants);
+		//console.log(allRestaurants);
 		restaurants = [...allRestaurants];
-
-		// Initialize scoreboard with 0 points for each restaurant
-		allRestaurants.forEach((restaurant) => {
-			scoreboard[restaurant.id] = 0;
-		});
-
-		// Update restaurants array with the new data
-
-		// Get the first pair to start the bracket
-		//getNextPair();
 
 		// Load images after initial mount
 		let loadedImages = 0;
@@ -113,7 +123,7 @@
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${getAuthToken()}`
+							Authorization: `Bearer ${getAuthToken()}`
 						},
 						credentials: 'include',
 						body: JSON.stringify({
@@ -140,85 +150,66 @@
 	});
 </script>
 
-<div class="flex min-h-screen flex-col items-center justify-center p-4">
-	{#if !showScoreboard}
+<header class="absolute top-0 left-0 right-0 flex justify-between p-4">
+	<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem"></a>
+	<div class="space-x-2">
+		<form on:submit|preventDefault={handleSignOut}>
+			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"
+				>Profile</Button
+			>
+			<Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button
+			>
+		</form>
+	</div>
+</header>
+
+<div class="flex flex-col items-center justify-center min-h-screen pt-16">
+	{#if !showChampion}
 		<h1 class="mb-8 text-4xl font-bold">
 			Round {currentRound}
 		</h1>
 
-		<div class="relative w-full max-w-4xl">
+		<div class="relative w-full max-w-4xl pb-24">
 			<div class="grid grid-cols-1 gap-8 md:grid-cols-2">
 				{#each currentPair as restaurant, i}
-					<div class="flex flex-col">
-						<div class="flip-card-container relative h-[300px] overflow-visible md:h-[500px]">
-							<!-- svelte-ignore a11y_click_events_have_key_events -->
-							<!-- svelte-ignore a11y_no_static_element_interactions -->
-							<div
-								class="flip-card {flippedCards[restaurant.id] ? 'flipped' : ''} overflow-visible"
-								on:click={(e) => toggleCard(restaurant, e)}
-							>
-								<div class="flip-card-front shadow-md">
-									<div
-										class="absolute inset-0 bg-cover bg-center transition-transform duration-300"
-										style="background-image: url({restaurant.image})"
-									>
-										<div class="absolute inset-0 bg-black/40" />
-									</div>
-									<div class="absolute bottom-0 left-0 right-0 p-6">
-										<h2 class="text-2xl font-bold text-white">
-											{restaurant.name}
-										</h2>
-									</div>
-								</div>
-								<div class="flip-card-back">
-									<div class="h-full bg-white p-6">
-										<div class="flex h-full flex-col justify-between">
-											<div>
-												<h2 class="mb-4 text-2xl font-bold text-primary">{restaurant.name}</h2>
-												<p class="text-gray-700">{restaurant.description}</p>
-											</div>
-											<div
-												class="flex justify-center"
-												on:click={(e) => {
-													e.stopPropagation();
-													selectWinner(restaurant);
-												}}
-											>
-												<Button class="h-12 w-12 rounded-full bg-green-500">
-													<Checkmark />
-												</Button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+					<RestaurantCard 
+						{restaurant} 
+						flipped={flippedCards[restaurant.id]} 
+						onToggle={toggleCard} 
+						onSelectWinner={selectWinner} 
+					/>
 				{/each}
 			</div>
 		</div>
-	{:else}
-        <div class="w-full max-w-4xl">
-            <h1 class="mb-8 text-center text-4xl font-bold">CHAMPION</h1>
-            <div class="space-y-4">
-                {#if sortedRestaurants.length > 0}
-                    <div class="flex items-center justify-between rounded-lg bg-white p-4 shadow-md">
-                        <div class="flex items-center space-x-4">
-                            <span class="text-2xl font-bold text-yellow-500">#1</span>
-                            <div>
-                                <h2 class="text-xl font-semibold">{sortedRestaurants[0].name}</h2>
-                            </div>
-                        </div>
-                        <div
-                            class="h-16 w-16 rounded-full bg-cover bg-center"
-                            style="background-image: url({sortedRestaurants[0].image})"
-                        ></div>
-                    </div>
-                {/if}
-            </div>
-        </div>
+	{:else if champion}
+		<div class="w-full max-w-4xl pb-24">
+			<h1 class="mb-8 text-4xl font-bold text-center">Champion</h1>
+			<div class="space-y-4">
+				<div class="relative mx-auto w-full max-w-lg">
+					<RestaurantCard 
+						restaurant={champion} 
+						flipped={flippedCards[champion.id]} 
+						onToggle={toggleCard} 
+					/>
+				</div>
+			</div>
+		</div>
 	{/if}
+
+	<div class="bottom-0 left-0 w-full flex justify-center">
+		<div class="flex flex-col items-center">
+			<div on:click={() => goto('/restaurant_search')}>
+				<Button 
+				variant="outline" 
+				class="mb-8" 
+			>
+				Back to Search
+			</Button>
+			</div>
+		</div>
+	</div>
 </div>
+
 
 <style>
 	.flip-card-container {

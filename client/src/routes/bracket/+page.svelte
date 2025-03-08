@@ -5,12 +5,24 @@
 	import { getRestaurantsList, setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { apiBaseUrl } from '$lib/index.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
+	import RestaurantCard from '$lib/components/RestaurantCard.svelte';
+	import { goto } from '$app/navigation';
+	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 
 	interface Restaurant {
 		id: number;
 		name: string;
 		image: string;
-		description: string;
+		address?: string;
+		rating?: number;
+		reviews?: number;
+		priceLevel?: number;
+		type?: string;
+		description?: string;
+		hours?: any;
+		website?: string;
+		mapsLink?: string;
+		reviewsData?: any[];
 	}
 
 	let allRestaurants: Restaurant[] = [];
@@ -22,7 +34,6 @@
 	let flippedCards: { [key: number]: boolean } = {};
 	let scoreboard: { [key: number]: number } = {};
 	let showScoreboard = false;
-	let starting = true;
 
 	function getNextPair() {
 		currentPair = [];
@@ -85,15 +96,10 @@
 	}
 
 	function selectWinner(winner: Restaurant) {
-		if (starting) {
-			let temp = restaurants.splice(0, 2);
-			starting = false;
-		}
 		if (isTransitioning) return;
 		isTransitioning = true;
 
 		// Increment winner's score
-
 		scoreboard[winner.id] = (scoreboard[winner.id] || 0) + 1;
 
 		setTimeout(() => {
@@ -127,6 +133,18 @@
 		flippedCards[restaurant.id] = !flippedCards[restaurant.id];
 	}
 
+	async function handleSignOut() {
+		await fetch(`${apiBaseUrl}/users/signout`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${getAuthToken()}`
+			},
+			credentials: 'include'
+		});
+		goto('/');
+	}
+	
 	onMount(() => {
 		const restaurantsData = getRestaurantsList();
 
@@ -134,7 +152,18 @@
 			id: index + 1,
 			name: restaurant.name,
 			image: restaurant.menuImages[0] || '/placeholder.svg?height=400&width=300',
-			description: `Rating: ${restaurant.rating}, Reviews: ${restaurant.reviews}`
+			address: restaurant.address,
+			rating: restaurant.rating,
+			reviews: typeof restaurant.userRatingCount === 'number' ? restaurant.userRatingCount : 
+					(typeof restaurant.reviews === 'object' && restaurant.reviews ? 
+					 (restaurant.reviews.length || 0) : 0),
+			priceLevel: restaurant.priceLevel,
+			type: restaurant.type || 'Restaurant',
+			description: restaurant.description,
+			hours: restaurant.hours || {},
+			website: restaurant.website || '',
+			mapsLink: restaurant.mapsLink || '',
+			reviewsData: Array.isArray(restaurant.reviews) ? restaurant.reviews : []
 		}));
 
 		// console.log('RESTAURANTS: ', allRestaurants);
@@ -188,69 +217,56 @@
 	});
 </script>
 
-<div class="flex min-h-screen flex-col items-center justify-center p-4">
+<header class="absolute top-0 left-0 right-0 flex justify-between p-4">
+	<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem"></a>
+	<div class="space-x-2">
+		<form on:submit|preventDefault={handleSignOut}>
+			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"
+				>Profile</Button
+			>
+			<Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button
+			>
+		</form>
+	</div>
+</header>
+
+<div class="flex flex-col items-center justify-center min-h-screen pt-16">
 	{#if !showScoreboard}
 		<h1 class="mb-8 text-4xl font-bold">
 			Round {currentRound}
 		</h1>
 
-		<div class="relative w-full max-w-4xl">
+		<div class="relative w-full max-w-4xl pb-24">
 			<div class="grid grid-cols-1 gap-8 md:grid-cols-2">
 				{#each currentPair as restaurant, i}
-					<div class="flex flex-col">
-						<div class="flip-card-container relative h-[300px] overflow-visible md:h-[500px]">
-							<!-- svelte-ignore a11y_click_events_have_key_events -->
-							<!-- svelte-ignore a11y_no_static_element_interactions -->
-							<div
-								class="flip-card {flippedCards[restaurant.id] ? 'flipped' : ''} overflow-visible"
-								on:click={(e) => toggleCard(restaurant, e)}
-							>
-								<div class="flip-card-front shadow-md">
-									<div
-										class="absolute inset-0 bg-cover bg-center transition-transform duration-300"
-										style="background-image: url({restaurant.image})"
-									>
-										<div class="absolute inset-0 bg-black/40" />
-									</div>
-									<div class="absolute bottom-0 left-0 right-0 p-6">
-										<h2 class="text-2xl font-bold text-white">
-											{restaurant.name}
-										</h2>
-									</div>
-								</div>
-								<div class="flip-card-back">
-									<div class="h-full bg-white p-6">
-										<div class="flex h-full flex-col justify-between">
-											<div>
-												<h2 class="mb-4 text-2xl font-bold text-primary">{restaurant.name}</h2>
-												<p class="text-gray-700">{restaurant.description}</p>
-											</div>
-											<div
-												class="flex justify-center"
-												on:click={(e) => {
-													e.stopPropagation();
-													selectWinner(restaurant);
-												}}
-											>
-												<Button class="h-12 w-12 rounded-full bg-green-500">
-													<Checkmark />
-												</Button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+					<RestaurantCard 
+						{restaurant} 
+						flipped={flippedCards[restaurant.id]} 
+						onToggle={toggleCard} 
+						onSelectWinner={selectWinner} 
+					/>
 				{/each}
+			</div>
+		</div>
+
+		<div class="bottom-0 left-0 w-full flex justify-center">
+			<div class="flex flex-col items-center">
+				<div on:click={() => goto('/restaurant_search')}>
+					<Button 
+					variant="outline" 
+					class="mb-8" 
+				>
+					Back to Search
+				</Button>
+				</div>
 			</div>
 		</div>
 	{:else}
 		<div class="w-full max-w-4xl">
-			<h1 class="mb-8 text-center text-4xl font-bold">Final Rankings</h1>
+			<h1 class="mb-8 text-4xl font-bold text-center">Final Rankings</h1>
 			<div class="space-y-4">
 				{#each sortedRestaurants as restaurant, index}
-					<div class="flex items-center justify-between rounded-lg bg-white p-4 shadow-md">
+					<div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-md">
 						<div class="flex items-center space-x-4">
 							<span
 								class="text-2xl font-bold {index === 0
@@ -268,50 +284,25 @@
 							</div>
 						</div>
 						<div
-							class="h-16 w-16 rounded-full bg-cover bg-center"
+							class="w-16 h-16 bg-center bg-cover rounded-full"
 							style="background-image: url({restaurant.image})"
 						></div>
 					</div>
 				{/each}
 			</div>
+			<div class="flex justify-center mt-8">
+				<div class="flex flex-col items-center">
+					<div on:click={() => goto('/restaurant_search')}>
+						<Button 
+						variant="outline" 
+						class="mb-8" 
+					>
+						Back to Search
+					</Button>
+					</div>
+				</div>
+			</div>
 		</div>
 	{/if}
+
 </div>
-
-<style>
-	.flip-card-container {
-		perspective: 1500px;
-	}
-
-	.flip-card {
-		position: relative;
-		width: 100%;
-		height: 100%;
-		transform-style: preserve-3d;
-		transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-		cursor: pointer;
-	}
-
-	.flip-card.flipped {
-		transform: rotateY(180deg);
-	}
-
-	.flip-card-front,
-	.flip-card-back {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		backface-visibility: hidden;
-		overflow: hidden;
-		border-radius: 0.5rem;
-	}
-
-	.flip-card-front {
-		background-color: #f3f4f6;
-	}
-
-	.flip-card-back {
-		transform: rotateY(180deg);
-		background-color: white;
-	}
-</style>

@@ -1,20 +1,40 @@
 <script lang="ts">
   import { Button } from '$lib/components/ui/button';
-  import { getUsername, userProfileData } from '$lib/stores/userStore.svelte.js';
+  import { getUsername, userProfileData, getAuthToken } from '$lib/stores/userStore.svelte.js';
   import * as Card from '$lib/components/ui/card';
+  import LogoNoMove from '$lib/images/WEAT_unmoving.png';
+  import { goto } from '$app/navigation';
+  import { apiBaseUrl } from '$lib/index.js';
 
   let profileData;
+
+  // Subscribe to user profile data
   userProfileData.subscribe(data => {
     profileData = data;
   });
+
+  // Handle sign-out action
+  async function handleSignOut() {
+    await fetch(`${apiBaseUrl}/users/signout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getAuthToken()}`
+      },
+      credentials: 'include'
+    });
+    goto('/');
+  }
 </script>
 
-<header class="fixed top-0 left-0 right-0 flex justify-between p-4 bg-white z-50">
-  <a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
+
+<header class="absolute top-0 left-0 right-0 flex justify-between p-4">
+  <a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem"></a>
   <div class="space-x-2">
-    <form>
-      <Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out (Inoperative)</Button>
-    </form>
+    <form on:submit|preventDefault={handleSignOut}>
+			<Button type="submit" variant="outline" size="sm" class="bg-black text-white">Sign Out</Button
+			>
+		</form>
   </div>
 </header>
 
@@ -23,7 +43,7 @@
 
   <Card.Root class="mt-16 w-1/2 h-96">
     <Card.Header class="text-center">
-      <Card.Title tag="h1" class="text-4xl font-bold">Past Rankings</Card.Title>
+      <Card.Title tag="h1" class="text-4xl font-bold">Past Winners</Card.Title>
     </Card.Header>
     <Card.Content>
       {#if profileData && profileData.champions && profileData.champions.length > 0}

@@ -4,6 +4,7 @@
 	import { apiBaseUrl } from '$lib/index.js';
 	import { setUsername } from '$lib/stores/userStore.svelte.js';
 	import { goto } from '$app/navigation';
+	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 
 	let username = '';
 	let password = '';
@@ -40,19 +41,19 @@
 
 
 <header class="absolute top-0 left-0 right-0 flex justify-between p-4">
-  <a href="/" class="text-lg font-bold text-black hover:underline">Weat</a>
-  <div class="space-x-2">
-    <Button href="/login" variant="outline" size="sm" class="text-white bg-black">Sign In</Button>
-  </div>
+	<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem"></a>
+	<div class="space-x-2">
+		<Button href="/login" variant="outline" size="sm" class="text-white bg-black">Sign In</Button>
+	</div>
 </header>
 
 <div class="flex flex-col items-center justify-center min-h-screen space-y-6">
 	<div class="w-full max-w-sm mx-auto text-center space-y-6">
-		<h1 class="text-3xl font-bold underline">Sign Up</h1>
+		<h1 class="text-3xl font-bold">Sign Up</h1>
 		<form on:submit={handleSubmitSignup} class="space-y-4">
-			<Input bind:value={username} placeholder="Username/Email" class="max-w-sm mx-auto"></Input>
-			<Input bind:value={password} placeholder="Password" class="max-w-sm mx-auto" type="password"></Input>
-			<Input bind:value={confirmPassword} placeholder="Confirm Password" class="max-w-sm mx-auto" type="password"></Input>
+			<Input bind:value={username} placeholder="Username/Email" class="max-w-sm mx-auto" style="background-color: white; color: black;"></Input>
+			<Input bind:value={password} placeholder="Password" class="max-w-sm mx-auto" type="password" style="background-color: white; color: black;"></Input>
+			<Input bind:value={confirmPassword} placeholder="Confirm Password" class="max-w-sm mx-auto" type="password" style="background-color: white; color: black;"></Input>
 			<Button type="submit" class="w-full max-w-sm mx-auto">Submit</Button>
 			{#if errorMessage}
 				<p class="text-red-500">{errorMessage}</p>

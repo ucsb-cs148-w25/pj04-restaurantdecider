@@ -4,7 +4,7 @@
 	import Checkmark from '$lib/svg/checkmark.svelte';
 	import { getRestaurantsList, setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { apiBaseUrl } from '$lib/index.js';
-	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
+	import { getAuthToken, setUserProfileData } from '$lib/stores/userStore.svelte.js';
 	import RestaurantCard from '$lib/components/RestaurantCard.svelte';
 	import { Divide } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
@@ -59,9 +59,15 @@
 			flippedCards = {};
 			winners = [...winners, winner];
 			currentRound = currentRound + 1;
+
+			// Save the current round winner to the user's profile (store or backend)
 			if (winners.length === 1 && restaurants.length === 0) {
 				champion = winners[0];
 				showChampion = true;
+				// Save champion to the user's profile
+				setUserProfileData({
+					champions: [champion.name]
+				});
 			} else {
 				getNextPair();
 			}

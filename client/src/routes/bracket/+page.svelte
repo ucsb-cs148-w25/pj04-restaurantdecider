@@ -4,7 +4,7 @@
 	import Checkmark from '$lib/svg/checkmark.svelte';
 	import { getRestaurantsList, setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { apiBaseUrl } from '$lib/index.js';
-	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
+	import { getAuthToken, setUserProfileData } from '$lib/stores/userStore.svelte.js';
 	import RestaurantCard from '$lib/components/RestaurantCard.svelte';
 	import { goto } from '$app/navigation';
 	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
@@ -71,6 +71,12 @@
 
 		// If no ties found, show scoreboard
 		if (highestScoreWithTies === -1) {
+			const champion = allRestaurants.reduce((prev, current) =>
+				(scoreboard[prev.id] || 0) > (scoreboard[current.id] || 0) ? prev : current
+			);
+			setUserProfileData({
+				champions: [champion.name]
+			});
 			showScoreboard = true;
 			return;
 		}
@@ -91,6 +97,10 @@
 			currentPair = tiedRestaurants.splice(0, 2);
 			winners = tiedRestaurants.splice(2);
 		} else {
+			const champion = tiedRestaurants[0];  // The top winner from the tie
+        	setUserProfileData({
+				champions: [champion.name]
+			});
 			showScoreboard = true;
 		}
 	}

@@ -60,7 +60,7 @@
 <div class="flex flex-col items-center pt-16 pb-24 min-h-screen">
   <div class="pl-4 text-4xl font-bold">Hi, {getUsername()}!</div>
 
-  <Card.Root class="mt-16 w-1/2" style="height-50rem">
+  <Card.Root class="mt-16 w-1/2" style="height: 37rem">
     <Card.Header class="text-center">
       <Card.Title tag="h1" class="text-4xl font-bold">Past Winners</Card.Title>
     </Card.Header>
@@ -79,7 +79,6 @@
       {/if}
     </Card.Content>
 
-    {#if profileData && profileData.champions && profileData.champions.length > itemsPerPage}
     <Card.Footer class="text-center mt-8">
       <Pagination.Root 
         count={getTotalPages()} 
@@ -115,6 +114,5 @@
       </Pagination.Content>
       </Pagination.Root>
     </Card.Footer>
-    {/if}
   </Card.Root>
 </div>

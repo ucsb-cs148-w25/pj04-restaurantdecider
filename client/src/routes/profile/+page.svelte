@@ -8,7 +8,7 @@
   import { apiBaseUrl } from '$lib/index.js';
 
   let profileData;
-  let currentPage = 1;
+  let currentPage = $state(1);
   const itemsPerPage = 12;
 
   userProfileData.subscribe(data => {
@@ -38,6 +38,7 @@
 
   function handlePageChange(page) {
     currentPage = page;
+    console.log("clicked");
   }
 
   function getTotalPages() {
@@ -87,8 +88,10 @@
       >
       <Pagination.Content>
         <Pagination.Item>
+          <div on:click={() => 
+            handlePageChange(currentPage - 1)}
+          >
           <Pagination.PrevButton 
-            on:click={() => handlePageChange(currentPage - 1)} 
             disabled={currentPage === 1}
           />
         </Pagination.Item>
@@ -106,8 +109,10 @@
           {/if}
         {/each}
         <Pagination.Item>
+          <div on:click={() => 
+            handlePageChange(currentPage + 1)}
+          >
           <Pagination.NextButton 
-            on:click={() => handlePageChange(currentPage + 1)} 
             disabled={currentPage === getTotalPages()}
           />
         </Pagination.Item>

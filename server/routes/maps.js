@@ -24,8 +24,16 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
     });
   }
 
-  const listSizes = { short: 8, medium: 16, long: 32 };
-  const limit = listSizes[listSize] || 8;
+  // Handle both string and numeric listSize values
+  let limit;
+  if (typeof listSize === 'string' && !Number.isInteger(parseInt(listSize))) {
+    // Handle string identifiers like 'short', 'medium', 'long'
+    const listSizes = { short: 8, medium: 16, long: 32 };
+    limit = listSizes[listSize] || 8;
+  } else {
+    // Handle numeric values directly (8, 16, 32)
+    limit = parseInt(listSize) || 8;
+  }
   const radiusInMeters = radius * 1609.344;
 
   try {

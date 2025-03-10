@@ -31,18 +31,23 @@
 
 	let {
 		class: className,
-		variant = "default",
-		size = "default",
+		variant = $bindable("default"),
+		size = $bindable("default"),
 		ref = $bindable(null),
 		href = undefined,
-		type = "button",
+		type = $bindable("button"),
 		children,
 		...restProps
 	} = $props();
 </script>
 
 {#if href}
-	<a bind:this={ref} class={cn(buttonVariants({ variant, size }), className)} {href} {...restProps}>
+	<a 
+		bind:this={ref} 
+		class={cn(buttonVariants({ variant, size }), className)} 
+		{href} 
+		{...restProps}
+	>
 		{@render children?.()}
 	</a>
 {:else}

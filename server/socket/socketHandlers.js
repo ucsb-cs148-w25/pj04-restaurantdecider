@@ -80,7 +80,7 @@ function verifyAuthToken(token) {
 }
 
 export function setupSocketHandlers(io) {
-  io.on("connection", (socket) => {
+  io.on("connection", async (socket) => {
     console.log(`New socket connection: ${socket.id}`);
 
     // Extract user info from auth token
@@ -93,14 +93,13 @@ export function setupSocketHandlers(io) {
       console.log(`Authenticated user connected: userId ${user.userId}`);
     }
 
-    socket.username = User.findByPk(socket.user).username;
+    socket.username = await User.findByPk(socket.user).username;
 
     // Create a new lobby
     socket.on("createLobby", (lobbySettings) => {
       try {
         // Check if user is authenticated
         if (!socket.user) {
-          console.log(socket);
           throw new Error("Authentication required to create a lobby");
         }
 
@@ -156,10 +155,14 @@ export function setupSocketHandlers(io) {
           socket.emit("lobbyError", { error: "Lobby not found" });
           return;
         }
+        console.log("USERNAME IN JOINROOM", username);
 
         // Use authenticated username if available
-        const joinUsername = socket.username || "Guest";
+        const joinUsername = username || "Guest";
         const userId = socket.user || socket.id;
+        console.log(socket.user);
+        console.log(username);
+        console.log(roomId);
 
         // Check if the room is accepting new users
         if (room.status !== "waiting") {
@@ -212,6 +215,8 @@ export function setupSocketHandlers(io) {
           isOwner: info.isOwner,
         });
       });
+
+      console.log("emitted user list:", users);
 
       io.to(roomId).emit("userList", { users });
     }
@@ -268,6 +273,7 @@ export function setupSocketHandlers(io) {
     // Start the lobby bracket
     socket.on("startLobby", (roomId) => {
       try {
+        console.log("Starting lobby with roomId:", roomId);
         const room = getRoom(roomId);
         if (!room) {
           socket.emit("lobbyError", { error: "Lobby not found" });
@@ -275,7 +281,10 @@ export function setupSocketHandlers(io) {
         }
 
         // Verify the requester is the owner
-        if (socket.id !== room.owner) {
+        console.log("Owner ID:", room.owner);
+        console.log("Socket ID:", socket.user);
+
+        if (socket.user !== room.owner) {
           socket.emit("lobbyError", {
             error: "Only the lobby owner can start the bracket",
           });

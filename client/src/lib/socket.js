@@ -19,7 +19,7 @@ function createSocket() {
 		// Check if document exists before getting auth token (needed for SSR)
 		const authToken = getAuthToken();
 		console.log('Connecting socket with auth token:', authToken);
-		
+
 		socketInstance = io(socketEndpoint, {
 			auth: { token: authToken },
 			withCredentials: true

@@ -8,6 +8,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 	import { apiBaseUrl } from '$lib';
+	import { setRestaurantsList } from '$lib/stores/bracketStore.svelte';
 
 	// Get roomId from the URL
 	const roomId = $page.params.room_id;
@@ -40,18 +41,37 @@
 				console.error('Auto-login check failed:', error);
 			}
 		};
-		checkLoginStatus();
+		await checkLoginStatus();
 
 		// Get username from store or set to Guest
-		username = getUsername() || 'Guest';
+		username = getUsername();
+		console.log('username', username);
 
 		// Handle connection state
-		socket.on('connect', () => {
-			connected = true;
-			console.log('Connected to Socket.IO server with ID:', socket.id);
+		// socket.on('connect', () => {
+		// 	connected = true;
+		// 	console.log('Connected to Socket.IO server with ID:', socket.id);
 
-			// Join the lobby
-			socket.emit('joinRoom', { roomId, username });
+		// 	// Join the lobby
+		// 	console.log('Joining room:', roomId);
+		// 	console.log('Username:', username);
+
+		// 	socket.emit('joinRoom', { roomId, username });
+		// });
+
+		connected = true;
+		console.log('Connected to Socket.IO server with ID:', socket.id);
+		
+		console.log('Joining room:', roomId);
+		console.log('Username:', username);
+
+		socket.emit('joinRoom', { roomId, username });
+		
+
+		// Handle user list updates
+		socket.on('userList', (data) => {
+			console.log('User list updated:', data);
+			users = data.users;
 		});
 
 		// Handle disconnection
@@ -67,12 +87,6 @@
 			lobbySettings = data.lobbySettings;
 		});
 
-		// Handle user list updates
-		socket.on('userList', (data) => {
-			console.log('User list updated:', data);
-			users = data.users || [];
-		});
-
 		// Handle lobby errors
 		socket.on('lobbyError', (error) => {
 			console.error('Lobby error:', error);
@@ -84,32 +98,36 @@
 		});
 
 		// Handle game start
-		socket.on('gameStarted', (data) => {
+		socket.on('bracketStarted', (data) => {
 			console.log('Game started:', data);
-			// Handle navigation to the game page or other actions
-			// This will be implemented later based on your game flow
+			// Navigate to the bracket page and pass data
+			setRestaurantsList(data.lobbySettings.restaurant_list);
+			goto(`/test/${roomId}/bracket`);
 		});
 	});
 
 	// Function to start the game (only available to the owner)
 	function startGame() {
+		console.log('pressed');
+		console.log('start game', isOwner);
 		if (isOwner) {
-			socket.emit('startGame', { roomId });
+			socket.emit('startLobby', roomId);
 		}
 	}
 
 	// Function to leave the room
 	function leaveRoom() {
 		// Navigate back to the test page
-		goto('/test');
+		socket.emit('leaveRoom', { roomId });
+		goto('/');
 	}
 </script>
 
-<div class="flex min-h-screen flex-col bg-gradient-to-b from-[#FFE5D0] to-[#FFCBA4]">
+<div class="flex min-h-screen flex-col">
 	<header class="header-bg flex justify-between p-4">
 		<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem" /></a>
 		<div class="space-x-2">
-			<Button variant="outline" on:click={leaveRoom}>Leave Room</Button>
+			<Button variant="outline" onclick={leaveRoom} class="leave-btn">Leave Room</Button>
 		</div>
 	</header>
 
@@ -123,7 +141,8 @@
 		<Card.Root class="w-full max-w-3xl">
 			<Card.Header>
 				<Card.Title class="text-2xl">Waiting Room</Card.Title>
-				<Card.Description>Room ID: {roomId} {username}</Card.Description>
+				<Card.Description>Room ID: {roomId}</Card.Description>
+				<Card.Description>Username: {username}</Card.Description>
 			</Card.Header>
 
 			<Card.Content>
@@ -146,9 +165,7 @@
 
 				{#if isOwner}
 					<div class="text-center">
-						<Button on:click={startGame} disabled={users.length < 1} class="px-8 py-2 text-lg">
-							Start Game
-						</Button>
+						<Button onclick={startGame} class="px-8 py-2 text-lg">Start Game</Button>
 						<p class="mt-2 text-sm text-gray-500">
 							{#if users.length < 1}
 								You need at least one participant to start the game

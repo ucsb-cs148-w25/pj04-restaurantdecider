@@ -35,7 +35,6 @@
 		checkLoginStatus();
 });
 
-
 	async function handleSubmitLogin(event: Event) {
 		event.preventDefault();
 		try {
@@ -51,10 +50,14 @@
 				})
 			});
 
-			const data = await response.json();
-			console.log(data);
-			setUsername(data.username);
-			goto('/restaurant_search');
+			if (response.ok) {
+				const data = await response.json();
+				console.log(data);
+				setUsername(data.username);
+				goto('/restaurant_search');
+			} else {
+				errorMessage = 'Invalid username or password.';
+			}
 		} catch (error) {
 			console.error('Login error:', error);
 		}
@@ -71,6 +74,9 @@
 <div class="flex items-center justify-center min-h-screen flex-col space-y-6">
 	<div class="text-center space-y-6 w-full max-w-sm mx-auto">
 		<h1 class="text-3xl font-bold">Sign in</h1>
+  		{#if errorMessage}
+			<p class="error">{errorMessage}</p>
+		{/if}
 		<form on:submit={handleSubmitLogin} class="space-y-4">
 			<Input bind:value={loginUsername} placeholder="Username/Email" class="w-full" style="background-color: white; color: black;"></Input>
 			<Input bind:value={loginPassword} placeholder="Password" class="w-full" type="password" style="background-color: white; color: black;"></Input>

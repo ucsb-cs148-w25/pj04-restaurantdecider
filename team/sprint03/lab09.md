@@ -1,4 +1,4 @@
-## lab08 Standup Meeting (Fri 02/28)
+## lab09 Standup Meeting (Fri 03/07)
 Led by: Irene Li
 
 - [ ] Chloe Weng
@@ -20,8 +20,8 @@ Led by: Irene Li
     - improvement of profile page UI design
 - next Monday: distribute the remaining issues and run through prod version to make sure there are no bugs
 - most important issues yet to complete (high priority):
-  - team rounds
-  - sign in authentication (only when account is actually created, otherwise error)
+  - team rounds [IN PROGRESS]
+  - sign in authentication (only when account is actually created, otherwise error) [IN PROGRESS]
   - not able to access other pages when not signed in (any attempt to go to another page like the ranking page will result in error and automatic directing to sign in page)
   - make sure 8/16/32 number of restaurants actually gets sent to the ranking pages
   - auto-location on Google maps
@@ -31,3 +31,5 @@ Led by: Irene Li
   - dietary restrictions
   - do not show buttons (for restuarants to never show up in ranking)
   - favorite restaurants
+  - adding a list and card view in the bracket final scoreboard so that users can see more information about the restaurants again
+  - designing the home page more: adding some more information on the home page so users know how the website works and other about the website

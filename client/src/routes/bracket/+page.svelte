@@ -280,7 +280,7 @@
 								#{index + 1}
 							</span>
 							<div>
-								<h2 class="text-xl font-semibold">{restaurant.name}</h2>
+								<h2 class="text-xl font-semibold text-black">{restaurant.name}</h2>
 							</div>
 						</div>
 						<div

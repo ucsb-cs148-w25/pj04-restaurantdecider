@@ -53,8 +53,11 @@
 - Added header, return home, and return to search buttons for both champion and bracket ranking pages
 - Added error check on restaurant search page for choosing ranking style
 - Fixed restaurant search button to respond to user input
-- Created WEAT logo and incorporated it into the web app, changed the UI design for all pages
+- Created WEAT logo (moving and unmoving) and incorporated it into the web app
+- Changed the UI design for all pages to match logo background color
 - Reformatted standup notes for consistency
+- Added tooltip to champion and bracket buttons on restaurant search page for clarity
+- Created separate homepage for sign-in users (separated homepage for before and after sign in)
 
 7. Edison Zhang
 - Created enhanced Google Maps component to fix issues with broken embed (Issue #94)

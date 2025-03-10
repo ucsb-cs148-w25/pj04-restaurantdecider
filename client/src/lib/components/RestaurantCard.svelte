@@ -78,17 +78,17 @@
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gold" class="bi bi-star-fill" viewBox="0 0 16 16">
 											<path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
 										</svg>
-										<span class="ml-1">{restaurant.rating}</span>
+										<span class="text-gray-700">{restaurant.rating}</span>
 									</div>
 								{/if}
 								{#if restaurant.reviews}
 									<div class="mr-2">
-										<span>({typeof restaurant.reviews === 'number' ? restaurant.reviews : 'No'} reviews)</span>
+										<span class="text-gray-700">({typeof restaurant.reviews === 'number' ? restaurant.reviews : 'No'} reviews)</span>
 									</div>
 								{/if}
 								{#if restaurant.priceLevel}
 									<div>
-										<span>{new Array(restaurant.priceLevel || 0).fill('$').join('')}</span>
+										<span class="text-gray-700"> {new Array(restaurant.priceLevel || 0).fill('$').join('')}</span>
 									</div>
 								{/if}
 							</div>
@@ -99,7 +99,7 @@
 							
 							{#if restaurant.address}
 								<div class="flex items-start mb-2">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="flex-shrink-0 mt-1 mr-1 bi bi-geo-alt" viewBox="0 0 16 16">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="flex-shrink-0 mt-1 mr-1 bi bi-geo-alt" viewBox="0 0 16 16">
 										<path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
 									</svg>
 									<p class="text-gray-700">{restaurant.address}</p>
@@ -113,7 +113,8 @@
 							<!-- Price estimate -->
 							{#if restaurant.priceLevel}
 								<div>
-									<span>{new Array(restaurant.priceLevel || 0).fill('$').join('')}</span>
+									<h3 class="text-sm font-semibold text-gray-700">Price Level</h3>
+									<span class="text-gray-700">{new Array(restaurant.priceLevel || 0).fill('$').join('')}</span>
 								</div>
 							{/if}
 							
@@ -143,15 +144,11 @@
 											<div class="mb-2 p-2 bg-gray-50 rounded-md text-xs">
 												{#if review.authorAttribution}
 													<div class="flex items-center mb-1">
-														{#if review.authorAttribution.photoUri}
-															<img src={review.authorAttribution.photoUri} alt="Reviewer" class="w-5 h-5 rounded-full mr-1" />
-														{:else}
-															<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle mr-1" viewBox="0 0 16 16">
-																<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-																<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 1-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 1 8 1"/>
-															</svg>
-														{/if}
-														<span class="font-medium">{review.authorAttribution.displayName || 'Anonymous'}</span>
+														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-person-circle mr-1" viewBox="0 0 16 16">
+															<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+															<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 1-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 1 8 1"/>
+														</svg>
+														<span class="font-medium text-black font-semibold">{review.authorAttribution.displayName || 'Anonymous'}</span>
 													</div>
 												{/if}
 												
@@ -219,7 +216,7 @@
 						</div>
 						{#if typeof onSelectWinner === 'function' && onSelectWinner.toString() !== '() => {}'}
 						<div
-							class="flex justify-center mt-4"
+							class="flex justify-center mt-4 pb-2"
 							on:click={(e) => {
 								e.stopPropagation();
 								onSelectWinner(restaurant);

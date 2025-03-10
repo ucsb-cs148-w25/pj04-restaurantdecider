@@ -90,26 +90,6 @@
   		</div>
       </div>
 
-	  <!-- <div class="flex flex-col items-start pl-4 mt-8"> 
-		<div class="flex space-x-4 mb-8">
-			<div on:click={() => {rankingStyle = 1; }}>
-				<Button 
-					class={rankingStyle === 1 ? "bg-blue-700 text-white w-32 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-32"}
-				>
-					Champion Style
-				</Button>
-			</div>
-
-			<div on:click={() => {rankingStyle = 2; }}>
-			<Button 
-				class={rankingStyle === 2 ? "bg-blue-700 text-white w-32 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-32"} 
-			>
-				Bracket Style
-			</Button>
-			</div>
-  		</div>
-      </div>-->
-
 	  <div class="flex flex-col items-start">
 		<p class="mb-2 text-xl">Select Types of Places</p>
 		

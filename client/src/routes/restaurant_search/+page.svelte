@@ -71,7 +71,7 @@
 					<Tooltip.Root>
 					  <Tooltip.Trigger class={rankingStyle === 1 ? "rounded-md bg-blue-700 text-white w-32 h-10 hover:text-white hover:bg-blue-700" : "rounded-md bg-gray-200 text-black hover:bg-blue-300 w-32 h-10"}>Champion Style</Tooltip.Trigger>
 					  <Tooltip.Content>
-						<p>Add to library</p>
+						<p>Only get number one ranked restaurant<br />(Will take less time)</p>
 					  </Tooltip.Content>
 					</Tooltip.Root>
 				  </Tooltip.Provider>
@@ -82,7 +82,7 @@
 					<Tooltip.Root>
 					  <Tooltip.Trigger class={rankingStyle === 2 ? "rounded-md bg-blue-700 text-white w-32 h-10 hover:text-white hover:bg-blue-700" : "rounded-md bg-gray-200 text-black hover:bg-blue-300 w-32 h-10"}>Bracket Style</Tooltip.Trigger>
 					  <Tooltip.Content>
-						<p>Add to library</p>
+						<p>Get a ranked scoreboard with all restaurants<br />(Will take more time)</p>
 					  </Tooltip.Content>
 					</Tooltip.Root>
 				  </Tooltip.Provider>

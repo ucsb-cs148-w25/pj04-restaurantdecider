@@ -1,16 +1,25 @@
 ## Contributions
 1. Tanay Biradar
-- Initialized DB to backend
-- Added data to back of restaurant cards
-- Ensured number of restaurants displayed when searching is accurate (with Irene)
-- Restricted API requests to only come from authenticated users
-- Added check to throw error if any search input is invalid
-- Created map and location field on restaurant search page (and Google Maps API key)
-- Created API endpoints for login/signup (with Chloe)
-- Loaded restaurants into bracket for final ranking
-- Migrated username and authentication state to cookies
-- Modified CORS policy (implemented part of this through Irene's account)
-- Implemented testing features for components
+- Initialized database structure and integration with backend server
+- Restricted API requests to only come from authenticated users (Issue #77)
+- Modified CORS policy for production environment compatibility (Issue #96)
+- Fixed API Base URL configuration for different environments (Issue #85)
+- Created restaurant search input page with location field, radius selection, and map (Issue #66)
+- Implemented Google Maps integration and secured API key
+- Populated detailed restaurant data into restaurant cards (Issue #88)
+- Ensured correct number of restaurants are displayed when searching (Issues #89, #90)
+- Added input validation to throw errors for invalid search parameters (Issue #91)
+- Created API endpoints for login/signup functionality (with Chloe)
+- Loaded restaurants into bracket for final ranking (Issue #74)
+- Fixed restaurant bracket algorithm issues (Issue #79)
+- Migrated username and authentication state to cookies for persistent sessions (Issue #71)
+- Implemented unit and integration testing for key components
+- Wrote test cases for backend ranking services
+- Set up Docker containerization for both frontend and backend services
+- Created multi-stage Docker builds for optimized production deployment
+- Implemented Content Security Policy (CSP) for handling Google user content images
+- Set up GitHub Actions for automated Docker builds and continuous integration
+- Deployed and hosts the project on personal home server (cs148.tanaybiradar.com)
   
 2. Karthik Bhattaram
 - Created a Svelte store and rturned profile info on login
@@ -48,9 +57,18 @@
 - Reformatted standup notes for consistency
 
 7. Edison Zhang
-- Created a Google Maps component to fix issues with broken embed
-- Added ShadCN UI component library
-- Created restaurant bracket algorithm (with Irene)
-- Debugged bracket algorithm (with Irene)
+- Created enhanced Google Maps component to fix issues with broken embed (Issue #94)
+- Improved map interactivity and implemented rounded container design (PR #109)
+- Added ShadCN UI component library for consistent design system (Issue #46)
+- Created restaurant bracket algorithm for comparing and ranking restaurants (with Irene)
+- Debugged bracket algorithm to ensure accurate results (with Irene)
+- Fixed bracket card flipping animation (Issue #79)
 - Created and formatted UI design of bracket rounds tournament page
-- Created grouping feature with sockets
+- Researched and implemented Web Sockets functionality for real-time collaboration (Issue #134)
+- Dedicated significant time to developing and refining socket implementation for collaborative team restaurant picking
+- Created group bracket system enabling multiple users to select restaurants together (Issue #148)
+- Developed rooms feature allowing users to join shared decision groups (Issue #87)
+- Migrated frontend code to Svelte Runes for improved state management
+- Contributed to initial repository setup and README documentation (Issue #72)
+- Co-led the initial project dockerization effort with multi-container setup (PR #81)
+- Centered and improved UI in restaurant search page (Issue #130)

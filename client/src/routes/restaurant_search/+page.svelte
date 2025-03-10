@@ -64,22 +64,28 @@
         <Input id="search-box" type="text" placeholder="Search for a location" class="search-input w-full" />
       </div>
 
-	  <div class="flex flex-col items-start pl-4 mt-8">
+	  <div class="flex flex-col items-start pl-4 mt-8"> 
 		<div class="flex space-x-4 mb-8">
 			<div on:click={() => {rankingStyle = 1; }}>
-				<Button 
-					class={rankingStyle === 1 ? "bg-blue-700 text-white w-32 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-32"}
-				>
-					Champion Style
-				</Button>
+				<Tooltip.Provider>
+					<Tooltip.Root>
+					  <Tooltip.Trigger class={rankingStyle === 1 ? "rounded-md bg-blue-700 text-white w-32 h-10 hover:text-white hover:bg-blue-700" : "rounded-md bg-gray-200 text-black hover:bg-blue-300 w-32 h-10"}>Champion Style</Tooltip.Trigger>
+					  <Tooltip.Content>
+						<p>Only get number one ranked restaurant<br />(Will take less time)</p>
+					  </Tooltip.Content>
+					</Tooltip.Root>
+				  </Tooltip.Provider>
 			</div>
 
 			<div on:click={() => {rankingStyle = 2; }}>
-			<Button 
-				class={rankingStyle === 2 ? "bg-blue-700 text-white w-32 hover:text-white hover:bg-blue-700" : "bg-gray-200 text-black hover:bg-blue-300 w-32"} 
-			>
-				Bracket Style
-			</Button>
+				<Tooltip.Provider>
+					<Tooltip.Root>
+					  <Tooltip.Trigger class={rankingStyle === 2 ? "rounded-md bg-blue-700 text-white w-32 h-10 hover:text-white hover:bg-blue-700" : "rounded-md bg-gray-200 text-black hover:bg-blue-300 w-32 h-10"}>Bracket Style</Tooltip.Trigger>
+					  <Tooltip.Content>
+						<p>Get a ranked scoreboard with all restaurants<br />(Will take more time)</p>
+					  </Tooltip.Content>
+					</Tooltip.Root>
+				  </Tooltip.Provider>
 			</div>
   		</div>
       </div>
@@ -132,6 +138,7 @@
 	import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
+	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 
 	let { data } = $props();
 	let numToShow = $state(0);

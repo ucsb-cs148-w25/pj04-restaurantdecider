@@ -23,6 +23,7 @@
 - Added option for users to preselect type of restaurant (with Karthik)
 - Created API endpoint to accept rankings and store in DB
 - Added an upper limit of 30 miles to radius input
+- Prevented user from faking a log in with a user/password combination that wasn't previously used to sign up.
   
 4. Danny You
 - No major contributions

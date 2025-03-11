@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Button } from '$lib/components/ui/button';
   import * as Pagination from "$lib/components/ui/pagination";
-  import { getUsername, userProfileData, getAuthToken } from '$lib/stores/userStore.svelte.js';
+  import { getUsername, userProfileData, getAuthToken, setUsername, setUserProfileData } from '$lib/stores/userStore.svelte.js';
   import * as Card from '$lib/components/ui/card';
   import LogoNoMove from '$lib/images/WEAT_unmoving.png';
   import { goto } from '$app/navigation';
@@ -24,6 +24,9 @@
       },
       credentials: 'include'
     });
+    // Clear localStorage
+    localStorage.removeItem('username');
+    localStorage.removeItem('userProfileData');
     goto('/');
   }
 
@@ -37,12 +40,16 @@
   }
 
   function handlePageChange(page) {
+    if (page == 0 || page > getTotalPages()) {
+      return;
+    }
     currentPage = page;
-    console.log("clicked");
+    console.log("clicked", currentPage);
   }
 
   function getTotalPages() {
     if (profileData && profileData.champions) {
+      console.log("total pages", Math.ceil(profileData.champions.length / itemsPerPage));
       return Math.ceil(profileData.champions.length / itemsPerPage);
     }
     return 0;
@@ -61,11 +68,11 @@
 <div class="flex flex-col items-center pt-16 pb-24 min-h-screen">
   <div class="pl-4 text-4xl font-bold">Hi, {getUsername()}!</div>
 
-  <Card.Root class="mt-16 w-1/2" style="height: 37rem">
+  <Card.Root class="mt-16 w-1/2 flex flex-col" style="height: 37rem">
     <Card.Header class="text-center">
       <Card.Title tag="h1" class="text-4xl font-bold">Past Winners</Card.Title>
     </Card.Header>
-    <Card.Content>
+    <Card.Content class="flex-1">
       {#if profileData && profileData.champions && profileData.champions.length > 0}
         <div class="mt-8">
           <ul>
@@ -80,11 +87,11 @@
       {/if}
     </Card.Content>
 
-    <Card.Footer class="text-center mt-8">
+    <Card.Footer class="text-center mt-8 mt-auto">
       <Pagination.Root 
         count={getTotalPages()} 
         perPage={itemsPerPage} 
-        let:pages let:currentPage
+        let:pages
       >
       <Pagination.Content>
         <Pagination.Item>
@@ -94,6 +101,7 @@
           <Pagination.PrevButton 
             disabled={currentPage === 1}
           />
+          </div>
         </Pagination.Item>
         {#each pages as page (page.key)}
           {#if page.type === "ellipsis"}
@@ -101,11 +109,11 @@
               <Pagination.Ellipsis />
             </Pagination.Item>
           {:else}
-            <Pagination.Item isVisible={currentPage == page.value}>
-              <Pagination.Link {page} isActive={currentPage == page.value}>
-                {page.value}
-              </Pagination.Link>
-            </Pagination.Item>
+          <!-- <Pagination.Item isVisible={currentPage == page.value}>
+            <Pagination.Link {page} isActive={currentPage == page.value}>
+              {page.value}
+            </Pagination.Link>
+          </Pagination.Item> -->
           {/if}
         {/each}
         <Pagination.Item>
@@ -115,6 +123,7 @@
           <Pagination.NextButton 
             disabled={currentPage === getTotalPages()}
           />
+          </div>
         </Pagination.Item>
       </Pagination.Content>
       </Pagination.Root>

@@ -46,6 +46,8 @@
 	let finalGroupResults: any = null;
 	let usersSubmitted = 0;
 	let totalUsers = 0;
+	let rankingStyle = 'bracket'; // Default to bracket mode
+	let winningRestaurant: Restaurant | null = null; // Store the winning restaurant object
 
 	function getNextPair() {
 		currentPair = [];
@@ -187,25 +189,47 @@
 
 	onMount(() => {
 		// Handle user submission updates
-		socket.on('userSubmittedResults', (data) => {
+		socket.on('userSubmittedResults', (data: { submittedCount: number; totalUsers: number }) => {
 			console.log('User submitted results:', data);
 			usersSubmitted = data.submittedCount;
 			totalUsers = data.totalUsers;
 		});
 
+		// Handle lobby joined event to get lobby settings
+		socket.on('joinedLobby', (data: { lobbySettings?: { rankingStyle?: string } }) => {
+			console.log('Joined lobby with settings:', data);
+			// Get ranking style from lobby settings
+			if (data.lobbySettings && data.lobbySettings.rankingStyle) {
+				rankingStyle = data.lobbySettings.rankingStyle;
+				console.log('Ranking style set to:', rankingStyle);
+			}
+		});
+
 		// Handle when all users have completed their brackets
-		socket.on('bracketCompleted', (data) => {
+		socket.on('bracketCompleted', (data: { finalResults: any; rankingStyle?: string }) => {
 			console.log('Bracket completed:', data);
 			finalGroupResults = data.finalResults;
+
+			// Update ranking style if provided by the server
+			if (data.rankingStyle) {
+				rankingStyle = data.rankingStyle;
+				console.log('Final ranking style set to:', rankingStyle);
+			}
+
+			// If we're in champion mode, find the winning restaurant from our list
+			if (rankingStyle === 'champion' && finalGroupResults && finalGroupResults.winner) {
+				winningRestaurant = allRestaurants.find((r) => r.name === finalGroupResults.winner) || null;
+			}
+
 			showScoreboard = true;
 			waitingForOthers = false;
 		});
 
 		// Get restaurant data
-		const restaurantsData = getRestaurantsList();
+		const restaurantsData: { restaurants: any[] } = getRestaurantsList() || { restaurants: [] };
 		console.log(restaurantsData);
 
-		allRestaurants = restaurantsData.restaurants.map((restaurant, index) => ({
+		allRestaurants = restaurantsData.restaurants.map((restaurant: any, index: number) => ({
 			id: index + 1,
 			name: restaurant.name,
 			image: restaurant.menuImages[0] || '/placeholder.svg?height=400&width=300',
@@ -306,9 +330,9 @@
 
 		<div class="bottom-0 left-0 flex w-full justify-center">
 			<div class="flex flex-col items-center">
-				<div on:click={() => goto('/restaurant_search')}>
+				<button on:click={() => goto('/restaurant_search')} class="w-full">
 					<Button variant="outline" class="mb-8">Back to Search</Button>
-				</div>
+				</button>
 			</div>
 		</div>
 	{:else if waitingForOthers}
@@ -316,8 +340,8 @@
 			<h1 class="mb-8 text-center text-4xl font-bold">Waiting for other participants</h1>
 
 			<div class="mb-8 rounded-lg bg-white p-6 text-center shadow-md">
-				<p class="mb-4 text-xl">Your results have been submitted!</p>
-				<p class="text-lg">
+				<p class="mb-4 text-xl text-black">Your results have been submitted!</p>
+				<p class="text-lg text-black">
 					{usersSubmitted} of {totalUsers} participants have completed their brackets
 				</p>
 
@@ -347,7 +371,7 @@
 								#{index + 1}
 							</span>
 							<div>
-								<h2 class="text-xl font-semibold">{restaurant.name}</h2>
+								<h2 class="text-xl font-semibold text-black">{restaurant.name}</h2>
 							</div>
 						</div>
 						<div
@@ -362,34 +386,61 @@
 		<div class="w-full max-w-4xl">
 			<h1 class="mb-8 text-center text-4xl font-bold">Group Results</h1>
 
-			<div class="mb-8 rounded-lg bg-white p-6 text-center shadow-md">
-				<h2 class="mb-4 text-2xl font-semibold">🏆 Winner 🏆</h2>
-				<p class="text-3xl font-bold text-yellow-500">{finalGroupResults.winner}</p>
-			</div>
+			{#if rankingStyle === 'champion' && winningRestaurant}
+				<!-- Champion style shows the winner with the restaurant card -->
+				<div class="mb-4 text-center">
+					<h2 class="mb-4 text-2xl font-semibold">🏆 Champion 🏆</h2>
+				</div>
 
-			{#if finalGroupResults.finalRound && finalGroupResults.finalRound.length > 0}
-				<h2 class="mb-4 text-center text-2xl font-semibold">Finalists</h2>
-				<div class="mb-8 space-y-4">
-					{#each finalGroupResults.finalRound as restaurant, index}
-						<div class="flex items-center justify-between rounded-lg bg-white p-4 shadow-md">
-							<div class="flex items-center space-x-4">
-								<span class="text-2xl font-bold">
-									#{index + 1}
-								</span>
-								<div>
-									<h2 class="text-xl font-semibold">{restaurant}</h2>
+				<div class="mb-8 flex justify-center">
+					<div class="w-full max-w-md">
+						<RestaurantCard
+							restaurant={winningRestaurant}
+							flipped={true}
+							onToggle={() => {}}
+							onSelectWinner={() => {}}
+						/>
+					</div>
+				</div>
+			{:else}
+				<!-- Bracket style shows the winner and full rankings -->
+				<div class="mb-8 rounded-lg bg-white p-6 text-center shadow-md">
+					<h2 class="mb-4 text-2xl font-semibold">🏆 Winner 🏆</h2>
+					<p class="text-3xl font-bold text-yellow-500">{finalGroupResults.winner}</p>
+				</div>
+
+				{#if finalGroupResults.rankings && finalGroupResults.rankings.length > 0}
+					<h2 class="mb-4 text-center text-2xl font-semibold">Full Rankings</h2>
+					<div class="space-y-4">
+						{#each finalGroupResults.rankings as ranking, index}
+							<div class="flex items-center justify-between rounded-lg bg-white p-4 shadow-md">
+								<div class="flex items-center space-x-4">
+									<span
+										class="text-2xl font-bold {index === 0
+											? 'text-yellow-500'
+											: index === 1
+												? 'text-gray-500'
+												: index === 2
+													? 'text-amber-700'
+													: 'text-gray-700'}"
+									>
+										#{index + 1}
+									</span>
+									<div>
+										<h2 class="text-xl font-semibold text-black">{ranking.name}</h2>
+									</div>
 								</div>
 							</div>
-						</div>
-					{/each}
-				</div>
+						{/each}
+					</div>
+				{/if}
 			{/if}
 
 			<div class="mt-8 flex justify-center">
 				<div class="flex flex-col items-center">
-					<div on:click={() => goto('/restaurant_search')}>
+					<button on:click={() => goto('/restaurant_search')} class="w-full">
 						<Button variant="outline" class="mb-8">Back to Search</Button>
-					</div>
+					</button>
 				</div>
 			</div>
 		</div>
@@ -412,7 +463,7 @@
 								#{index + 1}
 							</span>
 							<div>
-								<h2 class="text-xl font-semibold">{restaurant.name}</h2>
+								<h2 class="text-xl font-semibold text-black">{restaurant.name}</h2>
 							</div>
 						</div>
 						<div
@@ -424,9 +475,9 @@
 			</div>
 			<div class="mt-8 flex justify-center">
 				<div class="flex flex-col items-center">
-					<div on:click={() => goto('/restaurant_search')}>
+					<button on:click={() => goto('/restaurant_search')} class="w-full">
 						<Button variant="outline" class="mb-8">Back to Search</Button>
-					</div>
+					</button>
 				</div>
 			</div>
 		</div>

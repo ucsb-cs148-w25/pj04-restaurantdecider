@@ -41,7 +41,7 @@
 	socket.on('lobbyCreated', ({ roomId, isOwner, lobbySettings }) => {
 		console.log('Lobby created:', { roomId, isOwner, lobbySettings });
 		// Navigate to the room page
-		goto(`/test/${roomId}`);
+		goto(`/group/${roomId}`);
 	});
 
 	// Handle lobby creation errors
@@ -298,7 +298,7 @@
 	<!-- Card Section -->
 	<Card.Root class="card-root mt-8 w-2/5">
 		<Card.Header class="text-center">
-			<Card.Title tag="h1" class="text-5xl">Search for Restaurants</Card.Title>
+			<Card.Title tag="h1" class="text-5xl">Set Location for Group</Card.Title>
 		</Card.Header>
 		<Card.Content>
 			<div class="mt-4 flex items-center space-x-8 self-start">

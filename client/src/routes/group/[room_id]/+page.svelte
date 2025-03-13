@@ -61,12 +61,11 @@
 
 		connected = true;
 		console.log('Connected to Socket.IO server with ID:', socket.id);
-		
+
 		console.log('Joining room:', roomId);
 		console.log('Username:', username);
 
 		socket.emit('joinRoom', { roomId, username });
-		
 
 		// Handle user list updates
 		socket.on('userList', (data) => {
@@ -91,9 +90,9 @@
 		socket.on('lobbyError', (error) => {
 			console.error('Lobby error:', error);
 			errorMessage = error.error || 'An error occurred';
-			// Redirect back to test page if the room doesn't exist
+			// Redirect back to group page if the room doesn't exist
 			if (error.error === 'Lobby not found') {
-				setTimeout(() => goto('/test'), 2000);
+				setTimeout(() => goto('/group'), 2000);
 			}
 		});
 
@@ -102,7 +101,7 @@
 			console.log('Game started:', data);
 			// Navigate to the bracket page and pass data
 			setRestaurantsList(data.lobbySettings.restaurant_list);
-			goto(`/test/${roomId}/bracket`);
+			goto(`/group/${roomId}/bracket`);
 		});
 	});
 
@@ -117,9 +116,9 @@
 
 	// Function to leave the room
 	function leaveRoom() {
-		// Navigate back to the test page
+		// Navigate back to the group page
 		socket.emit('leaveRoom', { roomId });
-		goto('/');
+		goto('/group');
 	}
 </script>
 

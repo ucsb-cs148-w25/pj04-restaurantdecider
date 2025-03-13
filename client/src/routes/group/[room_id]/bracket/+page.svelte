@@ -29,7 +29,7 @@
 
 	// Get roomId from the URL
 	const roomId = $page.params.room_id;
-	
+
 	// Socket and state variables
 	let socket = getSocket();
 	let allRestaurants: Restaurant[] = [];
@@ -112,23 +112,23 @@
 	// Function to submit results to the server
 	function submitResults() {
 		if (submittedResults) return; // Prevent multiple submissions
-		
+
 		// Find the winner (restaurant with highest score)
 		const winner = sortedRestaurants.length > 0 ? sortedRestaurants[0] : null;
-		
+
 		// Prepare results object
 		const results = {
 			winner: winner ? winner.name : null,
-			finalRound: sortedRestaurants.slice(0, 3).map(r => r.name), // Top 3 restaurants
-			rankings: sortedRestaurants.map(r => ({ 
-				name: r.name, 
-				score: scoreboard[r.id] || 0 
+			finalRound: sortedRestaurants.slice(0, 3).map((r) => r.name), // Top 3 restaurants
+			rankings: sortedRestaurants.map((r) => ({
+				name: r.name,
+				score: scoreboard[r.id] || 0
 			}))
 		};
-		
+
 		// Submit results to server
 		socket.emit('submitBracketResults', { roomId, results });
-		
+
 		// Update UI state
 		submittedResults = true;
 		waitingForOthers = true;
@@ -203,7 +203,7 @@
 
 		// Get restaurant data
 		const restaurantsData = getRestaurantsList();
-		console.log(restaurantsData)
+		console.log(restaurantsData);
 
 		allRestaurants = restaurantsData.restaurants.map((restaurant, index) => ({
 			id: index + 1,
@@ -314,21 +314,23 @@
 	{:else if waitingForOthers}
 		<div class="w-full max-w-4xl">
 			<h1 class="mb-8 text-center text-4xl font-bold">Waiting for other participants</h1>
-			
-			<div class="mb-8 rounded-lg bg-white p-6 shadow-md text-center">
-				<p class="text-xl mb-4">Your results have been submitted!</p>
-				<p class="text-lg">{usersSubmitted} of {totalUsers} participants have completed their brackets</p>
-				
+
+			<div class="mb-8 rounded-lg bg-white p-6 text-center shadow-md">
+				<p class="mb-4 text-xl">Your results have been submitted!</p>
+				<p class="text-lg">
+					{usersSubmitted} of {totalUsers} participants have completed their brackets
+				</p>
+
 				<!-- Progress bar -->
-				<div class="w-full bg-gray-200 rounded-full h-4 mt-4">
-					<div 
-						class="bg-blue-600 h-4 rounded-full transition-all duration-500" 
+				<div class="mt-4 h-4 w-full rounded-full bg-gray-200">
+					<div
+						class="h-4 rounded-full bg-blue-600 transition-all duration-500"
 						style="width: {(usersSubmitted / totalUsers) * 100}%"
 					></div>
 				</div>
 			</div>
-			
-			<h2 class="text-2xl font-semibold mb-4 text-center">Your Rankings</h2>
+
+			<h2 class="mb-4 text-center text-2xl font-semibold">Your Rankings</h2>
 			<div class="space-y-4">
 				{#each sortedRestaurants as restaurant, index}
 					<div class="flex items-center justify-between rounded-lg bg-white p-4 shadow-md">
@@ -359,15 +361,15 @@
 	{:else if finalGroupResults}
 		<div class="w-full max-w-4xl">
 			<h1 class="mb-8 text-center text-4xl font-bold">Group Results</h1>
-			
-			<div class="mb-8 rounded-lg bg-white p-6 shadow-md text-center">
-				<h2 class="text-2xl font-semibold mb-4">🏆 Winner 🏆</h2>
+
+			<div class="mb-8 rounded-lg bg-white p-6 text-center shadow-md">
+				<h2 class="mb-4 text-2xl font-semibold">🏆 Winner 🏆</h2>
 				<p class="text-3xl font-bold text-yellow-500">{finalGroupResults.winner}</p>
 			</div>
-			
+
 			{#if finalGroupResults.finalRound && finalGroupResults.finalRound.length > 0}
-				<h2 class="text-2xl font-semibold mb-4 text-center">Finalists</h2>
-				<div class="space-y-4 mb-8">
+				<h2 class="mb-4 text-center text-2xl font-semibold">Finalists</h2>
+				<div class="mb-8 space-y-4">
 					{#each finalGroupResults.finalRound as restaurant, index}
 						<div class="flex items-center justify-between rounded-lg bg-white p-4 shadow-md">
 							<div class="flex items-center space-x-4">
@@ -382,7 +384,7 @@
 					{/each}
 				</div>
 			{/if}
-			
+
 			<div class="mt-8 flex justify-center">
 				<div class="flex flex-col items-center">
 					<div on:click={() => goto('/restaurant_search')}>

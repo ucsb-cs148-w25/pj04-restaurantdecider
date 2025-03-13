@@ -8,6 +8,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Card from '$lib/components/ui/card';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { apiBaseUrl } from '$lib/index.js';
 	import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
@@ -300,7 +301,7 @@
 			<Card.Title tag="h1" class="text-5xl">Search for Restaurants</Card.Title>
 		</Card.Header>
 		<Card.Content>
-			<div class="mt-4 flex items-center space-x-8 self-start pl-4">
+			<div class="mt-4 flex items-center space-x-8 self-start">
 				<!-- Radius Input -->
 				<div class="flex items-center">
 					<p class="mr-2 text-xl">Radius (miles)</p>
@@ -355,7 +356,7 @@
 				</div>
 			</div>
 
-			<div class="search-container mt-2 w-full max-w-4xl self-start pl-4">
+			<div class="search-container mt-2 w-full max-w-4xl self-start">
 				<Input
 					id="search-box"
 					type="text"
@@ -364,20 +365,26 @@
 				/>
 			</div>
 
-			<div class="mt-8 flex flex-col items-start pl-4">
+			<div class="mt-8 flex flex-col items-start">
 				<div class="mb-8 flex space-x-4">
 					<div
 						on:click={() => {
 							rankingStyle = 1;
 						}}
 					>
-						<Button
-							class={rankingStyle === 1
-								? 'w-32 bg-blue-700 text-white hover:bg-blue-700 hover:text-white'
-								: 'w-32 bg-gray-200 text-black hover:bg-blue-300'}
-						>
-							Champion Style
-						</Button>
+						<Tooltip.Provider>
+							<Tooltip.Root>
+								<Tooltip.Trigger
+									class={rankingStyle === 1
+										? 'h-10 w-32 rounded-md bg-blue-700 text-white hover:bg-blue-700 hover:text-white'
+										: 'h-10 w-32 rounded-md bg-gray-200 text-black hover:bg-blue-300'}
+									>Champion Style</Tooltip.Trigger
+								>
+								<Tooltip.Content>
+									<p>Only get number one ranked restaurant<br />(Will take less time)</p>
+								</Tooltip.Content>
+							</Tooltip.Root>
+						</Tooltip.Provider>
 					</div>
 
 					<div
@@ -385,13 +392,19 @@
 							rankingStyle = 2;
 						}}
 					>
-						<Button
-							class={rankingStyle === 2
-								? 'w-32 bg-blue-700 text-white hover:bg-blue-700 hover:text-white'
-								: 'w-32 bg-gray-200 text-black hover:bg-blue-300'}
-						>
-							Bracket Style
-						</Button>
+						<Tooltip.Provider>
+							<Tooltip.Root>
+								<Tooltip.Trigger
+									class={rankingStyle === 2
+										? 'h-10 w-32 rounded-md bg-blue-700 text-white hover:bg-blue-700 hover:text-white'
+										: 'h-10 w-32 rounded-md bg-gray-200 text-black hover:bg-blue-300'}
+									>Bracket Style</Tooltip.Trigger
+								>
+								<Tooltip.Content>
+									<p>Get a ranked scoreboard with all restaurants<br />(Will take more time)</p>
+								</Tooltip.Content>
+							</Tooltip.Root>
+						</Tooltip.Provider>
 					</div>
 				</div>
 			</div>

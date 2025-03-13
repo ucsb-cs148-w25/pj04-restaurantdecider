@@ -39,26 +39,82 @@ function createRoom(roomId, ownerId = null) {
   return rooms.get(roomId);
 }
 // Function to combine bracket results from all users
-function combineBracketResults(bracketResults) {
-  // Simplified logic for combining bracket results
-  // In a real implementation, you might have more complex logic
-
+function combineBracketResults(bracketResults, mode = "bracket") {
   // If there's only one result or no results, return it
   if (bracketResults.length <= 1) {
     return bracketResults[0] || null;
   }
 
-  // For demonstration, we'll just pick a random winner from the finalists
-  const finalists = bracketResults
-    .map((result) => result.winner)
-    .filter(Boolean);
-  if (finalists.length === 0) return null;
+  // Create a map to track all restaurants and their placements
+  const restaurantPlacements = {};
+  const restaurantCounts = {};
 
-  // Return a randomly selected winner from finalists
-  return {
-    winner: finalists[Math.floor(Math.random() * finalists.length)],
-    finalRound: finalists,
+  // Process each user's bracket results
+  bracketResults.forEach((result) => {
+    if (!result || !result.rankings || !Array.isArray(result.rankings)) {
+      return; // Skip invalid results
+    }
+
+    // Process rankings to calculate placement scores
+    result.rankings.forEach((ranking, index) => {
+      if (!ranking || !ranking.name) return;
+
+      const restaurantName = ranking.name;
+      const placement = index + 1; // 1-based placement (1st, 2nd, 3rd, etc.)
+
+      if (!restaurantPlacements[restaurantName]) {
+        restaurantPlacements[restaurantName] = 0;
+        restaurantCounts[restaurantName] = 0;
+      }
+
+      restaurantPlacements[restaurantName] += placement;
+      restaurantCounts[restaurantName]++;
+    });
+  });
+
+  // Calculate average placement for each restaurant
+  const averagePlacements = {};
+  for (const [restaurant, totalPlacement] of Object.entries(
+    restaurantPlacements
+  )) {
+    averagePlacements[restaurant] =
+      totalPlacement / restaurantCounts[restaurant];
+  }
+
+  // Sort restaurants by average placement (lower is better)
+  const sortedRestaurants = Object.entries(averagePlacements)
+    .sort(([, avgA], [, avgB]) => avgA - avgB)
+    .map(([name]) => name);
+
+  // Create final rankings array with scores
+  const rankings = sortedRestaurants.map((name, index) => ({
+    name,
+    score: averagePlacements[name],
+  }));
+
+  // Determine the winner and finalists
+  const winner = sortedRestaurants.length > 0 ? sortedRestaurants[0] : null;
+  const finalRound = sortedRestaurants.slice(
+    0,
+    Math.min(3, sortedRestaurants.length)
+  );
+
+  // Create the result object based on the mode
+  const result = {
+    winner,
+    finalRound,
+    rankings,
   };
+
+  // For champion style, only return the winner
+  if (mode === "champion") {
+    return {
+      winner,
+    };
+  }
+
+  // For bracket style (default), return the full result
+  return result;
 }
 
 // Verify and extract user info from auth token

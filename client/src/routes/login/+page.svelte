@@ -26,7 +26,7 @@
 					const data = await response.json();
 					console.log(data);
 					setUsername(data.username);
-					goto('/restaurant_search');
+					goto('/homepage');
 				}
 			} catch (error) {
 				console.error('Auto-login check failed:', error);
@@ -54,7 +54,7 @@
 				const data = await response.json();
 				console.log(data);
 				setUsername(data.username);
-				goto('/restaurant_search');
+				goto('/homepage');
 			} else {
 				errorMessage = 'Invalid username or password.';
 			}

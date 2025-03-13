@@ -6,19 +6,25 @@
 
 <header class="absolute left-0 right-0 top-0 flex justify-between p-4">
 	<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem" /></a>
-	<div class="space-x-2">
-		<Button href="/login" variant="outline" size="sm" class="bg-black text-white">Sign In</Button>
-		<Button href="/signup" variant="outline" size="sm" class="bg-black text-white">Sign Up</Button>
-	</div>
 </header>
 
 <div class="flex h-screen flex-col items-center justify-center">
 	<div class="space-y-4 text-center">
-		<img src={LogoMove} alt="Logo" style="width: 40rem" />
+		<img src={LogoMove} alt="Logo" style="width: 30rem" />
 		<p class="text-lg">Decide on restaurants with your friends</p>
 
-		<Button href="/login" variant="outline" size="sm" class="bg-black text-white">Sign In</Button>
-		<Button href="/signup" variant="outline" size="sm" class="bg-black text-white">Sign Up</Button>
-		<Button href="/test" variant="outline" size="sm" class="bg-black text-white">Test</Button>
+		<Button
+			href="/login"
+			variant="outline"
+			size="lg"
+			class="mx-2 bg-black px-8 py-5 text-lg text-white">Sign In</Button
+		>
+
+		<Button
+			href="/signup"
+			variant="outline"
+			size="lg"
+			class="mx-2 bg-black px-8 py-5 text-lg text-white">Sign Up</Button
+		>
 	</div>
 </div>

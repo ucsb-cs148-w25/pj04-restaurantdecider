@@ -1,14 +1,14 @@
 import { MAPS_API_KEY } from '$env/static/private';
 
 export const load = async () => {
-  // Default location set to San Jose for testing
-  // if this works correctly, it should point to UCSB
-  let user_loc = { lat: 37.3128, lng: -121.9610 };
+  // Default location set to UCSB by default
+  let user_loc = { lat: 34.4151682, lng: -119.8496976 };
 
   // Function to get geolocation using a Promise
   const getUserLocation = () => {
     return new Promise((resolve, reject) => {
       if ("geolocation" in navigator) {
+        console.log("Geolocation works - getting location")
         navigator.geolocation.getCurrentPosition(
           (position) => resolve({
             lat: position.coords.latitude,

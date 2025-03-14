@@ -6,8 +6,8 @@
   import { goto } from '$app/navigation';
   import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import { apiBaseUrl } from '$lib/index.js';
-  import MovingFigure from '$lib/images/fries.gif'
-  import WaveHello from '$lib/images/wave_hello.gif'
+  import MovingFigure from '$lib/images/fries.gif';
+  import WaveHello from '$lib/images/wave_hello.gif';
 
   let showImage = false;
   

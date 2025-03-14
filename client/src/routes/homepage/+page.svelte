@@ -35,7 +35,7 @@
 <div class="flex h-screen flex-col items-center justify-center">
 	<div class="space-y-4 text-center">
 		<img src={LogoMove} alt="Logo" style="width: 30rem" />
-		<p class="text-lg">Decide on restaurants with your friends</p>
+		<p class="text-lg">Decide on restaurants by yourself or with your friends!</p>
 
 		<Button
 			href="/restaurant_search"

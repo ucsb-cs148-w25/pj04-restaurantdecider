@@ -11,7 +11,7 @@
 <div class="flex h-screen flex-col items-center justify-center">
 	<div class="space-y-4 text-center">
 		<img src={LogoMove} alt="Logo" style="width: 30rem" />
-		<p class="text-lg">Decide on restaurants with your friends</p>
+		<p class="text-lg">Don't know where to go eat? <br> Let WEAT help you decide!</p>
 
 		<Button
 			href="/login"

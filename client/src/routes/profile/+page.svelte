@@ -6,6 +6,14 @@
   import { goto } from '$app/navigation';
   import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import { apiBaseUrl } from '$lib/index.js';
+  import MovingFigure from '$lib/images/fries.gif'
+  import WaveHello from '$lib/images/wave_hello.gif'
+
+  let showImage = false;
+  
+  function toggleImage() {
+    showImage = !showImage;
+  }
   
   async function handleSignOut() {
 		await fetch(`${apiBaseUrl}/users/signout`, {
@@ -31,5 +39,13 @@
 </header>
 
 <div class="flex flex-col items-center justify-center pt-16 pb-24 min-h-screen">
+  <img src={WaveHello} alt="Hello" style="width: 8rem">
   <div class="pl-4 text-6xl font-bold">Hi, {getUsername()}!</div>
+  <p>Thanks for choosing WEAT!</p>
+  <div on:click={toggleImage} style="padding-top: 2rem;">
+    <Button variant="outline" size="sm" class="bg-black text-white">Click for a Surprise!</Button>
+  </div>
+  {#if showImage}
+    <img src={MovingFigure} alt="Image" style="width: 8rem; padding-top: 2rem">
+  {/if}
 </div>

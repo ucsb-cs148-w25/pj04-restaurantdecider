@@ -401,7 +401,7 @@
 									>Bracket Style</Tooltip.Trigger
 								>
 								<Tooltip.Content>
-									<p>Get a ranked scoreboard with all restaurants<br />(Will take more time)</p>
+									<p>Get a ranked scoreboard with all restaurants</p>
 								</Tooltip.Content>
 							</Tooltip.Root>
 						</Tooltip.Provider>

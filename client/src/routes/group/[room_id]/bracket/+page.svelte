@@ -389,7 +389,7 @@
 			{#if rankingStyle === 'champion' && winningRestaurant}
 				<!-- Champion style shows the winner with the restaurant card -->
 				<div class="mb-4 text-center">
-					<h2 class="mb-4 text-2xl font-semibold">Champion 🏆</h2>
+					<h2 class="mb-4 text-2xl font-semibold">🏆 Champion 🏆</h2>
 				</div>
 
 				<div class="mb-8 flex justify-center">

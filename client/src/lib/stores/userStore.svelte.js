@@ -9,5 +9,24 @@ export function setUsername(newUsername) {
 }
 
 export function getAuthToken() {
-	return document.cookie?.split('; ')?.find(row => row?.startsWith('auth='))?.split('=')[1]
+	try {
+		if (!document.cookie) return null;
+
+		const cookieValue = document.cookie.split('; ').find((row) => row.startsWith('auth='));
+
+		if (!cookieValue) {
+			console.warn('Auth cookie not found');
+		}
+
+		const token = cookieValue.split('=')[1];
+		if (!token) {
+			console.warn('Auth token is empty');
+			return null;
+		}
+
+		return token;
+	} catch (error) {
+		console.error('Error retrieving auth token:', error);
+		return null;
+	}
 }

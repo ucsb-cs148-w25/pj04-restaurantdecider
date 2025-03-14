@@ -222,7 +222,7 @@
 </script>
 
 <header class="header-bg absolute left-0 right-0 top-0 z-50 flex justify-between p-4">
-	<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem" /></a>
+	<a href="/homepage"><img src={LogoNoMove} alt="Logo" style="width: 8rem" /></a>
 	<div class="space-x-2">
 		<form on:submit|preventDefault={handleSignOut}>
 			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"

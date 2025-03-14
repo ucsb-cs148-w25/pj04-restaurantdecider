@@ -1,10 +1,33 @@
-# Project Name: Weat
+# Weat - Restaurant Decider
 
 ## Description
 
 Weat (a contraction of "We eat") is a tool designed to help groups of indecisive people find restaurants that meet their collective needs, considering dietary restrictions, preferences, and proximity.
 
-## Our Group: Names and GitHub IDs
+## Table of Contents
+- [Weat - Restaurant Decider](#weat---restaurant-decider)
+  - [Description](#description)
+  - [Table of Contents](#table-of-contents)
+  - [Team Members](#team-members)
+  - [Tech Stack](#tech-stack)
+    - [Frontend](#frontend)
+    - [Backend](#backend)
+    - [DevOps](#devops)
+  - [Project Details](#project-details)
+  - [User Roles](#user-roles)
+  - [Roles and Permissions](#roles-and-permissions)
+  - [Repository Structure](#repository-structure)
+  - [Installation and Setup](#installation-and-setup)
+    - [Prerequisites](#prerequisites)
+    - [Dependencies](#dependencies)
+      - [Frontend (Client)](#frontend-client)
+      - [Backend (Server)](#backend-server)
+    - [Installation Steps](#installation-steps)
+    - [Deployment](#deployment)
+  - [Functionality](#functionality)
+  - [Live Demo](#live-demo)
+
+## Team Members
 
 - Tanay Biradar (TanayB11)
 - Karthik Bhattaram (KarthikB-dev)
@@ -49,13 +72,42 @@ A user can have both roles simultaneously. The individual role tracks personal p
 
 The application is open to the public with no publicly posted data. User data is only visible to other users within the same group during the decision-making process.
 
-## Installation
+## Repository Structure
+
+```
+/project-pj04-restaurantdecider
+├── client/                  # Frontend SvelteKit application
+│   ├── src/                 # Source code for the frontend
+│   │   ├── app.html         # Main HTML template with CSP configuration
+│   │   ├── lib/             # Reusable components and utilities
+│   │   ├── routes/          # SvelteKit routes and page components
+│   │   └── ...
+│   ├── static/              # Static assets
+│   ├── Dockerfile           # Frontend container configuration
+│   └── ...
+├── server/                  # Backend Express application
+│   ├── bin/                 # Server startup scripts
+│   ├── models/              # Database models
+│   ├── routes/              # API route handlers
+│   ├── socket/              # WebSocket handlers
+│   ├── utils/               # Utility functions
+│   ├── app.js               # Main server application file
+│   ├── Dockerfile           # Backend container configuration
+│   └── ...
+├── docs/                    # Project documentation
+│   ├── MANUAL.md            # User manual
+│   └── ...
+├── docker-compose.yml       # Docker Compose configuration
+└── README.md                # This file
+```
+
+## Installation and Setup
 
 ### Prerequisites
 
 - Node.js (v20 for frontend, v18 for backend)
 - Yarn package manager
-- Docker and Docker Compose (v3.8 or higher)
+- Docker and Docker Compose (v3.8 or higher) for containerized setup
 - Git
 
 ### Dependencies
@@ -119,22 +171,27 @@ The application is open to the public with no publicly posted data. User data is
 
    Note: Create a .env file in the server directory and add a JWT_SECRET token
 
-## Development Pipeline
+### Deployment
 
-The project uses a containerized development and deployment pipeline:
+To deploy the application to a production environment:
 
-1. **Local Development**:
-   - Frontend and backend can be developed independently using their respective dev servers
-   - Docker Compose enables running the full stack locally in a production-like environment
+1. Set up environment variables for production:
+   - Set `NODE_ENV=production` in both client and server environments
+   - Ensure `JWT_SECRET` and `MAPS_API_KEY` are configured securely
+   - Configure any domain-specific settings in the server's CORS options
 
-2. **Build Process**:
-   - Frontend: Multi-stage Docker build optimizes the SvelteKit application for production
-   - Backend: Docker image with Node.js 18 contains all necessary dependencies
+2. Build and deploy using Docker:
 
-3. **Deployment**:
-   - The application is deployed as Docker containers in a production environment
-   - Environment variables control configuration differences between environments
-   - Content Security Policy includes support for Google user content images
+```bash
+docker-compose up -d --build
+```
+
+3. Content Security Policy (CSP):
+   - The application has a CSP configured in `client/src/app.html`
+   - Ensure the CSP includes 'https://lh3.googleusercontent.com' and 'https://*.googleusercontent.com' in the img-src directive to allow Google user content images
+
+4. SSL/TLS:
+   - For production deployment, configure SSL/TLS certificates using a reverse proxy like Nginx or a cloud provider's load balancer
 
 ## Functionality
 
@@ -147,11 +204,5 @@ An average user experience might look like:
 - Vote on each pair of restaurants
 - View the final scoreboard
 
-## Known Bugs
-
-- Authentication does not set cookies (Issue(s) #71)
-- Restaurant Bracket logic is bugged (Issue(s) #78 #79)
-
-## Deployment
-
+## Live Demo
 A live testable version of Weat is available at: https://cs148.tanaybiradar.com/

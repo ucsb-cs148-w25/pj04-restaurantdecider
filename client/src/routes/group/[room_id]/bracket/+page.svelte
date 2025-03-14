@@ -297,7 +297,7 @@
 </script>
 
 <header class="absolute left-0 right-0 top-0 flex justify-between p-4">
-	<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem" /></a>
+	<a href="/homepage"><img src={LogoNoMove} alt="Logo" style="width: 8rem" /></a>
 	<div class="space-x-2">
 		<form on:submit|preventDefault={handleSignOut}>
 			<Button href="/profile" variant="outline" size="sm" class="bg-black text-white"
@@ -389,7 +389,7 @@
 			{#if rankingStyle === 'champion' && winningRestaurant}
 				<!-- Champion style shows the winner with the restaurant card -->
 				<div class="mb-4 text-center">
-					<h2 class="mb-4 text-2xl font-semibold">🏆 Champion 🏆</h2>
+					<h2 class="mb-4 text-2xl font-semibold">Champion 🏆</h2>
 				</div>
 
 				<div class="mb-8 flex justify-center">
@@ -405,7 +405,7 @@
 			{:else}
 				<!-- Bracket style shows the winner and full rankings -->
 				<div class="mb-8 rounded-lg bg-white p-6 text-center shadow-md">
-					<h2 class="mb-4 text-2xl font-semibold">🏆 Winner 🏆</h2>
+					<h2 class="mb-4 text-2xl font-semibold text-black">🏆 Winner 🏆</h2>
 					<p class="text-3xl font-bold text-yellow-500">{finalGroupResults.winner}</p>
 				</div>
 

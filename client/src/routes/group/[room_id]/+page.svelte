@@ -20,6 +20,7 @@
 	let lobbySettings = $state(null);
 	let users = $state([]);
 	let errorMessage = $state('');
+	let notification = $state({ show: false, message: '', type: '' });
 	let username = $state('');
 
 	onMount(async () => {
@@ -120,17 +121,51 @@
 		socket.emit('leaveRoom', { roomId });
 		goto('/group');
 	}
+
+	// Function to copy room URL to clipboard
+	function copyRoomUrl() {
+		const roomUrl = window.location.href;
+		navigator.clipboard
+			.writeText(roomUrl)
+			.then(() => {
+				showNotification('Room URL copied to clipboard', 'success');
+			})
+			.catch((err) => {
+				console.error('Failed to copy URL: ', err);
+				showNotification('Failed to copy URL', 'error');
+			});
+	}
+
+	// Function to show notification
+	function showNotification(message, type) {
+		// type should be 'success' or 'error'
+		notification = { show: true, message, type };
+		// Auto-hide notification after 3 seconds
+		setTimeout(() => {
+			notification = { show: false, message: '', type: '' };
+		}, 3000);
+	}
 </script>
 
-<div class="flex min-h-screen flex-col">
+<div class="relative flex min-h-screen flex-col">
 	<header class="header-bg flex justify-between p-4">
-		<a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem" /></a>
+		<a href="/homepage"><img src={LogoNoMove} alt="Logo" style="width: 8rem" /></a>
 		<div class="space-x-2">
 			<Button variant="outline" onclick={leaveRoom} class="leave-btn">Leave Room</Button>
 		</div>
 	</header>
 
 	<main class="flex flex-grow flex-col items-center justify-center p-6">
+		{#if notification.show}
+			<div
+				class="fixed right-4 top-20 z-50 rounded-md p-4 shadow-md transition-opacity duration-300 {notification.type ===
+				'success'
+					? 'bg-green-100 text-green-800'
+					: 'bg-red-100 text-red-800'}"
+			>
+				{notification.message}
+			</div>
+		{/if}
 		{#if errorMessage}
 			<div class="mb-4 w-full max-w-md rounded-md bg-red-100 p-4 text-red-800">
 				{errorMessage}
@@ -164,7 +199,31 @@
 
 				{#if isOwner}
 					<div class="text-center">
-						<Button onclick={startGame} class="px-8 py-2 text-lg">Start Game</Button>
+						<div class="flex justify-center gap-4">
+							<Button
+								variant="outline"
+								onclick={copyRoomUrl}
+								class="share-btn flex items-center py-2 text-lg"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="mr-2"
+								>
+									<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+									<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+								</svg>
+								Share Lobby
+							</Button>
+							<Button onclick={startGame} class="px-8 py-2 text-lg">Start Game</Button>
+						</div>
 						<p class="mt-2 text-sm text-gray-500">
 							{#if users.length < 1}
 								You need at least one participant to start the game
@@ -175,7 +234,31 @@
 					</div>
 				{:else}
 					<div class="text-center">
-						<p class="text-lg">Waiting for the host to start the game...</p>
+						<div class="flex justify-center">
+							<Button
+								variant="outline"
+								onclick={copyRoomUrl}
+								class="share-btn flex items-center py-2 text-lg"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="mr-2"
+								>
+									<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+									<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+								</svg>
+								Share Lobby
+							</Button>
+						</div>
+						<p class="mt-2 text-sm text-gray-500">Waiting for the host to start the game...</p>
 					</div>
 				{/if}
 			</Card.Content>

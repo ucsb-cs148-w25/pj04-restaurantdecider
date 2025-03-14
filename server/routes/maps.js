@@ -1,6 +1,6 @@
 import express from "express";
 import fetch from "node-fetch";
-import { authMiddleware } from './authMiddleware.js'
+import { authMiddleware } from "./authMiddleware.js";
 
 const router = express.Router();
 
@@ -15,18 +15,18 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
       longitude,
       radius,
       listSize,
-      user_preferences
+      user_preferences,
     });
     return res.status(400).json({
       error: "INVALID_REQUEST",
       message: "Missing required fields",
-      details: { latitude, longitude, radius, listSize, user_preferences},
+      details: { latitude, longitude, radius, listSize, user_preferences },
     });
   }
 
   // Handle both string and numeric listSize values
   let limit;
-  if (typeof listSize === 'string' && !Number.isInteger(parseInt(listSize))) {
+  if (typeof listSize === "string" && !Number.isInteger(parseInt(listSize))) {
     // Handle string identifiers like 'short', 'medium', 'long'
     const listSizes = { short: 8, medium: 16, long: 32 };
     limit = listSizes[listSize] || 8;
@@ -83,7 +83,7 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
         error: "NOT_ENOUGH_RESTAURANTS",
         message: "Not enough restaurants found",
         details: { found: data.places.length, limit },
-     });
+      });
     }
 
     const restaurants = data.places.map((place) => {
@@ -97,9 +97,9 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
           bakery: "Bakery",
           bar: "Bar",
           meal_takeaway: "Takeout Restaurant",
-          food: "Food"
+          food: "Food",
         };
-        
+
         for (const t of place.types) {
           if (typeMapping[t]) {
             type = typeMapping[t];
@@ -107,7 +107,7 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
           }
         }
       }
-      
+
       return {
         name: place.displayName?.text || "No name available",
         reviews: place.userRatingCount || 0,
@@ -120,7 +120,7 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
         hours: place.regularOpeningHours || [],
         website: place.websiteUri || "",
         mapsLink: place.googleMapsUri || "",
-        reviews: place.reviews || []
+        reviews: place.reviews || [],
       };
     });
 
@@ -133,7 +133,7 @@ router.post("/restaurants", authMiddleware, async (req, res) => {
   }
 });
 
-router.post("/restaurantphoto", authMiddleware, async (req, res) => {
+router.post("/restaurantphoto", async (req, res) => {
   const { resource_id, max_width_px } = req.body;
   try {
     const response = await fetch(

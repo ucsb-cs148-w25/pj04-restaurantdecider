@@ -403,8 +403,10 @@ export function setupSocketHandlers(io) {
         if (room.bracketResults.length >= room.users.size) {
           // Get the ranking style from lobby settings
           const rankingStyle = room.lobbySettings?.rankingStyle || "bracket";
-          console.log(`Using ranking style: ${rankingStyle} for room ${roomId}`);
-          
+          console.log(
+            `Using ranking style: ${rankingStyle} for room ${roomId}`
+          );
+
           // Combine the results using the room's ranking style
           room.finalResults = combineBracketResults(
             room.bracketResults.map((br) => br.results),
@@ -417,10 +419,12 @@ export function setupSocketHandlers(io) {
           // Send final results to all users with the ranking style
           io.to(roomId).emit("bracketCompleted", {
             finalResults: room.finalResults,
-            rankingStyle: rankingStyle
+            rankingStyle: rankingStyle,
           });
 
-          console.log(`Bracket completed for room ${roomId} with ${rankingStyle} style`);
+          console.log(
+            `Bracket completed for room ${roomId} with ${rankingStyle} style`
+          );
         }
       } catch (error) {
         console.error(`Error submitting bracket results: ${error.message}`);

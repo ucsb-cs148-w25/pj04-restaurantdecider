@@ -45,20 +45,26 @@
 	}
 	// Load Google Maps script dynamically
 	onMount(async () => {
-		const script = document.createElement('script');
-		script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places&v=weekly`;
-		script.async = true;
-		script.defer = true;
-		script.crossOrigin = 'anonymous';
-		// Add a specific error handler
-		script.onerror = (error) => {
-			console.error('Error loading Google Maps API:', error);
-		};
-		script.onload = () => {
-			scriptLoaded = true;
-			initializeMap();
-		};
-		document.head.appendChild(script);
+		const authToken = getAuthToken();
+    	if (authToken) {
+      		console.log("signed up");
+			const script = document.createElement('script');
+			script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places&v=weekly`;
+			script.async = true;
+			script.defer = true;
+			script.crossOrigin = 'anonymous';
+			// Add a specific error handler
+			script.onerror = (error) => {
+				console.error('Error loading Google Maps API:', error);
+			};
+			script.onload = () => {
+				scriptLoaded = true;
+				initializeMap();
+			};
+			document.head.appendChild(script);
+    	} else {
+      		goto('/');
+    	}
 	});
 
 	async function handleSignOut() {

@@ -6,14 +6,24 @@
   import { goto } from '$app/navigation';
   import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import { apiBaseUrl } from '$lib/index.js';
-  import MovingFigure from '$lib/images/fries.gif'
-  import WaveHello from '$lib/images/wave_hello.gif'
+  import MovingFigure from '$lib/images/fries.gif';
+  import WaveHello from '$lib/images/wave_hello.gif';
+  import { onMount } from 'svelte';
 
   let showImage = false;
   
   function toggleImage() {
     showImage = !showImage;
   }
+  
+  onMount(() => {
+    const authToken = getAuthToken();
+    if (authToken) {
+      console.log("signed up");
+    } else {
+      goto('/');
+    }
+  });
   
   async function handleSignOut() {
 		await fetch(`${apiBaseUrl}/users/signout`, {

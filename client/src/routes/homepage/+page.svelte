@@ -5,6 +5,16 @@
 	import { apiBaseUrl } from '$lib/index.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+    const authToken = getAuthToken();
+    if (authToken) {
+      console.log("signed up")
+    } else {
+      goto('/');
+    }
+  	});
 
 	async function handleSignOut() {
 		await fetch(`${apiBaseUrl}/users/signout`, {

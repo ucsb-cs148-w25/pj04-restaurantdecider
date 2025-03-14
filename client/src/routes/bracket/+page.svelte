@@ -6,7 +6,6 @@
 	import { apiBaseUrl } from '$lib/index.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import RestaurantCard from '$lib/components/RestaurantCard.svelte';
-	import { goto } from '$app/navigation';
 	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 
 	interface Restaurant {

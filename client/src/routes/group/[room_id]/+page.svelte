@@ -117,9 +117,12 @@
 
 	// Function to leave the room
 	function leaveRoom() {
-		// Navigate back to the group page
+		// Emit leaveRoom event with roomId
 		socket.emit('leaveRoom', { roomId });
-		goto('/group');
+		// Disconnect the socket
+		socket.disconnect();
+		// Navigate back to the home page
+		goto('/');
 	}
 
 	// Function to copy room URL to clipboard

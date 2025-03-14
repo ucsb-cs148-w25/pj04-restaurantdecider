@@ -277,12 +277,16 @@ export function setupSocketHandlers(io) {
       io.to(roomId).emit("userList", { users });
     }
 
-    socket.on("leaveRoom", (roomId) => {
+    socket.on("leaveRoom", (data) => {
       try {
+        // Extract roomId from the data object
+        const roomId = data.roomId;
         if (!roomId) return;
 
         const room = getRoom(roomId);
         if (!room) return;
+
+        console.log(`User ${socket.id} leaving room: ${roomId}`);
 
         // Leave the socket room
         socket.leave(roomId);
@@ -318,7 +322,7 @@ export function setupSocketHandlers(io) {
             }
           }, 3600000); // Remove after 1 hour of being empty
         } else {
-          // Notify everyone in the room about user list
+          // Notify everyone in the room about updated user list
           emitUserList(io, roomId, room);
         }
       } catch (error) {

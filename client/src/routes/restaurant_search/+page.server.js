@@ -1,5 +1,4 @@
 import { MAPS_API_KEY } from '$env/static/private';
-import { browser } from '$app/environment'; 
 
 export const load = async () => {
   // Default location set to San Jose for testing

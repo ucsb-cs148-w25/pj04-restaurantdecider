@@ -140,6 +140,13 @@
 	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 
+	onMount(() => {
+		const authToken = getAuthToken();
+		if (!authToken) {
+			goto('/');
+		}
+	});
+
 	let { data } = $props();
 	let numToShow = $state(0);
 	let rankingStyle = $state(0); //champion (1) or bracket style (2)

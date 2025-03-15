@@ -9,6 +9,8 @@
 	import { goto } from '$app/navigation';
 	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 
+
+
 	interface Restaurant {
 		id: number;
 		name: string;
@@ -146,6 +148,11 @@
 	}
 	
 	onMount(() => {
+		const authToken = getAuthToken();
+		if (!authToken) {
+			goto('/');
+			return;
+		}
 		const restaurantsData = getRestaurantsList();
 
 		allRestaurants = restaurantsData.restaurants.map((restaurant, index) => ({

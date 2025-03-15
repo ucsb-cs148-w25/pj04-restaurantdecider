@@ -6,11 +6,19 @@
   import { goto } from '$app/navigation';
   import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import { apiBaseUrl } from '$lib/index.js';
+  import { onMount } from 'svelte';
   import MovingFigure from '$lib/images/fries.gif';
   import WaveHello from '$lib/images/wave_hello.gif';
 
-  let showImage = false;
   
+  onMount(() => {
+		const authToken = getAuthToken();
+		if (!authToken) {
+			goto('/');
+		}
+	});
+  
+  let showImage = false;
   function toggleImage() {
     showImage = !showImage;
   }
@@ -27,6 +35,8 @@
 		goto('/');
 	}
 </script>
+
+
 
 <header class="absolute top-0 left-0 right-0 flex justify-between p-4">
   <a href="/homepage"><img src={LogoNoMove} alt="Logo" style="width: 8rem"></a>

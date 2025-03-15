@@ -89,6 +89,13 @@
 	}
 
 	onMount(() => {
+
+		const authToken = getAuthToken();
+		if (!authToken) {
+			goto('/');
+			return;
+		}
+
 		const restaurantsData = getRestaurantsList();
 
 		allRestaurants = restaurantsData.restaurants.map((restaurant, index) => ({

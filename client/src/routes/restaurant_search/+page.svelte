@@ -140,12 +140,6 @@
 	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
 	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 
-	onMount(() => {
-		const authToken = getAuthToken();
-		if (!authToken) {
-			goto('/');
-		}
-	});
 
 	let { data } = $props();
 	let numToShow = $state(0);
@@ -180,6 +174,12 @@
 	}
 	// Load Google Maps script dynamically
 	onMount(async () => {
+
+		const authToken = getAuthToken();
+		if (!authToken) {
+			goto('/');
+			return;
+		}
 		const script = document.createElement('script');
 		script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places&v=weekly`;
 		script.async = true;

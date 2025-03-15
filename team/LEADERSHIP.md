@@ -18,6 +18,7 @@
 | Wed 03/05 | Irene Li          | Led lecture 15 standup meeting                         |
 | Fri 03/07 | Irene Li          | Led lab 9 meeting                                      |
 | Mon 03/10 | Irene Li          | Led lecture 16 standup meeting                         |
+| Wed 03/12 | Irene Li          | Led lecture 17 standup meeting                         |
 
 
 # CURRENT LEADERSHIP ROLES (Lab 7)

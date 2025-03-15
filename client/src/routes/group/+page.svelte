@@ -1,4 +1,6 @@
 <script lang="js">
+	import { getSocket } from '$lib/socket.js';
+	import { getUsername } from '$lib/stores/userStore.svelte.js';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
@@ -6,16 +8,53 @@
 	import { Input } from '$lib/components/ui/input';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Card from '$lib/components/ui/card';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { apiBaseUrl } from '$lib/index.js';
 	import { setRestaurantsList } from '$lib/stores/bracketStore.svelte.js';
 	import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import LogoNoMove from '$lib/images/WEAT_unmoving.png';
-	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 
-	onMount(() => {
+	// Get the singleton socket instance
+	let socket = getSocket();
+	let connected = $state(false);
+	let userId = $state('');
+	let username = $state('');
+
+	socket.on('connect', () => {
+		connected = true;
+		userId = socket.id;
+		console.log('Connected to Socket.IO server with ID:', userId);
+		// Set username in socket
+		username = getUsername();
+		socket.username = username || 'Guest';
+
+		// Ensure the auth token is available in the socket connection
 		const authToken = getAuthToken();
-		if (!authToken) {
-			goto('/');
+		if (authToken) {
+			console.log('Auth token is available for socket authentication');
+		} else {
+			console.log('No auth token available for socket authentication');
+		}
+	});
+
+	// Handle lobby creation response
+	socket.on('lobbyCreated', ({ roomId, isOwner, lobbySettings }) => {
+		console.log('Lobby created:', { roomId, isOwner, lobbySettings });
+		// Navigate to the room page
+		goto(`/group/${roomId}`);
+	});
+
+	// Handle lobby creation errors
+	socket.on('lobbyError', ({ error }) => {
+		console.error('Lobby error:', error);
+		errorMessage = error;
+
+		// If authentication error, redirect to login
+		if (error.includes('Authentication required')) {
+			// Wait a moment to show the error before redirecting
+			setTimeout(() => {
+				goto('/login?redirect=' + encodeURIComponent(window.location.pathname));
+			}, 2000);
 		}
 	});
 
@@ -52,6 +91,9 @@
 	}
 	// Load Google Maps script dynamically
 	onMount(async () => {
+		// Get username from store
+		username = getUsername();
+
 		const script = document.createElement('script');
 		script.src = `https://maps.googleapis.com/maps/api/js?key=${data.mapConfig.apiKey}&libraries=places&v=weekly`;
 		script.async = true;
@@ -152,11 +194,22 @@
 				return response.json();
 			})
 			.then((data) => {
-				setRestaurantsList(data);
-				if (rankingStyle === 1) {
-					goto('/champion');
-				} else if (rankingStyle === 2) {
-					goto('/bracket');
+				let lobbySettings = {
+					restaurant_list: data,
+					rankingStyle: rankingStyle === 1 ? 'champion' : 'bracket'
+				};
+				// Create lobby with authentication
+				const authToken = getAuthToken();
+				if (authToken) {
+					console.log('Creating authenticated lobby');
+					socket.emit('createLobby', lobbySettings);
+				} else {
+					console.log('Authentication required to create a lobby');
+					errorMessage = 'Authentication required to create a lobby. Please log in.';
+					// Redirect to login page
+					setTimeout(() => {
+						goto('/login?redirect=' + encodeURIComponent(window.location.pathname));
+					}, 2000);
 				}
 			})
 			.catch((error) => {
@@ -245,7 +298,7 @@
 	<!-- Card Section -->
 	<Card.Root class="card-root mt-8 w-2/5">
 		<Card.Header class="text-center">
-			<Card.Title tag="h1" class="text-5xl">Search for Restaurants</Card.Title>
+			<Card.Title tag="h1" class="text-5xl">Set Location for Group</Card.Title>
 		</Card.Header>
 		<Card.Content>
 			<div class="mt-4 flex items-center space-x-8 self-start">
@@ -328,7 +381,7 @@
 									>Champion Style</Tooltip.Trigger
 								>
 								<Tooltip.Content>
-									<p>Only get number one ranked restaurant<br />(Will take less time)</p>
+									<p>Only get number one ranked restaurant</p>
 								</Tooltip.Content>
 							</Tooltip.Root>
 						</Tooltip.Provider>
@@ -348,7 +401,7 @@
 									>Bracket Style</Tooltip.Trigger
 								>
 								<Tooltip.Content>
-									<p>Get a ranked scoreboard with all restaurants<br />(Will take more time)</p>
+									<p>Get a ranked scoreboard with all restaurants</p>
 								</Tooltip.Content>
 							</Tooltip.Root>
 						</Tooltip.Provider>

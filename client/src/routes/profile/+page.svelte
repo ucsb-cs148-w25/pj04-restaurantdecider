@@ -6,7 +6,16 @@
   import { goto } from '$app/navigation';
   import { getAuthToken } from '$lib/stores/userStore.svelte.js';
 	import { apiBaseUrl } from '$lib/index.js';
-  
+  import { onMount } from 'svelte';
+
+
+  onMount(() => {
+		const authToken = getAuthToken();
+		if (!authToken) {
+			goto('/');
+		}
+	});
+
   async function handleSignOut() {
 		await fetch(`${apiBaseUrl}/users/signout`, {
 			method: 'POST',
@@ -19,6 +28,8 @@
 		goto('/');
 	}
 </script>
+
+
 
 <header class="absolute top-0 left-0 right-0 flex justify-between p-4">
   <a href="/"><img src={LogoNoMove} alt="Logo" style="width: 8rem"></a>

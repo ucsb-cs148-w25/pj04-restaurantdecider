@@ -90,7 +90,7 @@ const port = process.env.PORT || 3000; // Using environment variable PORT, fallb
 // Socket endpoint for client connections
 const socketEndpoint =
   process.env.NODE_ENV === "production"
-    ? "https://148.cs148.tanaybiradar.com/socket"
+    ? "https://cs148.tanaybiradar.com/socket"
     : "http://localhost:3001/socket";
 
 // Use server.listen with port number

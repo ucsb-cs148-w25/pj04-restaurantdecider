@@ -28,11 +28,12 @@
 - Added error check if there are enough restaurants in vicinity
   
 3. Winston Wang
-- Produced an API endpoint that gives restaurants to rank
-- Added option for users to preselect type of restaurant (with Karthik)
-- Created API endpoint to accept rankings and store in DB
-- Added an upper limit of 30 miles to radius input
-- Prevented user from faking a log in with a user/password combination that wasn't previously used to sign up.
+- Produced an API endpoint that gives restaurants to rank (Issue #39)
+- Added option for users to preselect type of restaurant (with Karthik) (Issue #111)
+- Created API endpoint to accept rankings and store in DB (Issue #67)
+- Added an upper limit of 30 miles to radius input (Issue #124)
+- Prevented user from faking a log in with a user/password combination that wasn't previously used to sign up. (Issue #131)
+- Added redirection from champion, bracket, restaurant search, and profile page if user hasn't signed in. (Was reverted due to issues in other merges to main and lack of time [PR#160](https://github.com/ucsb-cs148-w25/pj04-restaurantdecider/pull/160)) (Issue #133)
   
 4. Danny You
 - No major contributions

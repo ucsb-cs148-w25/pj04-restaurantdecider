@@ -5,5 +5,5 @@ export let apiBaseUrl =
 
 export let socketEndpoint =
 	process.env.NODE_ENV == 'production'
-		? 'https://cs148.tanaybiradar.com'
+		? 'https://cs148.tanaybiradar.com/socket'
 		: 'http://localhost:3001';

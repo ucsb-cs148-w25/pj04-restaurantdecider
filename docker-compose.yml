@@ -20,7 +20,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "2530:3000"
-      - "2531:3001"
     environment:
       - NODE_ENV=production
     volumes:
